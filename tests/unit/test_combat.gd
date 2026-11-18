@@ -58,7 +58,7 @@ func test_kill_bounty_paid_once() -> void:
 	run(m, 0.5)
 	eq(m.kills(), 1)
 	# the single-enemy wave also clears, paying the wave reward once
-	eq(m.economy.currency - before, 7 + m.level.economy.wave_reward(1), "bounty once + wave reward")
+	eq(m.economy.currency - before, m.economy.config.kill_bounty(7) + m.level.economy.wave_reward(1), "bounty once + wave reward")
 	check(m.economy.was_paid("kill:%d" % 2) or m.economy.was_paid("kill:%d" % 3), "kill ledger key recorded")
 
 
@@ -71,7 +71,7 @@ func test_damage_after_death_is_ignored() -> void:
 	var before := m.economy.currency
 	m.damage_enemy(e, 100, Damage.Type.KINETIC, 0)
 	m.damage_enemy(e, 100, Damage.Type.KINETIC, 0)
-	eq(m.economy.currency - before, 7, "second hit pays nothing")
+	eq(m.economy.currency - before, m.economy.config.kill_bounty(7), "second hit pays nothing")
 	eq(m.kills(), 1)
 
 

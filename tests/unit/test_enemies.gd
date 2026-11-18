@@ -192,3 +192,22 @@ func test_boss_l6_variant_two_phases_no_split() -> void:
 	eq(boss.boss_phase, 2, "never enters phase III")
 	m.damage_enemy(boss, 1e6, Damage.Type.TRUE, 0)
 	eq(m.alive_enemy_count(), 0, "no shards")
+
+
+func test_brute_reactive_armor_blocks_small_hits_only() -> void:
+	var m := make_lab()
+	var b := put(m, real_enemy("brute", 0.0), 300)
+	var hp0 := b.hp
+	m.damage_enemy(b, 10, Damage.Type.TRUE, 0)
+	near(hp0 - b.hp, 4.0, 0.01, "small hit (10 < 30) deals 40%")
+	var hp1 := b.hp
+	m.damage_enemy(b, 100, Damage.Type.TRUE, 0)
+	near(hp1 - b.hp, 100.0, 0.01, "big hit goes through in full")
+	var hp2 := b.hp
+	m.damage_enemy(b, 5, Damage.Type.TRUE, 0, false, 1.0, true)
+	near(hp2 - b.hp, 5.0, 0.01, "continuous damage (poison/burn/beam) is never reduced")
+	var d := real_enemy("drone", 0.0)
+	var dr := put(m, d, 350)
+	var hp3 := dr.hp
+	m.damage_enemy(dr, 10, Damage.Type.TRUE, 0)
+	near(hp3 - dr.hp, 10.0, 0.01, "other enemies unaffected")

@@ -10,7 +10,9 @@ func test_main_plus_secondary_branch_rules() -> void:
 	eq(t.branch, 0)
 	eq(t.tier, 1)
 	near(t.fire_rate, 2.6, 0.001, "Rapid I rate")
-	eq(t.total_invested, 85) # Pulse 100->50, Rapid I 70->35 (tower-spam remake, upgrades scaled too)
+	var A := t.def.branches[0].tiers
+	var B := t.def.branches[1].tiers
+	eq(t.total_invested, t.def.cost + A[0].cost)
 	check(m.try_upgrade(t, 1), "Penetrator I as second branch")
 	check(not m.try_upgrade(t, 2), "third branch locked")
 	eq(m.upgrade_block_reason(t, 2), "Locked: 2 branches chosen")
@@ -27,7 +29,7 @@ func test_main_plus_secondary_branch_rules() -> void:
 	near(t.fire_rate, 4.5, 0.001, "Rapid III rate kept (Penetrator II sets 1.6)")
 	near(t.damage, 13.5, 0.001, "Penetrator II damage beats Rapid III (-10% nerf, then halved by the remake)")
 	near(t.armor_pen, 4.0, 0.001, "Penetrator II pen")
-	eq(t.total_invested, 50 + 35 + 65 + 120 + 35 + 65) # all costs halved (tower-spam remake)
+	eq(t.total_invested, t.def.cost + A[0].cost + A[1].cost + A[2].cost + B[0].cost + B[1].cost)
 
 
 func test_either_branch_can_become_main() -> void:
@@ -79,7 +81,7 @@ func test_upgrade_requires_currency_and_unpaused() -> void:
 	var t := m.try_build(real_tower("pulse"), Vector2(300, 400))
 	check(not m.try_upgrade(t, 0), "26 < 40")
 	eq(t.branch, -1, "nothing committed on failure")
-	eq(m.economy.currency, 26)
+	eq(m.economy.currency, 84 - t.def.cost)
 	m.economy.credit(100, "test")
 	m.set_paused(true)
 	check(not m.try_upgrade(t, 0), "blocked while paused")
@@ -143,8 +145,19 @@ func test_evolution_requirements_and_cap() -> void:
 	eq(int(t0.pf("burst_every")), 20, "Storm Array param applied")
 	near(t0.fire_rate, 4.5, 0.001, "tier stats kept")
 	check(not m.try_evolve(t0), "no double evolve")
+	var base1 := towers[1].branch_def().evolution.cost
+	eq(m.evolution_cost(towers[1]), int(round(base1 * 1.15)), "2nd pulse evolution +15%")
+	before = m.economy.currency
 	check(m.try_evolve(towers[1]), "evolve #2")
+	eq(before - m.economy.currency, int(round(base1 * 1.15)), "charged the raised price")
+	eq(m.evolution_cost(towers[2]), int(round(base1 * 1.30)), "3rd pulse evolution +30%")
 	check(m.try_evolve(towers[2]), "evolve #3 - all towers can evolve in level")
+	# another tower type starts from its own base price
+	var n := m.try_build(real_tower("nova"), Vector2(480, 400))
+	m.try_upgrade(n, 0)
+	m.try_upgrade(n, 0)
+	m.try_upgrade(n, 0)
+	eq(m.evolution_cost(n), n.branch_def().evolution.cost, "counted per tower type")
 
 
 func test_storm_array_burst_fires_extra_shots() -> void:

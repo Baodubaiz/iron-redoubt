@@ -11,4 +11,4 @@ description = "Clear level 21 with 80% starting currency."
 period = 1
 level = ExtResource("1_s861a")
 currency_multiplier = 0.8
-cores = 30
+cores = 39

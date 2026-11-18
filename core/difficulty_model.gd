@@ -160,8 +160,12 @@ static func level_pressure(campaign: CampaignDef, index: int) -> Array:
 
 ## Calibrated difficulty score of a campaign level: 1.0 = narrow win (10-30% Base HP left).
 static func level_score(campaign: CampaignDef, index: int) -> float:
-	var l := campaign.levels[index]
-	var m := l.map
+	return float(level_pressure(campaign, index)[0]) / mechanic_k(campaign, index)
+
+
+## Calibration divisor of a level: base x the factor of each map mechanic present (+ research from META_FROM).
+static func mechanic_k(campaign: CampaignDef, index: int) -> float:
+	var m := campaign.levels[index].map
 	var k: float = CALIBRATION["base"]
 	if m.routes.size() > 1 and not m.dynamic_routes:
 		k *= CALIBRATION["dual"]
@@ -173,129 +177,38 @@ static func level_score(campaign: CampaignDef, index: int) -> float:
 		k *= CALIBRATION["nodes"]
 	if index >= META_FROM:
 		k *= CALIBRATION["meta"]
-	return float(level_pressure(campaign, index)[0]) / k
+	return k
 
 
-const CROWD_CAP := 100 ## max enemies spawned in any 25 s window (phones)
-static var _effective: Dictionary = {}
+# ---------------------------------------------------------------- threat budget (tools/gen_waves.gd)
+## Waves are planned as "which enemies + % of the level's peak" (tools/level_plan.gd). Threat is summed in
+## Drones (enemy_threat). The level's PEAK = its last wave (2026-11-18, user): level 1 = 70, +50 every
+## 5 levels up to level 40 (420), then +50 every 10 levels; earlier waves ramp up to it.
+const PEAK_BASE := 70.0
+const PEAK_STEP := 50.0
+const PEAK_STEP_EVERY := 5
+const PEAK_STEP_EVERY_LATE := 10
+const PEAK_LATE_FROM := 40
 
 
-## Target share of enemies that gather in the level's final wave (50-60%).
-## The head waves remain light and un-swarmed (authored baseline counts) so that
-## difficulty is forced by the climactic last-wave gathering rather than crushing
-## the player on early waves with 20-40 enemies.
-const LAST_WAVE_SHARE_MIN := 0.50
-const LAST_WAVE_SHARE_MAX := 0.60
-const LAST_WAVE_SHARE := 0.55
+static func level_peak_threat(level_number: int) -> float:
+	var early := (mini(level_number, PEAK_LATE_FROM) - 1) / PEAK_STEP_EVERY
+	var late := maxi(level_number - PEAK_LATE_FROM, 0) / PEAK_STEP_EVERY_LATE
+	return PEAK_BASE + PEAK_STEP * float(early + late)
 
 
-## The level as it is played:
-## 1. Head waves (first 30-35%) remain at authored counts (mult = 1.0) so players have room to build.
-## 2. Mid waves smoothly scale up to build momentum.
-## 3. The level's climax adds enough enemies that the final stretch holds 50-60% of the level's total,
-##    but (2026-11-18, user: one giant last wave lagged) that extra is spread evenly over the last
-##    waves in the second half of the level (SPREAD_FRACTION) instead of piling into the final one. A boss
-##    wave keeps its authored escorts; its share goes to the waves before it. Added enemies keep the
-##    authored spawn interval (the wave just lasts longer), so the screen never floods.
-## Any wave with more than CROWD_CAP spawns in a 25 s window is spread out over time.
-const BOSS_LEVEL_BONUS := 0.05 ## extra enemies on mid-chapter boss levels (5, 15, 25, 35)
-const BOSS_LEVEL_BONUS_FINALE := 0.10 ## extra enemies on chapter-finale boss levels (10, 20, 30, 40)
-const SPREAD_FRACTION := 0.5 ## share of the level's waves (the last ones) that split the climax
+## Threat of one enemy in "Drones" (Drone = 1.0): HP, armor, shield, speed and its skill multiplier.
+static func enemy_threat(e: EnemyDef, hp_mult: float = 1.0) -> float:
+	var drone: EnemyDef = load("res://data/enemies/drone.tres")
+	return enemy_pressure(e, hp_mult) / maxf(enemy_pressure(drone), 0.001)
 
 
+## The level as it is played = the level as written (2026-11-18, user: no %-based rules at all; every wave is
+## hand-authored in tools/level_waves.gd and spawns exactly as written). The old match-start rules
+## (mid-wave ramp, last-wave share, boss-level bonus, special->regular swap, crowd-cap stretch) were baked
+## into those lines once. Kept as a function so callers (match start, pressure analysis) stay unchanged.
 static func effective_level(l: LevelDef) -> LevelDef:
-	if l == null:
-		return l
-	var d := l.difficulty
-	var key := "%d|%.4f" % [l.get_instance_id(), d]
-	if _effective.has(key):
-		return _effective[key]
-	var e: LevelDef = l.duplicate(false)
-	var waves: Array[WaveDef] = []
-	var n := l.waves.size()
-	var prev_total := 0
-
-	for wi in range(n):
-		var w: WaveDef = l.waves[wi]
-		var progress := float(wi) / float(maxi(n - 1, 1))
-		# Head waves stay at 1.0x; mid waves scale gently up to 1.35x; the final wave keeps its authored counts
-		# here and gets its share of the climax below.
-		var mult := 1.0 if (progress <= 0.35 or wi == n - 1) else lerpf(1.0, 1.35, (progress - 0.35) / 0.65)
-		var nw: WaveDef = w.duplicate(false)
-		var groups: Array[SpawnGroupDef] = []
-		for g in w.groups:
-			var ng: SpawnGroupDef = g.duplicate(false)
-			if not g.enemy.is_boss and absf(mult - 1.0) > 0.0001:
-				ng.count = maxi(1, int(round(g.count * mult)))
-			if wi < n - 1:
-				prev_total += ng.count
-			groups.append(ng)
-		nw.groups = groups
-		waves.append(nw)
-
-	# Climax: same total as "final wave = share of the level", spread over the last few waves.
-	if n > 1 and prev_total > 0:
-		var raw_last := _non_boss_count(waves[n - 1])
-		var share := clampf(LAST_WAVE_SHARE + (d - 1.0) * 0.02, LAST_WAVE_SHARE_MIN, LAST_WAVE_SHARE_MAX)
-		var target_last_cnt := maxi(1, int(round(prev_total * (share / (1.0 - share)))))
-		var extra := target_last_cnt - raw_last
-		# Boss levels carry more (2026-11-18, user): +5% enemies on x5 boss levels, +10% on x0 chapter finales,
-		# spread over the same second-half waves.
-		if _has_boss(waves[n - 1]):
-			var bonus := BOSS_LEVEL_BONUS_FINALE if l.level_number % 10 == 0 else BOSS_LEVEL_BONUS
-			extra += int(round((prev_total + raw_last + maxi(extra, 0)) * bonus))
-		if extra > 0:
-			var targets: Array[int] = []
-			var spread := maxi(1, int(ceil(n * SPREAD_FRACTION)))
-			for wi in range(n - 1, n - 1 - spread, -1):
-				if wi == n - 1 and _has_boss(waves[wi]):
-					continue
-				if _non_boss_count(waves[wi]) > 0:
-					targets.append(wi)
-			for i in range(targets.size()):
-				var add := extra / targets.size() + (1 if i < extra % targets.size() else 0)
-				_add_enemies(waves[targets[i]], add)
-
-	for nw in waves:
-		for _i in range(6): # overlapping groups: one stretch may not be enough, repeat until under the cap
-			var peak := wave_peak(nw)
-			if peak <= CROWD_CAP:
-				break
-			var stretch := float(peak) / CROWD_CAP
-			for g in nw.groups:
-				if not g.enemy.is_boss:
-					g.interval *= stretch
-					g.start_delay *= stretch
-
-	e.waves = waves
-	_effective[key] = e
-	return e
-
-
-static func _non_boss_count(w: WaveDef) -> int:
-	var c := 0
-	for g in w.groups:
-		if not g.enemy.is_boss:
-			c += g.count
-	return c
-
-
-static func _has_boss(w: WaveDef) -> bool:
-	for g in w.groups:
-		if g.enemy.is_boss:
-			return true
-	return false
-
-
-## Grows a wave's non-boss groups proportionally by `add` enemies; spawn interval unchanged (wave lasts longer).
-static func _add_enemies(w: WaveDef, add: int) -> void:
-	var base := _non_boss_count(w)
-	if add <= 0 or base <= 0:
-		return
-	var f := float(base + add) / float(base)
-	for g in w.groups:
-		if not g.enemy.is_boss:
-			g.count = maxi(1, int(round(g.count * f)))
+	return l
 
 
 ## Most enemies spawned within any 25 s window of a wave (rough "on screen at once" estimate).

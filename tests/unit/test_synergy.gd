@@ -180,3 +180,16 @@ func test_focus_beam_ramps_and_resets() -> void:
 	# Focus I beam_dps 40 -> 18 (-10% nerf, then halved by the remake: 40*0.9*0.5)
 	check(first > 18 * 1.0 and later / 2.5 > first, "ramps up (%.1f then %.1f/s)" % [first, later / 2.5])
 	near(lance.beam_ramp(), 3.0, 0.01, "ramp capped at x3")
+
+
+## Bug 2026-11-18: Focus beam + Arc never chained (the beam path skipped the Arc code).
+func test_focus_beam_with_arc_chains() -> void:
+	var m := make_lab()
+	var lance := m.try_build(real_tower("lance"), Vector2(300, 420))
+	m.try_upgrade(lance, 2) # Focus I (beam)
+	m.try_upgrade(lance, 1) # Arc I (secondary): chain 2
+	check(lance.pf("beam_dps") > 0.0 and lance.pf("chain") > 0.0, "beam + chain")
+	var a := put(m, make_enemy_def(1.0e6, 0), 300)
+	var b := put(m, make_enemy_def(1.0e6, 0), 320)
+	run(m, 1.0)
+	check(a.hp < a.max_hp and b.hp < b.max_hp, "both the beam target and its neighbour take damage")

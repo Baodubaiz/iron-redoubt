@@ -12,4 +12,4 @@ period = 1
 level = ExtResource("1_2f31y")
 currency_multiplier = 0.85
 no_selling = true
-cores = 30
+cores = 39

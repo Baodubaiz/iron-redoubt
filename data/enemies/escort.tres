@@ -19,7 +19,7 @@ id = &"escort"
 display_name = "Escort"
 category = 1
 max_hp = 210.0
-speed = 57.800000000000004
+speed = 48.400000000000006
 armor = 2.1
 armor_by_type = {
 "poison": 5.0

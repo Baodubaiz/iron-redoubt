@@ -23,7 +23,7 @@
 [sub_resource type="Resource" id="Resource_jnhio"]
 script = ExtResource("17_w2lkn")
 enemy = ExtResource("18_ym15l")
-count = 6
+count = 21
 count_variance = 0.1
 interval = 1.4
 interval_jitter = 0.1
@@ -35,7 +35,7 @@ groups = Array[ExtResource("17_w2lkn")]([SubResource("Resource_jnhio")])
 [sub_resource type="Resource" id="Resource_5npo0"]
 script = ExtResource("17_w2lkn")
 enemy = ExtResource("18_ym15l")
-count = 9
+count = 22
 count_variance = 0.1
 interval = 1.2
 interval_jitter = 0.1
@@ -47,7 +47,7 @@ groups = Array[ExtResource("17_w2lkn")]([SubResource("Resource_5npo0")])
 [sub_resource type="Resource" id="Resource_vmush"]
 script = ExtResource("17_w2lkn")
 enemy = ExtResource("18_ym15l")
-count = 6
+count = 14
 count_variance = 0.1
 interval = 1.3
 interval_jitter = 0.1
@@ -55,6 +55,7 @@ interval_jitter = 0.1
 [sub_resource type="Resource" id="Resource_41dem"]
 script = ExtResource("17_w2lkn")
 enemy = ExtResource("19_f0qly")
+count = 12
 interval = 0.8
 start_delay = 6.0
 
@@ -65,7 +66,7 @@ groups = Array[ExtResource("17_w2lkn")]([SubResource("Resource_vmush"), SubResou
 [sub_resource type="Resource" id="Resource_nrsro"]
 script = ExtResource("17_w2lkn")
 enemy = ExtResource("18_ym15l")
-count = 12
+count = 30
 count_variance = 0.1
 interval_jitter = 0.1
 
@@ -76,7 +77,7 @@ groups = Array[ExtResource("17_w2lkn")]([SubResource("Resource_nrsro")])
 [sub_resource type="Resource" id="Resource_neoap"]
 script = ExtResource("17_w2lkn")
 enemy = ExtResource("19_f0qly")
-count = 10
+count = 24
 count_variance = 0.1
 interval = 0.7
 interval_jitter = 0.1
@@ -84,7 +85,7 @@ interval_jitter = 0.1
 [sub_resource type="Resource" id="Resource_kvslv"]
 script = ExtResource("17_w2lkn")
 enemy = ExtResource("18_ym15l")
-count = 6
+count = 15
 count_variance = 0.1
 interval_jitter = 0.1
 start_delay = 4.0
@@ -96,7 +97,7 @@ groups = Array[ExtResource("17_w2lkn")]([SubResource("Resource_neoap"), SubResou
 [sub_resource type="Resource" id="Resource_yy4u4"]
 script = ExtResource("17_w2lkn")
 enemy = ExtResource("18_ym15l")
-count = 14
+count = 34
 count_variance = 0.1
 interval = 0.8
 interval_jitter = 0.1
@@ -104,7 +105,7 @@ interval_jitter = 0.1
 [sub_resource type="Resource" id="Resource_4q1am"]
 script = ExtResource("17_w2lkn")
 enemy = ExtResource("19_f0qly")
-count = 6
+count = 14
 count_variance = 0.1
 interval = 0.6
 interval_jitter = 0.1
@@ -117,7 +118,7 @@ groups = Array[ExtResource("17_w2lkn")]([SubResource("Resource_yy4u4"), SubResou
 [sub_resource type="Resource" id="Resource_r1j1g"]
 script = ExtResource("17_w2lkn")
 enemy = ExtResource("18_ym15l")
-count = 16
+count = 36
 count_variance = 0.1
 interval = 0.7
 interval_jitter = 0.1
@@ -125,7 +126,7 @@ interval_jitter = 0.1
 [sub_resource type="Resource" id="Resource_2f7a3"]
 script = ExtResource("17_w2lkn")
 enemy = ExtResource("19_f0qly")
-count = 10
+count = 23
 count_variance = 0.1
 interval = 0.5
 interval_jitter = 0.1
@@ -138,13 +139,13 @@ groups = Array[ExtResource("17_w2lkn")]([SubResource("Resource_r1j1g"), SubResou
 [sub_resource type="Resource" id="Resource_rjvye"]
 script = ExtResource("17_w2lkn")
 enemy = ExtResource("19_f0qly")
-count = 22
+count = 51
 interval = 0.45
 
 [sub_resource type="Resource" id="Resource_oilsy"]
 script = ExtResource("17_w2lkn")
 enemy = ExtResource("18_ym15l")
-count = 10
+count = 24
 interval = 0.8
 start_delay = 6.0
 
@@ -162,4 +163,4 @@ waves = Array[ExtResource("16_tykhb")]([SubResource("Resource_0r623"), SubResour
 available_towers = Array[ExtResource("1_ed6kk")]([ExtResource("2_njawt"), ExtResource("3_lriho"), ExtResource("4_4dtr7"), ExtResource("5_l6nkq"), ExtResource("6_n26oj"), ExtResource("7_tmk06"), ExtResource("8_i0oqf"), ExtResource("9_8yf0e"), ExtResource("10_6il7h"), ExtResource("11_5wcyr"), ExtResource("12_i5f3d")])
 economy = ExtResource("13_n8g30")
 objective = "Learn to build: survive 8 waves of Drones and Darts."
-difficulty = 5.917
+cores_first_clear = 13

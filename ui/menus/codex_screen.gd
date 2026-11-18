@@ -7,7 +7,7 @@ extends Control
 const P = preload("res://ui/style/visual_palette.gd")
 const TOWERS := [&"pulse", &"trap", &"spotter", &"nova", &"beacon", &"venom", &"lance", &"sniper", &"bastion", &"storm", &"chronos"]
 ## ⚠ DEV: set false to restore production lock behaviour (enemies hidden until met in battle).
-const CODEX_DEV_UNLOCK_ALL := true
+const CODEX_DEV_UNLOCK_ALL := false
 
 const ENEMIES := [&"drone", &"dart", &"swarmling", &"brute", &"plated", &"glider", &"escort", &"phantom", &"aegis", &"sludge",
 	&"mender", &"shade", &"sprinter", &"jammer", &"prismling", &"diver",
@@ -18,7 +18,7 @@ const ENEMY_TIP := {
 	&"drone": "Basic walker. Anything kills it -- except Venom, which it resists specifically (it's a machine).",
 	&"dart": "Very fast and fragile. Pulse and slows catch it.",
 	&"swarmling": "Tiny and comes in floods. Nova splash shreds them.",
-	&"brute": "Lots of HP, slow. Focus fire on it. Resists Plasma (Spotter) specifically.",
+	&"brute": "Reactive armor: hits under 30 damage deal only 40%. Use big single shots (Marksman, Lance Overcharge) or poison/burn. Resists Plasma (Marker).",
 	&"plated": "Heavy armor. Lance, Venom (poison ignores armor entirely) or Siege shred.",
 	&"aegis": "Regenerating shield. Energy (Lance, Arc) breaks it twice as fast. Periodically jams nearby towers' fire rate.",
 	&"glider": "Flies over the lane. Pulse, Lance or Flak Nova; Sensor can ground it. Periodically shortens nearby towers' range.",
@@ -123,7 +123,7 @@ func _ready() -> void:
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.add_theme_constant_override("separation", 14)
 	v.add_child(body)
-	var left := ScrollContainer.new()
+	var left := DragScroll.new()
 	left.custom_minimum_size = Vector2(330, 0)
 	left.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	body.add_child(left)
@@ -135,7 +135,7 @@ func _ready() -> void:
 	panel.theme_type_variation = "CardAccent"
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	body.add_child(panel)
-	var rs := ScrollContainer.new()
+	var rs := DragScroll.new()
 	rs.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	panel.add_child(rs)
 	_detail = VBoxContainer.new()

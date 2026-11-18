@@ -10,4 +10,4 @@ display_name = "Brittle"
 description = "Clear level 22 with at most 10 Base HP."
 level = ExtResource("1_l2qw5")
 base_hp_cap = 10
-cores = 15
+cores = 20

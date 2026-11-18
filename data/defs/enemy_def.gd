@@ -25,6 +25,11 @@ enum Shape { CIRCLE, ARROW, HEAVY_CIRCLE, DOT, BRACKET_SQUARE, PENTAGON, CHEVRON
 ## absolute damage to the enemy than a smaller one would against the same %). The two stack
 ## independently and can both apply to the same hit.
 @export var resist_pct: Dictionary = {}
+## Reactive armor (2026-11-18, Brute): a single hit whose raw damage is below the threshold only deals
+## reactive_mult of it -- big hits (Marksman, Lance Overcharge) go through in full, rapid small shots
+## (Pulse) bounce off. Continuous damage (poison, burn, beams) is never affected. 0 = none.
+@export var reactive_threshold: float = 0.0
+@export var reactive_mult: float = 1.0
 @export var bounty: int = 1
 @export var base_damage: int = 1 ## Base HP lost when it escapes
 @export var flying: bool = false

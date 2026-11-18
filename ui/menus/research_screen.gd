@@ -103,6 +103,26 @@ func _build_categories(v: VBoxContainer) -> void:
 		_card_title(cv, I18n.t(cat["name"]))
 		_card_count(cv, owned, items.size())
 		grid.add_child(card)
+	_add_reset_button(v)
+
+
+## Refunds all research (two taps: the first one asks to confirm).
+func _add_reset_button(v: VBoxContainer) -> void:
+	var model: ProgressionModel = Progression.model
+	var refund := model.research_refund_total()
+	var b := UiKit.button(I18n.f("Reset research  (+%d Cores)", refund), func() -> void: pass, Vector2(0, 48), "", "lock")
+	b.name = "ResetResearch"
+	b.disabled = model.profile.data["research"].is_empty()
+	b.add_theme_font_size_override("font_size", 15)
+	var armed := [false]
+	b.pressed.connect(func() -> void:
+		if not armed[0]:
+			armed[0] = true
+			b.text = I18n.t("Tap again to reset all research")
+			return
+		Progression.model.reset_research()
+		_build.call_deferred())
+	v.add_child(b)
 
 
 ## Tower avatar+name cards, sorted by rank, with a locked "SS - coming soon" placeholder at the end.

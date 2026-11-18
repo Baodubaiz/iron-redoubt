@@ -12,4 +12,4 @@ params = {
 "counter": "evolved_types",
 "values": ["pulse", "nova", "lance", "beacon"]
 }
-cores = 15
+cores = 20

@@ -10,4 +10,4 @@ description = "Clear level 30."
 params = {
 "level": "level_09"
 }
-cores = 20
+cores = 26

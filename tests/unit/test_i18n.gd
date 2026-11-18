@@ -107,3 +107,18 @@ func test_locale_switch_translates() -> void:
 	s.clamp_values()
 	eq(s.language, "auto", "unknown language falls back to auto")
 	TranslationServer.set_locale("en")
+
+
+func test_translation_csv_rows_have_exactly_two_columns() -> void:
+	# An unquoted comma inside a text splits the row: its key no longer matches and the text stays English.
+	var f := FileAccess.open("res://i18n/translations.csv", FileAccess.READ)
+	var line_no := 0
+	var bad: Array = []
+	while not f.eof_reached():
+		var row := f.get_csv_line()
+		line_no += 1
+		if row.size() == 1 and row[0] == "":
+			continue
+		if row.size() != 2:
+			bad.append("%d: %s" % [line_no, row[0].substr(0, 50)])
+	eq(bad.size(), 0, "malformed rows (quote texts that contain commas): %s" % str(bad))

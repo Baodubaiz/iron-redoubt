@@ -162,9 +162,9 @@ func _draw() -> void:
 	var accent2: Color = _look["accent2"]
 	var floor_col: Color = _look["floor"]
 	draw_rect(Rect2(-2000, -2000, 5280, 4720), floor_col.darkened(0.25))
-	# metal floor tiles
-	for ty in range(0, 9):
-		for tx in range(0, 16):
+	# metal floor tiles -- past the 1280x720 world too, so wide / tall screens see floor, not an empty band
+	for ty in range(-3, 12):
+		for tx in range(-6, 22):
 			var r := Rect2(tx * 80, ty * 80, 80, 80)
 			var v := _hash(tx, ty)
 			draw_rect(r, floor_col.lightened(0.02 + v * 0.05))

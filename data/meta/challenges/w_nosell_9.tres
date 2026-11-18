@@ -11,4 +11,4 @@ description = "Clear level 30 without selling."
 period = 1
 level = ExtResource("1_c20dv")
 no_selling = true
-cores = 40
+cores = 52

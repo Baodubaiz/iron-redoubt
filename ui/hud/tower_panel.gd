@@ -477,7 +477,7 @@ func refresh() -> void:
 			_evo_button.text = I18n.t("Evolved")
 			_evo_button.disabled = true
 		else:
-			_evo_button.text = I18n.f("Evolve %d", br_def.evolution.cost) if r == "" else r
+			_evo_button.text = I18n.f("Evolve %d", controller.evolution_cost(t)) if r == "" else r
 			_evo_button.disabled = r != ""
 		_evo_card.add_theme_stylebox_override("panel", _card_style(Color(P.SURFACE, 0.9), Color(P.ORANGE, 0.7), 2))
 	else:

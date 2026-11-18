@@ -178,6 +178,15 @@ func submit_match(result: Dictionary, match_id: String) -> Dictionary:
 			report["unlocked_tower"] = level.unlock_tower_on_clear.display_name
 		report["shards"] = roll_shards(level, match_id)
 
+	# Defeat (2026-11-18, user): Cores for the waves survived, at the replay rate, so a loss is never wasted
+	# but never pays more than winning: first_clear * replay fraction * waves cleared / total waves.
+	if not won and level != null and not is_challenge:
+		var total := maxi(1, level.waves.size())
+		var cleared := clampi(int(result.get("waves_cleared", 0)), 0, total)
+		var amount := int(floor(level.cores_first_clear * campaign.replay_reward_fraction * cleared / float(total)))
+		if amount > 0 and profile.credit("defeat:%s:%s" % [level_id, match_id], amount):
+			report["defeat_waves"] = cleared
+
 	if is_challenge and won:
 		var ch := find_challenge(StringName(String(result["challenge_id"])))
 		var period := String(result.get("challenge_period", ""))
@@ -355,6 +364,25 @@ func buy_research(id: StringName) -> bool:
 	profile.data["research"].append(String(id))
 	save()
 	return true
+
+
+## Undo every research purchase and refund its Cores (2026-11-18, user: re-check the prices).
+## Removes the "research:<id>" spend entries from the ledger together with the research ids, so a later
+## merge with an older copy brings both back together (never a free refund). Returns the Cores refunded.
+func research_refund_total() -> int:
+	var total := 0
+	for id in profile.data["research"]:
+		total -= int(profile.data["ledger"].get("research:%s" % id, 0))
+	return total
+
+
+func reset_research() -> int:
+	var refund := research_refund_total()
+	for id in profile.data["research"]:
+		profile.data["ledger"].erase("research:%s" % id)
+	profile.data["research"].clear()
+	save()
+	return refund
 
 
 # ================================================================ challenges

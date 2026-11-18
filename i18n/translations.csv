@@ -1125,8 +1125,8 @@ Plasma,Plasma
 "Regenerates quickly. Poison and burst damage beat it. Resists Energy (Lance, Storm) specifically.","Hồi máu nhanh. Độc và dồn sát thương sẽ hạ được nó. Kháng riêng Điện (Lance, Storm)."
 "Support. Weak shots mark enemies: marked enemies take +8% damage from every tower. Hits air. Shots skip shields entirely (Plasma).","Hỗ trợ. Bắn yếu đánh dấu quái: quái bị đánh dấu nhận +8% sát thương từ mọi tháp. Bắn được quái bay. Đạn bỏ qua khiên hoàn toàn (Plasma)."
 "Stealthed until revealed. Beacon light or Sensor; splash still hits. -30% from plain Kinetic hits (Pulse, Sniper) -- a tower's own %-damage bonus (e.g. Beacon's buff) counters this, armor pierce does not.","Tàng hình cho tới khi bị lộ diện. Ánh sáng Hải Đăng hoặc Sensor; splash vẫn trúng. -30% với đòn Kinetic thường (Pulse, Sniper) -- bonus % sát thương riêng của tháp (vd buff Hải Đăng) khắc được, xuyên giáp thì không."
-"Regenerating shield. Energy (Lance, Arc) breaks it twice as fast. Periodically jams nearby towers' fire rate.","Khiên tự hồi. Năng lượng (Lance, Arc) phá nhanh gấp đôi. Định kị làm chậm tốc bắn trìu quanh."
-"Flies over the lane. Pulse, Lance or Flak Nova; Sensor can ground it. Periodically shortens nearby towers' range.","Bay qua đường. Pulse, Lance hoỷc Flak Nova; Sensor hạ được nó. Định kỳ giảm tầm bắn trìu quanh."
+"Regenerating shield. Energy (Lance, Arc) breaks it twice as fast. Periodically jams nearby towers' fire rate.","Khiên tự hồi. Năng lượng (Lance, Arc) phá nhanh gấp đôi. Định kỳ làm chậm tốc bắn xung quanh."
+"Flies over the lane. Pulse, Lance or Flak Nova; Sensor can ground it. Periodically shortens nearby towers' range.","Bay qua đường. Pulse, Lance hoặc Flak Nova; Sensor hạ được nó. Định kỳ giảm tầm bắn xung quanh."
 Main branch to tier 3 (+1 secondary branch up to tier 2). All towers can evolve.,Nhánh chính lên cấp 3 (+1 nhánh phụ tối đa cấp 2). Mọi tháp đều có thể tiến hoá.
 Jams towers in 180 px — they attack at 40% speed for 4 s. Kill it fast or spread towers wide.,Gây nhiễu tháp trong 180 px — tháp chỉ bắn với 40% tốc độ trong 4 giây. Diệt nhanh hoặc đặt tháp dàn trải.
 Heavy tank that fires a static field shrinking nearby tower range by 45% for 4.5 s. Long-range towers (Sniper) suffer least.,"Xe tăng nặng phát trường tĩnh điện, giảm 45% tầm bắn của tháp gần đó trong 4,5 giây. Tháp tầm xa (Sniper) bị ảnh hưởng ít nhất."
@@ -1150,3 +1150,16 @@ Both columns pour in from top. The Cloaker shrouds nearby enemy packs in optical
 Steep diagonal bridges. The stealth Wraith darts in with tower-disabling EMP pulse charges.,Những cây cầu chéo dốc. U Linh tàng hình lao tới với xung EMP vô hiệu hoá tháp.
 The beam splits around the crystal. Mender Elites project wide restorative wave pulses.,Tia sáng tách quanh khối pha lê. Y Sĩ Tinh Anh phát các đợt sóng hồi phục diện rộng.
 Support. Weak shots explode on impact (AOE 60) and mark all enemies hit: marked enemies take +8% damage from every tower. Hits air. Shots skip shields entirely (Plasma).,Hỗ trợ. Đạn yếu nổ khi trúng (diện rộng 60) và đánh dấu mọi kẻ địch trúng đạn: kẻ bị đánh dấu nhận thêm 8% sát thương từ mọi tháp. Bắn được mục tiêu bay. Đạn bỏ qua hoàn toàn khiên (Plasma).
+Mark +11% damage taken,Dấu: +11% sát thương nhận vào
+Mark +14% damage taken,Dấu: +14% sát thương nhận vào
+Marked enemies also lose 2 armor,Quái bị đánh dấu mất thêm 2 giáp
+Blasts reveal stealth for 2 s,Vụ nổ làm lộ quái tàng hình trong 2 giây
+Marked enemies are slowed 15%,Quái bị đánh dấu chậm 15%
+"Reactive armor: hits under 30 damage deal only 40%. Use big single shots (Marksman, Lance Overcharge) or poison/burn. Resists Plasma (Marker).","Giáp phản ứng: phát bắn dưới 30 sát thương chỉ gây 40%. Dùng phát bắn lớn (Marksman, Lance Overcharge) hoặc độc/thiêu đốt. Kháng Plasma (Marker)."
+Reactive armor,Giáp phản ứng
+Continue,Tiếp tục
+Abandon saved match,Bỏ trận đang lưu
+Level %d · Wave %d/%d,Level %d · Wave %d/%d
+Reset research  (+%d Cores),Đặt lại nghiên cứu  (+%d Cores)
+Tap again to reset all research,Chạm lần nữa để đặt lại toàn bộ nghiên cứu
+%d waves survived,Trụ được %d wave

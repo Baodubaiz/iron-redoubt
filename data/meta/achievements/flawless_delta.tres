@@ -11,4 +11,4 @@ kind = 1
 params = {
 "map": "delta"
 }
-cores = 10
+cores = 13

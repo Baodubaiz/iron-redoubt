@@ -143,3 +143,76 @@ func test_special_wave_not_randomized() -> void:
 		m.request_next_wave()
 		run(m, 1.0)
 		eq(m.enemies.size(), 20)
+
+
+# ---------------------------------------------------------------- mid-match save (MatchSnapshot)
+
+func test_mid_match_snapshot_round_trip() -> void:
+	var lvl: LevelDef = load("res://data/levels/level_01.tres")
+	var a := make_match(lvl, 11)
+	var pulse := real_tower("pulse")
+	a.economy.credit(2000, "test")
+	var t := a.try_build(pulse, Vector2(560, 560))
+	if t == null: # find any legal spot
+		for x in range(200, 1100, 40):
+			for y in range(120, 680, 40):
+				if t == null:
+					t = a.try_build(pulse, Vector2(x, y))
+	check(t != null, "built a tower")
+	a.try_upgrade(t, 0)
+	a.try_upgrade(t, 1)
+	a.set_targeting(t, TowerDef.TargetRule.STRONGEST)
+	a.base.max_hp = 1000 # survive wave 1 whatever leaks
+	a.base.hp = 1000
+	a.request_next_wave()
+	for i in range(int(240.0 / DT)):
+		a.step(DT)
+		if a.state == MatchController.State.PREP:
+			break
+	eq(a.state, MatchController.State.PREP, "first wave cleared")
+	var d := MatchSnapshot.capture(a, "m-1", [&"pulse"])
+	d = JSON.parse_string(JSON.stringify(d)) # through JSON like the real file
+	var b := make_match(lvl, int(d["seed"]))
+	check(MatchSnapshot.apply(b, d), "snapshot applies")
+	eq(b.state, MatchController.State.PREP)
+	eq(b.waves.index, a.waves.index)
+	eq(b.economy.currency, a.economy.currency)
+	eq(b.base.hp, a.base.hp)
+	eq(b.kills(), a.kills())
+	eq(b.towers.size(), 1)
+	var bt := b.towers[0]
+	eq(bt.tiers, t.tiers)
+	eq(bt.branch, t.branch)
+	eq(bt.total_invested, t.total_invested)
+	eq(bt.targeting_override, t.targeting_override)
+	near(bt.damage, t.damage, 0.0001, "same stats after rebuild")
+	check(bt.get_node_or_null("Visual") != null, "restored tower is drawn (has its TowerVisual)")
+	check(b.economy.was_paid("wave:0"), "wave 1 reward is not paid twice")
+	check(b.request_next_wave(), "can start the next wave")
+	eq(b.waves.index, a.waves.index + 1)
+
+
+func test_mid_match_snapshot_rejects_changed_level() -> void:
+	var lvl: LevelDef = load("res://data/levels/level_01.tres")
+	var a := make_match(lvl, 3)
+	a.base.max_hp = 1000
+	a.base.hp = 1000
+	a.request_next_wave()
+	for i in range(int(240.0 / DT)):
+		a.step(DT)
+		if a.state == MatchController.State.PREP:
+			break
+	var d := MatchSnapshot.capture(a, "m", [])
+	d["fingerprint"] = "other"
+	check(not MatchSnapshot.is_compatible(d, lvl), "different waves -> not applied")
+	var other: LevelDef = load("res://data/levels/level_02.tres")
+	d = MatchSnapshot.capture(a, "m", [])
+	check(not MatchSnapshot.is_compatible(d, other), "different level -> not applied")
+
+
+func test_mid_match_snapshot_file_round_trip() -> void:
+	var path := "user://test_match_resume.json"
+	MatchSnapshot.save({"version": MatchSnapshot.VERSION, "x": 1}, path)
+	eq(int(MatchSnapshot.load_saved(path).get("x", 0)), 1)
+	MatchSnapshot.clear(path)
+	check(MatchSnapshot.load_saved(path).is_empty(), "cleared")

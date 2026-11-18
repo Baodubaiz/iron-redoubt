@@ -10,4 +10,3 @@ display_name = "Glass Core"
 description = "Clear level 1 with at most 5 Base HP."
 level = ExtResource("1_x7kba")
 base_hp_cap = 5
-cores = 8

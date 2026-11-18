@@ -11,4 +11,4 @@ description = "Clear level 22 without Nova."
 period = 1
 level = ExtResource("1_8wfgm")
 banned_towers = Array[StringName]([&"nova"])
-cores = 35
+cores = 46

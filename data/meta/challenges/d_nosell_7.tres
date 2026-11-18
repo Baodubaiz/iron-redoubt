@@ -10,4 +10,4 @@ display_name = "Commitment"
 description = "Clear level 21 without selling."
 level = ExtResource("1_m1wt3")
 no_selling = true
-cores = 12
+cores = 16

@@ -11,4 +11,4 @@ kind = 0
 params = {
 "levels": ["level_01", "level_02", "level_03"]
 }
-cores = 10
+cores = 13

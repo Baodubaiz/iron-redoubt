@@ -79,6 +79,21 @@ func test_replay_never_regresses_best() -> void:
 	check(pm.profile.is_cleared(&"level_01"), "a loss never un-clears")
 
 
+func test_defeat_pays_for_waves_survived() -> void:
+	var pm := _model()
+	var l := campaign.levels[2]
+	var total := l.waves.size()
+	var half := total / 2
+	var r := _win(2, 0, {"won": false, "waves_cleared": half})
+	var rep := pm.submit_match(r, "lose-1")
+	var expect := int(floor(l.cores_first_clear * campaign.replay_reward_fraction * half / float(total)))
+	eq(rep["cores"], expect, "defeat: replay rate x waves cleared")
+	eq(pm.submit_match(r, "lose-1")["cores"], 0, "same match never pays twice")
+	eq(pm.submit_match(_win(2, 0, {"won": false, "waves_cleared": 0}), "lose-2")["cores"], 0, "no waves, no Cores")
+	check(not pm.profile.is_cleared(l.id), "a defeat is not a clear")
+	check(expect < l.cores_first_clear * campaign.replay_reward_fraction, "never more than a replay win")
+
+
 func test_flawless_bonus_once() -> void:
 	var pm := _model()
 	var r1 := pm.submit_match(_win(0, 0), "a")
@@ -103,6 +118,27 @@ func test_research_purchase_rules() -> void:
 	eq(mods.start_currency_bonus, 50)
 	var u := pm.unlocks()
 	check(not u.branch_unlocked(campaign.levels[0].available_towers[0], 2), "branch C still locked")
+
+
+func test_reset_research_refunds_everything() -> void:
+	var pm := _model()
+	pm.profile.credit("test:grant", 500)
+	check(pm.buy_research(&"reserve_1") and pm.buy_research(&"reserve_2"), "bought two")
+	var spent := 500 - pm.profile.cores()
+	eq(pm.research_refund_total(), spent)
+	eq(pm.reset_research(), spent)
+	eq(pm.profile.cores(), 500, "all Cores back")
+	check(not pm.profile.has_research(&"reserve_1"), "research gone")
+	check(pm.buy_research(&"reserve_1"), "can be bought again")
+	var c1 := campaign.find_research(&"reserve_1").cost
+	var c2 := campaign.find_research(&"reserve_2").cost
+	eq(pm.profile.cores(), 500 - c1)
+	# merging with an old copy that still owns the research brings the spend back too (no free Cores)
+	var old := pm.profile.data.duplicate(true)
+	old["research"].append("reserve_2")
+	old["ledger"]["research:reserve_2"] = -c2
+	var merged := Profile.new(Profile.merge(pm.profile.data, old))
+	eq(merged.cores(), 500 - spent)
 
 
 func test_research_applies_to_match() -> void:
@@ -164,7 +200,7 @@ func test_stale_save_merges_instead_of_overwriting() -> void:
 	dev_b.submit_match(_win(1), "b1") # stale base -> conflict -> merge
 	var final := Profile.new(store.stored)
 	check(final.is_cleared(&"level_01") and final.is_cleared(&"level_02"), "both devices' progress kept")
-	eq(final.cores(), campaign.levels[0].cores_first_clear + campaign.levels[1].cores_first_clear + 5 + 5, "no loss, no duplication (+flawless x2)")
+	eq(final.cores(), campaign.levels[0].cores_first_clear + campaign.levels[1].cores_first_clear + campaign.flawless_bonus * 2, "no loss, no duplication (+flawless x2)")
 	check(int(store.stored["revision"]) >= 2, "revision advanced")
 
 
@@ -211,7 +247,7 @@ func test_achievements_from_real_events_once() -> void:
 	var cores := pm.profile.cores()
 	var rep2 := pm.submit_match(_win(0, 19, {"base_hp": 1, "tower_types": ["pulse", "nova"]}), "b")
 	check(not rep2["achievements"].has("Close Call"), "not unlocked twice")
-	eq(pm.profile.cores() - cores, int(floor(10 * 0.25)), "only replay reward")
+	eq(pm.profile.cores() - cores, int(floor(campaign.levels[0].cores_first_clear * campaign.replay_reward_fraction)), "only replay reward")
 	pm.submit_match(_win(0, 0, {"kills_by_enemy": {"swarmling": 600}}), "c")
 	check(not pm.profile.data["achievements"].has("exterminator"), "600 < 1000")
 	var rep4 := pm.submit_match(_win(0, 0, {"kills_by_enemy": {"swarmling": 400}}), "d")

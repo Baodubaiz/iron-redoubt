@@ -10,4 +10,4 @@ display_name = "Heavy Metal"
 description = "Clear level 5 without Pulse."
 level = ExtResource("1_ginfe")
 banned_towers = Array[StringName]([&"pulse"])
-cores = 12
+cores = 16

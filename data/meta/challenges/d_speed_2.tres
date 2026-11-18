@@ -10,3 +10,4 @@ display_name = "Rush Hour"
 description = "Clear level 2 within 8 minutes."
 level = ExtResource("1_wo1gq")
 max_seconds = 480.0
+cores = 13

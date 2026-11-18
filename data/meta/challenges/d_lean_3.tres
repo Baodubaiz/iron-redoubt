@@ -10,3 +10,4 @@ display_name = "Lean Budget"
 description = "Clear level 5 with 80% starting currency."
 level = ExtResource("1_2876f")
 currency_multiplier = 0.8
+cores = 13

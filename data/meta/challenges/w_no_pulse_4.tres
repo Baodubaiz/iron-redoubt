@@ -11,4 +11,4 @@ description = "Clear level 11 without Pulse."
 period = 1
 level = ExtResource("1_iyafi")
 banned_towers = Array[StringName]([&"pulse"])
-cores = 30
+cores = 39

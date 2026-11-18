@@ -382,7 +382,7 @@ static func header(v: VBoxContainer, title_text: String, back: Callable) -> HBox
 
 
 static func scroll(v: VBoxContainer) -> VBoxContainer:
-	var s := ScrollContainer.new()
+	var s := DragScroll.new()
 	s.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	s.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	v.add_child(s)

@@ -7,19 +7,19 @@
 [sub_resource type="Resource" id="Resource_d1kqt"]
 script = ExtResource("2_mt6kv")
 display_name = "Kill Mark"
-description = "Marked enemies also lose 1 armor"
+description = "Marked enemies also lose 2 armor"
 cost = 235
 stats = {
-"spot_armor": 1.0
+"spot_armor": 2.0
 }
 
 [sub_resource type="Resource" id="Resource_bpph2"]
 script = ExtResource("2_mt6kv")
 display_name = "Lock-On I"
-description = "Mark +10% damage taken"
+description = "Mark +11% damage taken"
 cost = 35
 stats = {
-"spot_vuln": 1.1
+"spot_vuln": 1.11
 }
 
 [sub_resource type="Resource" id="Resource_c80sy"]
@@ -34,10 +34,10 @@ stats = {
 [sub_resource type="Resource" id="Resource_abmqq"]
 script = ExtResource("2_mt6kv")
 display_name = "Lock-On III"
-description = "Mark +15% damage taken"
+description = "Mark +14% damage taken"
 cost = 127
 stats = {
-"spot_vuln": 1.15
+"spot_vuln": 1.14
 }
 
 [sub_resource type="Resource" id="Resource_blokh"]
@@ -51,10 +51,10 @@ evolution = SubResource("Resource_d1kqt")
 [sub_resource type="Resource" id="Resource_kixll"]
 script = ExtResource("2_mt6kv")
 display_name = "Lead Mark"
-description = "Marked enemies are slowed 10%"
+description = "Marked enemies are slowed 15%"
 cost = 235
 stats = {
-"spot_slow_pct": 0.1
+"spot_slow_pct": 0.15
 }
 
 [sub_resource type="Resource" id="Resource_4jdg0"]
@@ -83,10 +83,10 @@ stats = {
 [sub_resource type="Resource" id="Resource_0uhgt"]
 script = ExtResource("2_mt6kv")
 display_name = "Tracer III"
-description = "Damage 7"
+description = "Blasts reveal stealth for 2 s"
 cost = 127
 stats = {
-"damage": 3.15
+"spot_reveal": 2.0
 }
 
 [sub_resource type="Resource" id="Resource_t36ih"]
@@ -151,10 +151,11 @@ cost = 52
 damage = 1.8
 damage_type = 4
 attack_range = 170.0
+splash_radius = 60.0
 projectile_speed = 620.0
 color = Color(1, 0.47843137, 0.6039216, 1)
 base_params = {
-"spot_duration": 3.0,
+"spot_duration": 4.0,
 "spot_vuln": 1.08
 }
 branches = Array[ExtResource("1_vcgax")]([SubResource("Resource_blokh"), SubResource("Resource_t36ih"), SubResource("Resource_3owqh")])

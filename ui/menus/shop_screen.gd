@@ -11,7 +11,12 @@ func _now() -> int:
 	return int(Time.get_unix_time_from_system())
 
 
+var _scroll: ScrollContainer
+
+
 func _build() -> void:
+	# A purchase rebuilds the whole screen; keep the list where the player was (it used to jump to the top).
+	var keep := _scroll.scroll_vertical if is_instance_valid(_scroll) else 0
 	for c in get_children():
 		c.queue_free()
 	var v := UiKit.screen(self)
@@ -40,6 +45,16 @@ func _build() -> void:
 		list.add_child(igrid)
 		for it in model.campaign.consumables:
 			igrid.add_child(_item_card(model, it))
+	_scroll = list.get_parent() as ScrollContainer
+	if keep > 0:
+		_restore_scroll(keep)
+
+
+func _restore_scroll(value: int) -> void:
+	var s := _scroll
+	await get_tree().process_frame # the new list needs one layout pass before it can scroll that far
+	if is_instance_valid(s):
+		s.scroll_vertical = value
 
 
 func _card(model: ProgressionModel, t: TowerDef) -> Control:

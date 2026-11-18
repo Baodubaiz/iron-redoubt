@@ -39,7 +39,7 @@ jackpot_max = 12
 [sub_resource type="Resource" id="Resource_284ts"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("19_j3yhv")
-count = 8
+count = 58
 count_variance = 0.1
 interval = 0.6
 interval_jitter = 0.1
@@ -48,7 +48,7 @@ route_index = -1
 [sub_resource type="Resource" id="Resource_neuxn"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("20_5rj8b")
-count = 6
+count = 43
 count_variance = 0.1
 interval = 0.4
 interval_jitter = 0.1
@@ -63,14 +63,14 @@ active_route = 0
 [sub_resource type="Resource" id="Resource_48hip"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("21_3ub3w")
-count = 2
+count = 15
 interval = 1.2
 route_index = -1
 
 [sub_resource type="Resource" id="Resource_7g05u"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("22_p7jx0")
-count = 4
+count = 23
 interval = 0.9
 
 [sub_resource type="Resource" id="Resource_pb0ex"]
@@ -80,14 +80,14 @@ groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_48hip"), SubResou
 [sub_resource type="Resource" id="Resource_qoaek"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("23_aswos")
-count = 2
+count = 18
 interval = 1.2
 route_index = -1
 
 [sub_resource type="Resource" id="Resource_v3qui"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("24_tg5n4")
-count = 13
+count = 35
 count_variance = 0.1
 interval = 0.16
 interval_jitter = 0.1
@@ -101,13 +101,14 @@ groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_qoaek"), SubResou
 [sub_resource type="Resource" id="Resource_lf30u"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("25_klc17")
+count = 31
 interval = 0.9
 route_index = -1
 
 [sub_resource type="Resource" id="Resource_7xakk"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("26_gcd6p")
-count = 1
+count = 7
 interval = 3.0
 start_delay = 2.0
 route_index = -1
@@ -119,13 +120,14 @@ groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_lf30u"), SubResou
 [sub_resource type="Resource" id="Resource_psgog"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("27_dl7gf")
-count = 4
+count = 7
 interval = 1.4
 route_index = -1
 
 [sub_resource type="Resource" id="Resource_t31yn"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("22_p7jx0")
+count = 21
 interval = 0.8
 start_delay = 3.0
 
@@ -136,12 +138,13 @@ groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_psgog"), SubResou
 [sub_resource type="Resource" id="Resource_ujsrq"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("21_3ub3w")
+count = 19
 route_index = -1
 
 [sub_resource type="Resource" id="Resource_df4sf"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("23_aswos")
-count = 3
+count = 10
 interval = 1.2
 start_delay = 4.0
 route_index = -1
@@ -153,7 +156,7 @@ groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_ujsrq"), SubResou
 [sub_resource type="Resource" id="Resource_j8ron"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("22_p7jx0")
-count = 8
+count = 51
 count_variance = 0.1
 interval = 0.6
 interval_jitter = 0.1
@@ -161,7 +164,7 @@ interval_jitter = 0.1
 [sub_resource type="Resource" id="Resource_dt73p"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("24_tg5n4")
-count = 15
+count = 35
 count_variance = 0.1
 interval = 0.15
 interval_jitter = 0.1
@@ -175,7 +178,7 @@ active_route = 1
 [sub_resource type="Resource" id="Resource_6o4ot"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("25_klc17")
-count = 6
+count = 29
 count_variance = 0.1
 interval = 0.8
 interval_jitter = 0.1
@@ -184,7 +187,7 @@ route_index = -1
 [sub_resource type="Resource" id="Resource_pppuh"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("27_dl7gf")
-count = 3
+count = 6
 interval = 1.4
 start_delay = 4.0
 route_index = -1
@@ -196,7 +199,7 @@ groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_6o4ot"), SubResou
 [sub_resource type="Resource" id="Resource_xyrom"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("23_aswos")
-count = 6
+count = 23
 count_variance = 0.1
 interval = 0.9
 interval_jitter = 0.1
@@ -205,7 +208,7 @@ route_index = -1
 [sub_resource type="Resource" id="Resource_ph61x"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("26_gcd6p")
-count = 2
+count = 7
 interval = 2.5
 start_delay = 3.0
 route_index = -1
@@ -217,14 +220,14 @@ groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_xyrom"), SubResou
 [sub_resource type="Resource" id="Resource_tj6ym"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("27_dl7gf")
-count = 8
+count = 15
 interval = 0.8
 route_index = -1
 
 [sub_resource type="Resource" id="Resource_rxwjv"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("26_gcd6p")
-count = 2
+count = 8
 interval = 2.0
 start_delay = 2.0
 route_index = -1
@@ -237,7 +240,7 @@ is_special = true
 [sub_resource type="Resource" id="Resource_50h0s"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("22_p7jx0")
-count = 10
+count = 35
 count_variance = 0.1
 interval = 0.5
 interval_jitter = 0.1
@@ -245,244 +248,306 @@ interval_jitter = 0.1
 [sub_resource type="Resource" id="Resource_3gbk3"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("21_3ub3w")
+count = 25
 start_delay = 3.0
 route_index = -1
 
 [sub_resource type="Resource" id="Resource_ypf6o"]
-script = ExtResource("17_40s7l")
-groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_50h0s"), SubResource("Resource_3gbk3")])
-
-[sub_resource type="Resource" id="Resource_l6ebf"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("24_tg5n4")
-count = 20
+count = 3
+count_variance = 0.1
+interval = 0.5
+interval_jitter = 0.1
+
+[sub_resource type="Resource" id="Resource_l6ebf"]
+script = ExtResource("17_40s7l")
+groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_50h0s"), SubResource("Resource_3gbk3"), SubResource("Resource_ypf6o")])
+
+[sub_resource type="Resource" id="Resource_0easg"]
+script = ExtResource("18_pmyb0")
+enemy = ExtResource("24_tg5n4")
+count = 70
 count_variance = 0.1
 interval = 0.12
 interval_jitter = 0.1
 route_index = -1
 
-[sub_resource type="Resource" id="Resource_0easg"]
+[sub_resource type="Resource" id="Resource_1vq4b"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("25_klc17")
+count = 55
 interval = 0.8
 start_delay = 4.0
 route_index = -1
 
-[sub_resource type="Resource" id="Resource_1vq4b"]
-script = ExtResource("17_40s7l")
-groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_l6ebf"), SubResource("Resource_0easg")])
-
 [sub_resource type="Resource" id="Resource_8dtiw"]
+script = ExtResource("17_40s7l")
+groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_0easg"), SubResource("Resource_1vq4b")])
+
+[sub_resource type="Resource" id="Resource_sudvk"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("23_aswos")
-count = 7
+count = 25
 count_variance = 0.1
 interval = 0.8
 interval_jitter = 0.1
 route_index = -1
 
-[sub_resource type="Resource" id="Resource_sudvk"]
+[sub_resource type="Resource" id="Resource_6rdyk"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("27_dl7gf")
-count = 4
+count = 8
 interval = 1.2
 start_delay = 5.0
 route_index = -1
 
-[sub_resource type="Resource" id="Resource_6rdyk"]
-script = ExtResource("17_40s7l")
-groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_8dtiw"), SubResource("Resource_sudvk")])
-
 [sub_resource type="Resource" id="Resource_imbii"]
 script = ExtResource("18_pmyb0")
-enemy = ExtResource("21_3ub3w")
-count = 8
+enemy = ExtResource("24_tg5n4")
+count = 2
 count_variance = 0.1
 interval = 0.8
 interval_jitter = 0.1
 route_index = -1
 
 [sub_resource type="Resource" id="Resource_ot085"]
+script = ExtResource("17_40s7l")
+groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_sudvk"), SubResource("Resource_6rdyk"), SubResource("Resource_imbii")])
+
+[sub_resource type="Resource" id="Resource_7end1"]
+script = ExtResource("18_pmyb0")
+enemy = ExtResource("21_3ub3w")
+count = 43
+count_variance = 0.1
+interval = 0.8
+interval_jitter = 0.1
+route_index = -1
+
+[sub_resource type="Resource" id="Resource_tole5"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("22_p7jx0")
-count = 8
+count = 28
 count_variance = 0.1
 interval = 0.5
 interval_jitter = 0.1
 start_delay = 4.0
 
-[sub_resource type="Resource" id="Resource_7end1"]
+[sub_resource type="Resource" id="Resource_av2wt"]
+script = ExtResource("18_pmyb0")
+enemy = ExtResource("24_tg5n4")
+count = 2
+count_variance = 0.1
+interval = 0.5
+interval_jitter = 0.1
+start_delay = 4.0
+
+[sub_resource type="Resource" id="Resource_sxm4w"]
 script = ExtResource("17_40s7l")
-groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_imbii"), SubResource("Resource_ot085")])
+groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_7end1"), SubResource("Resource_tole5"), SubResource("Resource_av2wt")])
 active_route = 0
 
-[sub_resource type="Resource" id="Resource_tole5"]
+[sub_resource type="Resource" id="Resource_jxnet"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("25_klc17")
-count = 8
+count = 69
 count_variance = 0.1
 interval = 0.6
 interval_jitter = 0.1
 route_index = -1
 
-[sub_resource type="Resource" id="Resource_av2wt"]
+[sub_resource type="Resource" id="Resource_qjvj6"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("26_gcd6p")
+count = 12
+interval = 2.2
+start_delay = 3.0
+route_index = -1
+
+[sub_resource type="Resource" id="Resource_sqxal"]
+script = ExtResource("18_pmyb0")
+enemy = ExtResource("24_tg5n4")
 count = 2
 interval = 2.2
 start_delay = 3.0
 route_index = -1
 
-[sub_resource type="Resource" id="Resource_sxm4w"]
+[sub_resource type="Resource" id="Resource_7714h"]
 script = ExtResource("17_40s7l")
-groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_tole5"), SubResource("Resource_av2wt")])
+groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_jxnet"), SubResource("Resource_qjvj6"), SubResource("Resource_sqxal")])
 
-[sub_resource type="Resource" id="Resource_jxnet"]
+[sub_resource type="Resource" id="Resource_0x6to"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("22_p7jx0")
-count = 13
+count = 56
 count_variance = 0.1
 interval = 0.4
 interval_jitter = 0.1
 
-[sub_resource type="Resource" id="Resource_qjvj6"]
+[sub_resource type="Resource" id="Resource_l6reb"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("23_aswos")
+count = 24
 start_delay = 4.0
 route_index = -1
 
-[sub_resource type="Resource" id="Resource_sqxal"]
-script = ExtResource("17_40s7l")
-groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_jxnet"), SubResource("Resource_qjvj6")])
+[sub_resource type="Resource" id="Resource_4kcfc"]
+script = ExtResource("18_pmyb0")
+enemy = ExtResource("24_tg5n4")
+count = 7
+count_variance = 0.1
+interval = 0.4
+interval_jitter = 0.1
 
-[sub_resource type="Resource" id="Resource_7714h"]
+[sub_resource type="Resource" id="Resource_lx2mr"]
+script = ExtResource("17_40s7l")
+groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_0x6to"), SubResource("Resource_l6reb"), SubResource("Resource_4kcfc")])
+
+[sub_resource type="Resource" id="Resource_0iiqm"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("27_dl7gf")
-count = 7
+count = 13
 count_variance = 0.1
 interval = 0.9
 interval_jitter = 0.1
 route_index = -1
 
-[sub_resource type="Resource" id="Resource_0x6to"]
+[sub_resource type="Resource" id="Resource_tvb1e"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("21_3ub3w")
-count = 6
+count = 35
 count_variance = 0.1
 interval = 0.9
 interval_jitter = 0.1
 start_delay = 5.0
 route_index = -1
 
-[sub_resource type="Resource" id="Resource_l6reb"]
+[sub_resource type="Resource" id="Resource_7266i"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("26_gcd6p")
+count = 9
+interval = 2.2
+start_delay = 8.0
+route_index = -1
+
+[sub_resource type="Resource" id="Resource_ie0yd"]
+script = ExtResource("18_pmyb0")
+enemy = ExtResource("24_tg5n4")
 count = 2
 interval = 2.2
 start_delay = 8.0
 route_index = -1
 
-[sub_resource type="Resource" id="Resource_4kcfc"]
-script = ExtResource("17_40s7l")
-groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_7714h"), SubResource("Resource_0x6to"), SubResource("Resource_l6reb")])
-
-[sub_resource type="Resource" id="Resource_lx2mr"]
-script = ExtResource("18_pmyb0")
-enemy = ExtResource("24_tg5n4")
-count = 25
-count_variance = 0.1
-interval = 0.1
-interval_jitter = 0.1
-route_index = -1
-
-[sub_resource type="Resource" id="Resource_0iiqm"]
-script = ExtResource("18_pmyb0")
-enemy = ExtResource("22_p7jx0")
-count = 15
-count_variance = 0.1
-interval = 0.45
-interval_jitter = 0.1
-start_delay = 3.0
-
-[sub_resource type="Resource" id="Resource_tvb1e"]
-script = ExtResource("18_pmyb0")
-enemy = ExtResource("25_klc17")
-count = 9
-count_variance = 0.1
-interval = 0.7
-interval_jitter = 0.1
-start_delay = 6.0
-route_index = -1
-
-[sub_resource type="Resource" id="Resource_7266i"]
-script = ExtResource("17_40s7l")
-groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_lx2mr"), SubResource("Resource_0iiqm"), SubResource("Resource_tvb1e")])
-
-[sub_resource type="Resource" id="Resource_ie0yd"]
-script = ExtResource("18_pmyb0")
-enemy = ExtResource("23_aswos")
-count = 9
-count_variance = 0.1
-interval = 0.7
-interval_jitter = 0.1
-route_index = -1
-
 [sub_resource type="Resource" id="Resource_j6wmx"]
-script = ExtResource("18_pmyb0")
-enemy = ExtResource("21_3ub3w")
-count = 7
-count_variance = 0.1
-interval = 0.8
-interval_jitter = 0.1
-start_delay = 4.0
-route_index = -1
+script = ExtResource("17_40s7l")
+groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_0iiqm"), SubResource("Resource_tvb1e"), SubResource("Resource_7266i"), SubResource("Resource_ie0yd")])
 
 [sub_resource type="Resource" id="Resource_wil1q"]
 script = ExtResource("18_pmyb0")
-enemy = ExtResource("22_p7jx0")
-count = 13
+enemy = ExtResource("24_tg5n4")
+count = 51
 count_variance = 0.1
-interval = 0.5
+interval = 0.21
 interval_jitter = 0.1
-start_delay = 8.0
+route_index = -1
 
 [sub_resource type="Resource" id="Resource_7q1tq"]
-script = ExtResource("17_40s7l")
-groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_ie0yd"), SubResource("Resource_j6wmx"), SubResource("Resource_wil1q")])
+script = ExtResource("18_pmyb0")
+enemy = ExtResource("22_p7jx0")
+count = 63
+count_variance = 0.1
+interval = 0.96
+interval_jitter = 0.1
+start_delay = 6.39
 
 [sub_resource type="Resource" id="Resource_1kc4o"]
+script = ExtResource("18_pmyb0")
+enemy = ExtResource("25_klc17")
+count = 48
+count_variance = 0.1
+interval = 1.49
+interval_jitter = 0.1
+start_delay = 12.78
+route_index = -1
+
+[sub_resource type="Resource" id="Resource_xbj0q"]
+script = ExtResource("17_40s7l")
+groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_wil1q"), SubResource("Resource_7q1tq"), SubResource("Resource_1kc4o")])
+
+[sub_resource type="Resource" id="Resource_tgcbw"]
+script = ExtResource("18_pmyb0")
+enemy = ExtResource("23_aswos")
+count = 27
+count_variance = 0.1
+interval = 0.71
+interval_jitter = 0.1
+route_index = -1
+
+[sub_resource type="Resource" id="Resource_krsrx"]
+script = ExtResource("18_pmyb0")
+enemy = ExtResource("21_3ub3w")
+count = 28
+count_variance = 0.1
+interval = 0.81
+interval_jitter = 0.1
+start_delay = 4.04
+route_index = -1
+
+[sub_resource type="Resource" id="Resource_v74vw"]
+script = ExtResource("18_pmyb0")
+enemy = ExtResource("22_p7jx0")
+count = 34
+count_variance = 0.1
+interval = 0.51
+interval_jitter = 0.1
+start_delay = 8.08
+
+[sub_resource type="Resource" id="Resource_akpf1"]
+script = ExtResource("18_pmyb0")
+enemy = ExtResource("24_tg5n4")
+count = 6
+count_variance = 0.1
+interval = 0.71
+interval_jitter = 0.1
+route_index = -1
+
+[sub_resource type="Resource" id="Resource_xuavb"]
+script = ExtResource("17_40s7l")
+groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_tgcbw"), SubResource("Resource_krsrx"), SubResource("Resource_v74vw"), SubResource("Resource_akpf1")])
+
+[sub_resource type="Resource" id="Resource_tpapu"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("28_y44wv")
 count = 1
 route_index = -1
 hp_multiplier = 0.42
 
-[sub_resource type="Resource" id="Resource_xbj0q"]
+[sub_resource type="Resource" id="Resource_euu82"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("23_aswos")
-count = 3
+count = 25
 interval = 1.5
 start_delay = 6.0
 route_index = -1
 
-[sub_resource type="Resource" id="Resource_tgcbw"]
+[sub_resource type="Resource" id="Resource_64bfn"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("26_gcd6p")
-count = 2
+count = 16
 interval = 3.0
 start_delay = 10.0
 route_index = -1
 
-[sub_resource type="Resource" id="Resource_krsrx"]
+[sub_resource type="Resource" id="Resource_d5ytm"]
 script = ExtResource("18_pmyb0")
 enemy = ExtResource("22_p7jx0")
-count = 6
+count = 44
 interval = 0.8
 start_delay = 15.0
 
-[sub_resource type="Resource" id="Resource_v74vw"]
+[sub_resource type="Resource" id="Resource_jo1wg"]
 script = ExtResource("17_40s7l")
-groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_1kc4o"), SubResource("Resource_xbj0q"), SubResource("Resource_tgcbw"), SubResource("Resource_krsrx")])
+groups = Array[ExtResource("18_pmyb0")]([SubResource("Resource_tpapu"), SubResource("Resource_euu82"), SubResource("Resource_64bfn"), SubResource("Resource_d5ytm")])
 is_boss = true
 
 [resource]
@@ -491,13 +556,12 @@ id = &"level_09"
 display_name = "30 — Monolith Awakened"
 level_number = 30
 map = ExtResource("14_bsm0i")
-waves = Array[ExtResource("17_40s7l")]([SubResource("Resource_wabj5"), SubResource("Resource_pb0ex"), SubResource("Resource_nb0x2"), SubResource("Resource_3lyvn"), SubResource("Resource_wp4d4"), SubResource("Resource_eypdf"), SubResource("Resource_lkelb"), SubResource("Resource_lv00g"), SubResource("Resource_e71j8"), SubResource("Resource_3vr0y"), SubResource("Resource_ypf6o"), SubResource("Resource_1vq4b"), SubResource("Resource_6rdyk"), SubResource("Resource_7end1"), SubResource("Resource_sxm4w"), SubResource("Resource_sqxal"), SubResource("Resource_4kcfc"), SubResource("Resource_7266i"), SubResource("Resource_7q1tq"), SubResource("Resource_v74vw")])
+waves = Array[ExtResource("17_40s7l")]([SubResource("Resource_wabj5"), SubResource("Resource_pb0ex"), SubResource("Resource_nb0x2"), SubResource("Resource_3lyvn"), SubResource("Resource_wp4d4"), SubResource("Resource_eypdf"), SubResource("Resource_lkelb"), SubResource("Resource_lv00g"), SubResource("Resource_e71j8"), SubResource("Resource_3vr0y"), SubResource("Resource_l6ebf"), SubResource("Resource_8dtiw"), SubResource("Resource_ot085"), SubResource("Resource_sxm4w"), SubResource("Resource_7714h"), SubResource("Resource_lx2mr"), SubResource("Resource_j6wmx"), SubResource("Resource_xbj0q"), SubResource("Resource_xuavb"), SubResource("Resource_jo1wg")])
 starting_currency = 650
 base_hp = 30
 available_towers = Array[ExtResource("1_2poj6")]([ExtResource("2_vj5t2"), ExtResource("3_miybt"), ExtResource("4_usm0h"), ExtResource("5_d8qyb"), ExtResource("6_l3whx"), ExtResource("7_k2qf5"), ExtResource("8_ugeml"), ExtResource("9_kwr51"), ExtResource("10_8n2il"), ExtResource("11_5y5oe"), ExtResource("12_75ask")])
 economy = ExtResource("13_m8u2q")
 prep_time = 22.0
 objective = "Everything you have learned. Defeat the awakened Monolith in wave 20."
-cores_first_clear = 50
-difficulty = 6.574
+cores_first_clear = 46
 shard_drop = SubResource("Resource_44trj")

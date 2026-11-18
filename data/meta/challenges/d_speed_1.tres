@@ -10,4 +10,3 @@ display_name = "Sprint"
 description = "Clear level 1 within 6 minutes."
 level = ExtResource("1_mim78")
 max_seconds = 360.0
-cores = 8

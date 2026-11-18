@@ -12,4 +12,4 @@ params = {
 "min_level": 5,
 "tower": "nova"
 }
-cores = 10
+cores = 13

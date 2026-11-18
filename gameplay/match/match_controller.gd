@@ -153,10 +153,10 @@ func step(dt: float) -> void:
 			if e.shred >= 4.0:
 				burn *= 1.5
 				_interaction("meltdown")
-			damage_enemy(e, burn, Damage.Type.TRUE, 0.0)
+			damage_enemy(e, burn, Damage.Type.TRUE, 0.0, false, 1.0, true)
 		if not e.effects.is_empty() and e.is_alive(): # data effects: damage over time
 			for d in e.tick_effects(dt):
-				damage_enemy(e, float(d[0]), int(d[1]), 0.0)
+				damage_enemy(e, float(d[0]), int(d[1]), 0.0, false, 1.0, true)
 	for e in enemies:
 		if e.advance(dt):
 			_on_enemy_reached_base(e)
@@ -229,9 +229,11 @@ func _add_enemy(e: Enemy) -> void:
 ## Death (bounty, on-death effects) happens exactly once. `secondary` damage (Inferno
 ## explosions) never triggers on-death effects, which prevents recursive chains.
 func damage_enemy(e: Enemy, amount: float, type: int, armor_pen: float, secondary: bool = false,
-		shield_mult: float = 1.0) -> void:
+		shield_mult: float = 1.0, continuous: bool = false) -> void:
 	if is_over() or e == null or not e.is_alive() or amount <= 0.0:
 		return
+	if not continuous and e.def.reactive_threshold > 0.0 and amount < e.def.reactive_threshold:
+		amount *= e.def.reactive_mult # Brute reactive armor: small hits mostly bounce off
 	if e.submerge_timer > 0.0:
 		return # Leviathan submerged: immune to everything
 	if e.immune_timer > 0.0 and type == e.immune_type:
@@ -431,6 +433,9 @@ func _apply_on_hit(t: Tower, e: Enemy, quake: bool) -> void:
 		e.apply_effect(param_effect(t, "venom"))
 	if t.pf("spot_vuln") > 1.0 and e.is_alive(): # Spotter: mark built from its params
 		e.apply_effect(param_effect(t, "spot"))
+	var reveal := t.pf("spot_reveal") # Marker Tracer III: its blast exposes stealthed enemies it hits
+	if reveal > 0.0 and e.is_alive() and e.is_stealthy():
+		e.reveal_timer = maxf(e.reveal_timer, reveal)
 
 
 ## Railspike: the shot continues through up to (pierce - 1) more enemies in a line.
@@ -459,7 +464,10 @@ func _pierce(t: Tower, primary: Enemy, dmg: float, type: int, pen: float) -> voi
 
 ## Arc: chains to nearby targetable enemies. Conductive (Arc T3+): prefers Chilled enemies and
 ## gets bonus jumps between Chilled enemies.
-func _chain(t: Tower, start: Enemy, dmg: float) -> void:
+## Beam mode (Focus + Arc, 2026-11-18 bug fix: the beam never chained): `continuous` = per-frame damage
+## (dmg is already dps*dt, skips reactive armor like the beam itself); `fx` = draw the arcs and apply
+## Stagger this call (throttled by beam_tick so a beam does not stun-lock or spam effects).
+func _chain(t: Tower, start: Enemy, dmg: float, continuous: bool = false, fx: bool = true) -> void:
 	var jumps := int(t.pf("chain"))
 	if jumps <= 0:
 		return
@@ -488,10 +496,11 @@ func _chain(t: Tower, start: Enemy, dmg: float) -> void:
 				best_chilled = chilled
 		if next == null:
 			break
-		projectiles.line(cur.position, next.position, t.def.color)
+		if fx:
+			projectiles.line(cur.position, next.position, t.def.color)
 		var from_chilled := cur.is_chilled()
-		damage_enemy(next, dmg * falloff * _hit_mult(t, next), Damage.Type.ENERGY, t.armor_pen, false, smult)
-		if stagger > 0.0 and next.is_alive():
+		damage_enemy(next, dmg * falloff * _hit_mult(t, next), Damage.Type.ENERGY, t.armor_pen, false, smult, continuous)
+		if fx and stagger > 0.0 and next.is_alive():
 			next.apply_stun(stagger)
 		if conductive and bonus_used < bonus and from_chilled and next.is_chilled():
 			bonus_used += 1
@@ -503,9 +512,19 @@ func _chain(t: Tower, start: Enemy, dmg: float) -> void:
 
 
 ## Focus beam: continuous damage that ramps on the same target. Phase Beam pierces the line.
+const BEAM_CHAIN_FX_EVERY := 0.4 ## s between drawn arcs / Stagger procs of a chaining beam
+var _beam_chain_fx := {} ## tower uid -> match_time of the next drawn arc
+
+
 func beam_tick(t: Tower, target: Enemy, dt: float) -> void:
 	var dps := t.pf("beam_dps") * (1.0 + t.amp_damage)
-	damage_enemy(target, dps * t.beam_ramp() * dt * _hit_mult(t, target), Damage.Type.ENERGY, t.armor_pen)
+	damage_enemy(target, dps * t.beam_ramp() * dt * _hit_mult(t, target), Damage.Type.ENERGY, t.armor_pen, false, 1.0, true)
+	if t.pf("chain") > 0.0 and is_instance_valid(target):
+		# Arc on a beam tower: the beam arcs on to nearby enemies continuously (same falloff per jump).
+		var fx := match_time >= float(_beam_chain_fx.get(t.uid, 0.0))
+		if fx:
+			_beam_chain_fx[t.uid] = match_time + BEAM_CHAIN_FX_EVERY
+		_chain(t, target, dps * t.beam_ramp() * dt, true, fx)
 	if bool(t.p("beam_pierce", false)):
 		var dir := (target.position - t.position).normalized()
 		var cands: Array[Enemy] = []
@@ -515,7 +534,7 @@ func beam_tick(t: Tower, target: Enemy, dt: float) -> void:
 				continue
 			var rel := e.position - t.position
 			if rel.dot(dir) > 0.0 and absf(rel.cross(dir)) <= 12.0:
-				damage_enemy(e, dps * dt * _hit_mult(t, e), Damage.Type.ENERGY, t.armor_pen)
+				damage_enemy(e, dps * dt * _hit_mult(t, e), Damage.Type.ENERGY, t.armor_pen, false, 1.0, true)
 
 
 # ================================================================ auras / synergy
@@ -904,23 +923,36 @@ func evolved_count() -> int:
 	return n
 
 
+func evolved_of_type(id: StringName) -> int:
+	var n := 0
+	for tw in towers:
+		if tw.evolved and not tw.sold and tw.def.id == id:
+			n += 1
+	return n
+
+
+## What evolving `t` costs right now (+15% per evolved tower of the same type).
+func evolution_cost(t: Tower) -> int:
+	return UpgradeRules.evolution_cost(t, evolved_of_type(t.def.id))
+
+
 func evolution_block_reason(t: Tower) -> String:
 	if not can_issue_commands():
 		return I18n.t("Paused") if paused else I18n.t("Match over")
 	if t == null or t.sold:
 		return I18n.t("No tower")
-	return UpgradeRules.evolution_block_reason(t, unlocks, economy.currency, evolved_count())
+	return UpgradeRules.evolution_block_reason(t, unlocks, economy.currency, evolved_count(), evolved_of_type(t.def.id))
 
 
 func try_evolve(t: Tower) -> bool:
 	if evolution_block_reason(t) != "":
 		return false
-	var evo := t.branch_def().evolution
-	if not economy.try_spend(evo.cost, "evolve:%d" % t.uid):
+	var cost := evolution_cost(t)
+	if not economy.try_spend(cost, "evolve:%d" % t.uid):
 		return false
 	t.evolved = true
 	stats["evolved_types"][t.def.id] = true
-	t.total_invested += evo.cost
+	t.total_invested += cost
 	t.recompute()
 	t.pulse_feedback()
 	tower_upgraded.emit(t)

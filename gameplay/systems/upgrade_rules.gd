@@ -4,6 +4,9 @@ extends RefCounted
 ## one secondary branch (up to tier 2); the third branch stays locked. (User change, 2026-11-12.)
 
 const EVOLUTION_CAP := -1 ## max evolved towers per match: -1 = unlimited (all towers can evolve; set to 2 to rollback)
+## Each further evolution of the SAME tower type in a match costs +15% of the base price (2026-11-18,
+## user: evolving everything made regular waves trivial). Counted per tower type, living evolved towers.
+const EVOLUTION_STEP := 0.15
 const WAVES_TO_CALIBRATE := 2 ## completed waves at T3 before evolution is allowed
 const MAX_TIER := 3
 ## Main + secondary upgrades: at most 2 branches per tower, only one of them above tier 2.
@@ -81,7 +84,16 @@ static func upgrade_block_reason(t: Tower, b: int, unlocks: Unlocks, currency: i
 	return ""
 
 
-static func evolution_block_reason(t: Tower, unlocks: Unlocks, currency: int, evolved_count: int) -> String:
+## Price of evolving `t` when `same_type_evolved` towers of its type are already evolved.
+static func evolution_cost(t: Tower, same_type_evolved: int) -> int:
+	var br := t.branch_def()
+	if br == null or br.evolution == null:
+		return 0
+	return int(round(br.evolution.cost * (1.0 + EVOLUTION_STEP * maxi(0, same_type_evolved))))
+
+
+static func evolution_block_reason(t: Tower, unlocks: Unlocks, currency: int, evolved_count: int,
+		same_type_evolved: int = 0) -> String:
 	if t.evolved:
 		return I18n.t("Already evolved")
 	var br := t.branch_def()
@@ -95,6 +107,7 @@ static func evolution_block_reason(t: Tower, unlocks: Unlocks, currency: int, ev
 		return I18n.f("Calibrating (%d/%d waves)", [t.waves_since_t3, WAVES_TO_CALIBRATE])
 	if EVOLUTION_CAP > 0 and evolved_count >= EVOLUTION_CAP:
 		return I18n.f("Evolution limit (%d per match)", EVOLUTION_CAP)
-	if currency < br.evolution.cost:
-		return I18n.f("Need %d more", br.evolution.cost - currency)
+	var cost := evolution_cost(t, same_type_evolved)
+	if currency < cost:
+		return I18n.f("Need %d more", cost - currency)
 	return ""

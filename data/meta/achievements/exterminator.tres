@@ -12,4 +12,4 @@ params = {
 "counter": "kills_swarmling",
 "target": 1000
 }
-cores = 10
+cores = 13

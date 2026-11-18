@@ -11,4 +11,4 @@ description = "Clear level 15 with at most 10 Base HP."
 period = 1
 level = ExtResource("1_ulm5c")
 base_hp_cap = 10
-cores = 30
+cores = 39

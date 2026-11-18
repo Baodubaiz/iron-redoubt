@@ -10,4 +10,4 @@ display_name = "Thin Shield"
 description = "Clear level 12 with at most 8 Base HP."
 level = ExtResource("1_use0x")
 base_hp_cap = 8
-cores = 12
+cores = 16

@@ -11,4 +11,4 @@ kind = 2
 params = {
 "seconds": 90
 }
-cores = 15
+cores = 20

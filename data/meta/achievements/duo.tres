@@ -11,4 +11,4 @@ kind = 3
 params = {
 "count": 2
 }
-cores = 10
+cores = 13

@@ -10,3 +10,4 @@ display_name = "No Refunds"
 description = "Clear level 11 without selling."
 level = ExtResource("1_wo8td")
 no_selling = true
+cores = 13

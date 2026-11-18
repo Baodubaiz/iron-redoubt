@@ -48,10 +48,15 @@ static func from_rects(window: Rect2, safe: Rect2, visible: Vector2) -> Dictiona
 
 
 ## Where to put the world's origin so it is centred inside the safe area (never negative).
-static func world_offset(visible: Vector2, ins: Dictionary) -> Vector2:
+## `right_reserve`: width of a HUD column on the right (tower palette); on screens wider than the world the
+## map is centred in the space left of it, so the leftover margin is split evenly instead of piling up on
+## one side (2026-11-18, user: wide phones showed a big empty band on the left).
+static func world_offset(visible: Vector2, ins: Dictionary, right_reserve: float = 0.0) -> Vector2:
 	var avail := Vector2(visible.x - ins["left"] - ins["right"], visible.y - ins["top"] - ins["bottom"])
+	var spare := avail.x - WORLD_SIZE.x
+	var reserve := clampf(right_reserve, 0.0, maxf(spare, 0.0)) # never pushes the world off-screen
 	return Vector2(
-		ins["left"] + maxf(0.0, (avail.x - WORLD_SIZE.x) * 0.5),
+		ins["left"] + maxf(0.0, (spare - reserve) * 0.5),
 		ins["top"] + maxf(0.0, (avail.y - WORLD_SIZE.y) * 0.5))
 
 

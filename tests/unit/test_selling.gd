@@ -6,12 +6,13 @@ extends TestCase
 func test_refund_includes_upgrades_and_evolution() -> void:
 	var m := make_lab()
 	var t := m.try_build(real_tower("nova"), Vector2(300, 420))
-	eq(m.sell_refund(t), 61, "floor(88*0.7), Nova cost 175->88 (tower-spam remake)")
+	eq(m.sell_refund(t), int(floor(t.def.cost * 0.7)), "70% of the Nova build cost")
 	for i in range(3):
 		m.try_upgrade(t, 1)
 	t.waves_since_t3 = 2
 	check(m.try_evolve(t), "evolve")
-	var invested := 101 + 69 + 139 + 266 + 483 # Base(+15%), T1(+15%), T2(+20.75%), T3(+26.5%), Evo(+38%)
+	var br := t.def.branches[1]
+	var invested := t.def.cost + br.tiers[0].cost + br.tiers[1].cost + br.tiers[2].cost + br.evolution.cost
 	eq(t.total_invested, invested)
 	var before := m.economy.currency
 	var refund := m.try_sell(t)
@@ -52,4 +53,4 @@ func test_sell_disabled_while_paused() -> void:
 	eq(m.try_sell(t), -1)
 	check(m.towers.has(t), "still there")
 	m.set_paused(false)
-	eq(m.try_sell(t), 70)
+	eq(m.try_sell(t), int(floor(t.def.cost * 0.7)))

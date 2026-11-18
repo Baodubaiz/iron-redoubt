@@ -10,4 +10,4 @@ display_name = "Austerity"
 description = "Clear level 15 with 85% starting currency."
 level = ExtResource("1_k5fo6")
 currency_multiplier = 0.85
-cores = 14
+cores = 18

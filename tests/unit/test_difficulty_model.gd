@@ -3,34 +3,53 @@ extends TestCase
 ## bot-verified levels. Guards new content: a level whose waves or enemies push it far outside the
 ## calibrated band fails here immediately.
 
-const LOW := 0.4
-const HIGH := 2.8 # level_01 scores 2.64 after the 5-10% HP tuning (formula overrates many weak Drones); the bot wins it
+## Threat-budget design (2026-11-18): each level's last wave = its peak threat (in Drones): level 1 = 70,
+## +50 every 5 levels (DifficultyModel.level_peak_threat); waves come from tools/gen_waves.gd.
+const PEAK_TOLERANCE := 0.15 # rounding to whole enemies (min 1 per group) + a fixed boss can overshoot
 
 
-func test_every_level_stays_in_the_calibrated_band() -> void:
+func _wave_threat(w: WaveDef) -> float:
+	var t := 0.0
+	for g in w.groups:
+		t += g.count * DifficultyModel.enemy_threat(g.enemy, g.hp_multiplier)
+	return t
+
+
+func test_every_level_peaks_at_its_threat_budget() -> void:
 	var c: CampaignDef = load("res://data/campaign.tres")
-	for i in range(c.levels.size()):
-		var s := DifficultyModel.level_score(c, i)
-		check(s >= LOW and s <= HIGH, "%s difficulty score %.2f within %.1f-%.1f (run tools/difficulty_report.gd)" % [
-			c.levels[i].id, s, LOW, HIGH])
+	for l in c.levels:
+		var peak := DifficultyModel.level_peak_threat(l.level_number)
+		var last := _wave_threat(l.waves[l.waves.size() - 1])
+		check(absf(last - peak) <= peak * PEAK_TOLERANCE, "%s last wave threat %.0f ~ peak %.0f (run tools/gen_waves.gd)" % [
+			l.id, last, peak])
+
+
+func test_peak_threat_steps() -> void:
+	eq(DifficultyModel.level_peak_threat(1), 70.0)
+	eq(DifficultyModel.level_peak_threat(5), 70.0)
+	eq(DifficultyModel.level_peak_threat(6), 120.0)
+	eq(DifficultyModel.level_peak_threat(40), 420.0)
+	eq(DifficultyModel.level_peak_threat(50), 470.0, "after 40: +50 every 10 levels")
 
 
 func test_score_follows_the_waves() -> void:
 	var c: CampaignDef = load("res://data/campaign.tres")
 	var i := 10
 	var before := DifficultyModel.level_score(c, i)
-	var l := c.levels[i]
-	var w: WaveDef = l.waves[l.waves.size() - 1]
+	var per_wave: Array = DifficultyModel.level_pressure(c, i)[1]
+	var top := 0
+	for k in range(per_wave.size()):
+		if per_wave[k] > per_wave[top]:
+			top = k
+	var w: WaveDef = c.levels[i].waves[top]
 	var saved: Array = []
 	for g in w.groups:
 		saved.append(g.count)
 		g.count *= 3
-	DifficultyModel._effective.clear() # the effective (played) level is cached per level + difficulty
 	var after := DifficultyModel.level_score(c, i)
 	for k in range(w.groups.size()):
 		w.groups[k].count = saved[k]
-	DifficultyModel._effective.clear()
-	check(after > before, "tripling the last wave raises the score (%.2f -> %.2f)" % [before, after])
+	check(after > before, "tripling the hardest wave raises the score (%.2f -> %.2f)" % [before, after])
 
 
 func test_enemy_traits_raise_pressure() -> void:

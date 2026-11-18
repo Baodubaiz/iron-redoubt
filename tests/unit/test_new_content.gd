@@ -274,7 +274,7 @@ func test_towers_unlock_when_their_counter_enemy_arrives() -> void:
 				continue
 			var foe: StringName = expect[id]
 			eq(first[foe], l.level_number, "%s unlocks where %s first appears" % [id, foe])
-	eq(first.size(), 16 + 8, "16 enemies + 8 bosses appear in the campaign")
+	eq(first.size(), 23 + 8, "23 enemies + 8 bosses appear in the campaign")
 
 
 func test_rank_s_is_above_a_but_leaves_room_for_ss() -> void:

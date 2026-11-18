@@ -12,3 +12,4 @@ params = {
 "stat": "early_starts",
 "target": 10
 }
+cores = 7

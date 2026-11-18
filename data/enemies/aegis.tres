@@ -20,13 +20,14 @@ id = &"aegis"
 display_name = "Aegis"
 category = 1
 max_hp = 168.0
-speed = 63.0
+speed = 40.0
 armor = 2.1
 bounty = 15
 base_damage = 2
 radius = 13.0
 color = Color(0.56078434, 0.827451, 1, 1)
 shape = 5
+threat_mult = 1.2
 shield = 150.0
 boss_params = {
 "first_skill": 5.0

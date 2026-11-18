@@ -8,12 +8,15 @@ script = ExtResource("2_cb57j")
 id = &"brute"
 display_name = "Brute"
 max_hp = 315.0
-speed = 47.300000000000004
+speed = 41.0
 armor_by_type = {
 "plasma": 8.0
 }
+reactive_threshold = 30.0
+reactive_mult = 0.4
 bounty = 12
 base_damage = 3
 radius = 16.0
 color = Color(1, 0.56078434, 0.56078434, 1)
 shape = 2
+threat_mult = 2.5

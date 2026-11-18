@@ -36,6 +36,11 @@ func _enemies() -> void:
 	# Dense mass (2026-11-16): resists Plasma specifically, same per-type-armor idea as Drone/Poison
 	# and Sludge/Energy, just going the other direction (a tanky brawler, not a support type).
 	brute.armor_by_type = {"plasma": 8.0}
+	# Reactive armor (2026-11-18, user: give Marksman a counter target without a new enemy): hits under
+	# 30 raw damage deal 40%. Big single shots (Marksman, Lance Overcharge, Nova shells) are unaffected;
+	# poison / burn / beams are continuous and never reduced.
+	brute.reactive_threshold = 30.0
+	brute.reactive_mult = 0.4
 	_save(brute, "res://data/enemies/brute.tres")
 	_save(_enemy(&"swarmling", "Swarmling", C.BASIC, 18, 90, 0, 1, 1, 5, "c9b8ff", E.DOT), "res://data/enemies/swarmling.tres")
 	_save(_enemy(&"plated", "Plated", C.DEFENSIVE, 220, 55, 8, 14, 2, 13, "d9d9d9", E.BRACKET_SQUARE), "res://data/enemies/plated.tres")
@@ -459,20 +464,24 @@ func _towers() -> void:
 	# support tool, not a damage dealer), so this is a low-risk way to give Plasma -- "skips shields
 	# entirely" -- a real, testable tower instead of sitting unused in the catalog.
 	var spotter := _tower(&"spotter", "Marker", "Support. Weak shots explode on impact (AOE 60) and mark all enemies hit: marked enemies take +8% damage from every tower. Hits air. Shots skip shields entirely (Plasma).", 90, 4,
-		Damage.Type.PLASMA, 1.0, 170, 0, 620, true, true, TowerDef.TargetRule.FIRST, "ff7a9a", TowerDef.Shape.TRIANGLE)
+		Damage.Type.PLASMA, 1.0, 170, 60, 620, true, true, TowerDef.TargetRule.FIRST, "ff7a9a", TowerDef.Shape.TRIANGLE)
+	# splash 0 -> 60 (2026-11-18, user): the description always promised an AOE-60 burst that marks every
+	# enemy hit, but the data had no splash, so it marked one target at a time.
 	spotter.rarity = &"C"
-	spotter.base_params = {"spot_vuln": 1.08, "spot_duration": 3.0}
+	# Buff (2026-11-18, user), kept within rank C: max mark 14% stays under Chronos (S, field up to 16%)
+	# and Beacon (B, +20% amp); Beacon stays the main stealth counter (Tracer reveal is only 2 s).
+	spotter.base_params = {"spot_vuln": 1.08, "spot_duration": 4.0} # 8% = rank-C cap (test_new_content)
 	spotter.branches = [
 		_branch(&"lockon", "Lock-On", "Stronger marks.", false, [
-			_tier("Lock-On I", "Mark +10% damage taken", 60, {"spot_vuln": 1.10}),
+			_tier("Lock-On I", "Mark +11% damage taken", 60, {"spot_vuln": 1.11}),
 			_tier("Lock-On II", "Mark +12% damage taken", 110, {"spot_vuln": 1.12}),
-			_tier("Lock-On III", "Mark +15% damage taken", 200, {"spot_vuln": 1.15}),
-		], _tier("Kill Mark", "Marked enemies also lose 1 armor", 340, {"spot_armor": 1.0})),
+			_tier("Lock-On III", "Mark +14% damage taken", 200, {"spot_vuln": 1.14}),
+		], _tier("Kill Mark", "Marked enemies also lose 2 armor", 340, {"spot_armor": 2.0})),
 		_branch(&"tracer", "Tracer", "Hunts special enemies.", false, [
 			_tier("Tracer I", "+30% damage vs stealth", 60, {"tag_mult": {"stealth": 1.3}}),
 			_tier("Tracer II", "+20% damage vs flying", 110, {"tag_mult": {"stealth": 1.3, "flying": 1.2}}),
-			_tier("Tracer III", "Damage 7", 200, {"damage": 7.0}),
-		], _tier("Lead Mark", "Marked enemies are slowed 10%", 340, {"spot_slow_pct": 0.10})),
+			_tier("Tracer III", "Blasts reveal stealth for 2 s", 200, {"spot_reveal": 2.0}),
+		], _tier("Lead Mark", "Marked enemies are slowed 15%", 340, {"spot_slow_pct": 0.15})),
 		_branch(&"widescan", "Wide Scan", "Marks more enemies.", true, [
 			_tier("Wide Scan I", "Fire rate 1.4/s", 60, {"fire_rate": 1.4}),
 			_tier("Wide Scan II", "Fire rate 1.8/s", 110, {"fire_rate": 1.8}),
@@ -1102,6 +1111,7 @@ func _map(id: StringName, n: String, region: StringName, routes: Array, air: Arr
 	return m
 
 
+const LEVEL_WAVES = preload("res://tools/level_waves.gd")
 var E := {}
 var ORDER: Array = []
 ## level id -> wave-count factor from the difficulty pass (1.0 = unchanged)
@@ -1318,7 +1328,7 @@ func _levels() -> void:
 
 	var l9 := _level(&"level_09", "9 — Monolith Awakened", 9, M.call("prism_c"), all, econ, 650, 30)
 	l9.objective = "Everything you have learned. Defeat the awakened Monolith in wave 20."
-	l9.cores_first_clear = 50
+	l9.cores_first_clear = 35 # 2026-11-18: was 50 (boss levels ~1.3x their neighbours)
 	l9.prep_time = 22.0
 	l9.waves = _waves([
 		"drone*16@0.6#-1, dart*12@0.4+3#-1 | route=0",
@@ -1390,44 +1400,17 @@ func _levels() -> void:
 			l.shard_drop = sd
 		else:
 			l.shard_drop = null
-	# Special-enemy emphasis late in each level (user feedback, 2026-11-15, 2nd of 2 late-game fixes
-	# alongside DifficultyModel's BACKLOAD curve): in each level's last 2 regular (non-boss) waves,
-	# any special enemy (threat_mult > 1) that already appears elsewhere in that level gets +45% more
-	# of it. Pure composition shift — no new enemy types, barely any change to the level's total
-	# count — so by late game (when players have the most money/towers) the finishers lean harder on
-	# enemies raw tower spam doesn't answer (shields, stealth, splits...) instead of more filler.
-	const LATE_SPECIAL_BOOST := 1.45
+	# Waves come from tools/level_waves.gd, generated by tools/gen_waves.gd from tools/level_plan.gd
+	# (2026-11-18, user: plan = enemies + threat per wave; no runtime %-rules, every wave spawns exactly as
+	# written). The inline _waves([...]) lines above are only a fallback for a level missing from the file.
 	for l in levels:
-		var specials := {}
-		for w in l.waves:
-			if w.is_boss:
-				continue
-			for g in w.groups:
-				if not g.enemy.is_boss and g.enemy.threat_mult > 1.0:
-					specials[g.enemy.id] = true
-		if specials.is_empty():
-			continue
-		var regular: Array[WaveDef] = []
-		for w in l.waves:
-			if not w.is_boss:
-				regular.append(w)
-		for w in regular.slice(maxi(0, regular.size() - 2)):
-			for g in w.groups:
-				if specials.has(g.enemy.id):
-					g.count = maxi(g.count + 1, int(round(g.count * LATE_SPECIAL_BOOST)))
+		l.difficulty = 1.0
+		if LEVEL_WAVES.WAVES.has(String(l.id)):
+			l.waves = _waves(LEVEL_WAVES.WAVES[String(l.id)])
+		else:
+			push_warning("level %s has no entry in tools/level_waves.gd; using its inline waves" % l.id)
 	for l in levels:
-		l.difficulty = DIFFICULTY.get(String(l.id), 1.0)
-		for w in l.waves:
-			for g in w.groups:
-				if g.enemy.is_boss:
-					continue
-				var k := g.hp_multiplier
-				g.hp_multiplier = 1.0
-				if absf(k - 1.0) > 0.001:
-					g.count = maxi(1, int(round(g.count * k)))
-					if k > 1.0:
-						g.interval = snappedf(g.interval / sqrt(k), 0.01)
-	for l in levels:
+		l.cores_first_clear = int(round(l.cores_first_clear * CORES_MULT))
 		_save(l, "res://data/levels/%s.tres" % l.id)
 
 	# Combat Lab — dev test bed (not part of the campaign).
@@ -1519,7 +1502,7 @@ func _rift_levels(levels: Array[LevelDef], all: Array[TowerDef], econ: EconomyCo
 			{"dart": 3, "glider": 3, "drone": 2, "aegis": 2, "plated": 2, "phantom": 1, "swarm": 1, "mender": 1}, 0.6, 1.75, ""],
 		[18, "Eclipse", "Darkness, stealth and shields from both flanks.", 22, 800, 25, 40,
 			{"phantom": 3, "aegis": 3, "mender": 2, "plated": 2, "glider": 2, "brute": 1, "swarm": 1}, 0.6, 2.1, ""],
-		[19, "Colossus", "The Colossus shields its escort, jumps through the Rift and overdrives in its last phase.", 25, 850, 30, 80,
+		[19, "Colossus", "The Colossus shields its escort, jumps through the Rift and overdrives in its last phase.", 25, 850, 30, 45, # first clear was 80
 			{"brute": 2, "plated": 2, "aegis": 2, "glider": 2, "phantom": 1, "swarm": 2, "mender": 2, "dart": 1}, 0.6, 1.35,
 			"colossus*1@1.0, plated*8@1.2+8, aegis*8@1.2+16, glider*14@0.7+24"],
 	]
@@ -1554,7 +1537,7 @@ func _region_levels(levels: Array[LevelDef], t3: Array[TowerDef], all: Array[Tow
 			{"drone": 2, "dart": 1, "swarm": 2, "brute": 2, "plated": 2, "glider": 3}, 0.7, 1.05, ""],
 		[25, "circuit_i", "Arc Furnace", "The lane wraps around the furnace. The Static Crawler pulses static fields, shrinking tower range.", 15, 450, 20, 18, all,
 			{"drone": 2, "dart": 2, "swarm": 2, "brute": 2, "plated": 3, "glider": 2}, 0.34, 1.1, ""],
-		[26, "circuit_j", "Dynamo", "The Dynamo shortens your towers' range, caps every hit and overloads at the end. Spread out and use many fast hits.", 16, 500, 25, 30, all,
+		[26, "circuit_j", "Dynamo", "The Dynamo shortens your towers' range, caps every hit and overloads at the end. Spread out and use many fast hits.", 16, 500, 25, 24, all, # first clear was 30
 			{"drone": 2, "dart": 2, "swarm": 2, "brute": 2, "plated": 3, "glider": 2}, 0.6, 1.1,
 			"dynamo*1@1.0, plated*6@1.4+6, brute*3@2.0+12"],
 		[27, "delta_d", "Marsh Fork", "Two diagonal entrances meet early. Night falls every third wave.", 14, 500, 20, 18, all,
@@ -1569,14 +1552,14 @@ func _region_levels(levels: Array[LevelDef], t3: Array[TowerDef], all: Array[Tow
 			{"drone": 2, "dart": 2, "plated": 2, "aegis": 2, "phantom": 2, "brute": 2, "glider": 2, "mender": 1}, 0.6, 1.05, ""],
 		[32, "delta_i", "Mangrove", "The lane crosses the southern entrance. Watch both.", 16, 540, 20, 22, all,
 			{"drone": 2, "swarm": 2, "plated": 2, "aegis": 3, "phantom": 2, "glider": 2, "mender": 2}, 0.55, 1.0, ""],
-		[33, "delta_j", "Leviathan", "The Leviathan dives out of reach and raises your kills again. Hit hard while it surfaces.", 16, 560, 25, 40, all,
+		[33, "delta_j", "Leviathan", "The Leviathan dives out of reach and raises your kills again. Hit hard while it surfaces.", 16, 560, 25, 32, all, # first clear was 40
 			{"drone": 2, "dart": 2, "plated": 2, "aegis": 2, "phantom": 2, "brute": 2, "glider": 2, "mender": 2}, 0.45, 0.95,
 			"leviathan*1@1.0#0, aegis*5@1.4+6#1, mender*2@2.6+10#0"],
 		[34, "prism_d", "Facet Hall", "Two angled lanes around a crystal hall. Gates switch every five waves.", 16, 560, 20, 25, all,
 			{"drone": 2, "dart": 2, "plated": 2, "aegis": 2, "phantom": 1, "glider": 2, "brute": 2, "mender": 1}, 0.6, 1.1, ""],
 		[35, "prism_e", "Lens Array", "Two lens-shaped lanes around a crystal. The gate picks one.", 16, 560, 20, 25, all,
 			{"drone": 3, "swarm": 2, "plated": 2, "aegis": 2, "brute": 2, "phantom": 1, "mender": 1}, 0.6, 1.2, ""],
-		[36, "prism_f", "Refractor", "The Refractor sends mirror decoys ahead and resists one damage type at a time. Mix your towers.", 17, 580, 25, 35, all,
+		[36, "prism_f", "Refractor", "The Refractor sends mirror decoys ahead and resists one damage type at a time. Mix your towers.", 17, 580, 25, 33, all, # first clear was 35
 			{"drone": 2, "dart": 2, "plated": 2, "aegis": 2, "phantom": 2, "glider": 2, "brute": 1, "mender": 1}, 0.6, 1.15,
 			"refractor*1@1.0#-1, glider*8@0.8+5, plated*5@1.3+8#-1"],
 		[37, "prism_g", "Split Beam", "The beam splits around the crystal. Mender Elites project wide restorative wave pulses.", 17, 580, 20, 25, all,
@@ -1795,6 +1778,7 @@ func _meta() -> void:
 				if td.rarity == StringName(rank):
 					shop.append(td)
 	campaign.shop_towers = shop
+	campaign.flawless_bonus = int(round(5 * CORES_MULT))
 	campaign.consumables = _consumables()
 	_save(campaign, "res://data/campaign.tres")
 
@@ -1840,6 +1824,8 @@ const THREAT := {
 	"glider": 1.2, "phantom": 1.3, "mender": 1.3, "escort": 1.2, "sludge": 1.3, "shade": 1.5, "sprinter": 1.15,
 	"jammer": 1.2, "prismling": 1.2, "diver": 1.25, "warden": 1.3, "carrier": 1.3, "monolith": 1.3, "chimera": 1.3,
 	"colossus": 1.4, "dynamo": 1.3, "leviathan": 1.35, "refractor": 1.3,
+	"aegis": 1.2, # jam skill (2026-11-18): its shield was counted, the skill was not
+	"brute": 2.5, # reactive armor: small hits deal 40% -> up to 2.5x tankier (2026-11-18: was 1.3, L2 too dense)
 }
 
 
@@ -1887,10 +1873,12 @@ func _catalogs() -> void:
 		["venom_patch_radius", "Cloud size", T, MX, "px", false, true], ["venom_patch_duration", "Cloud time", T, MX, "s", false, true],
 		["spot_vuln", "Mark", T, MX, "x", false, true], ["spot_duration", "Mark time", T, MX, "s", false, false],
 		["spot_armor", "Mark armor break", T, MX, "", false, true], ["spot_slow_pct", "Mark slow", T, MX, "", true, true],
+		["spot_reveal", "Reveal", T, MX, "s", false, true],
 		["field", "Field", T, OR, "", false, false], ["field_slow_pct", "Field slow", T, MX, "", true, true],
 		["field_vuln", "Field exposure", T, MX, "x", false, true],
 		["max_hp", "HP", EN, MX, "", false, true], ["speed", "Speed", EN, MX, "px/s", false, true],
 		["armor", "Armor", EN, MX, "", false, true], ["shield", "Shield", EN, MX, "", false, true],
+		["reactive_threshold", "Reactive armor", EN, MX, "", false, true],
 		["bounty", "Bounty", EN, MX, "", false, true], ["base_damage", "Base damage", EN, MX, "", false, true],
 	]
 	var cat := StatCatalog.new()
@@ -2094,6 +2082,9 @@ const BOUNTY_MULT := 1.0185
 ## +5% HP / speed / armor on every enemy. It was in the generated .tres but not in this script, so a regen
 ## (2026-11-18) wiped it; restored here so it survives future regens.
 const ENEMY_STAT_MULT := 1.05
+## +30% on every Core reward: first clears (so replays / defeats too), achievements, challenges
+## (2026-11-18, user: research took too long to afford).
+const CORES_MULT := 1.3
 
 
 func _enemy(id: StringName, n: String, cat: EnemyDef.Category, hp: float, spd: float, armor: float, bounty: int,
@@ -2257,7 +2248,7 @@ func _ach(id: StringName, n: String, desc: String, kind: AchievementDef.Kind, pa
 	a.description = desc
 	a.kind = kind
 	a.params = params
-	a.cores = cores
+	a.cores = int(round(cores * CORES_MULT))
 	return a
 
 
@@ -2276,13 +2267,33 @@ func _chal(id: StringName, n: String, desc: String, period: ChallengeDef.Period,
 	c.currency_multiplier = cur_mult
 	c.no_selling = no_sell
 	c.max_seconds = max_s
-	c.cores = cores
+	c.cores = int(round(cores * CORES_MULT))
 	return c
+
+
+## Tankier = slower (2026-11-18, user: applies to every regular enemy). Effective HP (HP x armour factor
+## + shield, same as DifficultyModel.enemy_pressure) caps the speed: speed <= SPEED_CAP_K * sqrt(SPEED_CAP_REF / ehp),
+## never below SPEED_CAP_FLOOR. Light enemies sit under the curve and keep their speed. Bosses have their own rule.
+const SPEED_CAP_K := 42.0
+const SPEED_CAP_REF := 300.0
+const SPEED_CAP_FLOOR := 30.0
+const SPEED_CAP_FROM_EHP := 120.0
+
+
+static func speed_cap(e: EnemyDef) -> float:
+	var armor_f := DifficultyModel.REF_HIT / maxf(DifficultyModel.REF_HIT - e.armor, DifficultyModel.REF_HIT * 0.25)
+	var ehp := e.max_hp * armor_f + e.shield
+	if ehp < SPEED_CAP_FROM_EHP:
+		return INF
+	return maxf(SPEED_CAP_FLOOR, SPEED_CAP_K * sqrt(SPEED_CAP_REF / ehp))
 
 
 func _save(res: Resource, path: String) -> void:
 	if res is EnemyDef and THREAT.has(String((res as EnemyDef).id)):
 		(res as EnemyDef).threat_mult = THREAT[String((res as EnemyDef).id)]
+	if res is EnemyDef and (res as EnemyDef).category != EnemyDef.Category.BOSS:
+		var en := res as EnemyDef
+		en.speed = minf(en.speed, snappedf(speed_cap(en), 0.1))
 	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 	var err := ResourceSaver.save(res, path)
 	if err != OK:

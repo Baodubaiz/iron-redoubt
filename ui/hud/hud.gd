@@ -557,6 +557,8 @@ func show_report(report: Dictionary, next_level: LevelDef) -> void:
 	else:
 		if int(report["cores"]) > 0:
 			items.append(["cores", I18n.f("+%d Cores", report["cores"]), P.ORANGE])
+		if report.has("defeat_waves"):
+			items.append(["check", I18n.f("%d waves survived", int(report["defeat_waves"])), P.TEXT_DIM])
 		if report["first_clear"]:
 			items.append(["check", I18n.t("First clear!"), P.GREEN])
 		if report["flawless"]:

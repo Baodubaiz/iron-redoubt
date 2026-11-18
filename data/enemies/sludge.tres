@@ -21,7 +21,7 @@ id = &"sludge"
 display_name = "Sludge"
 category = 1
 max_hp = 378.0
-speed = 44.1
+speed = 37.4
 armor_by_type = {
 "energy": 8.0
 }

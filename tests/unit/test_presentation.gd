@@ -83,3 +83,11 @@ func test_every_tower_has_a_shot_sound_or_is_aura() -> void:
 		if t.attack_mode == TowerDef.AttackMode.AURA:
 			continue
 		check(ResourceLoader.exists("res://audio/sfx/shot_%s.wav" % t.id), "shot sound for %s" % t.id)
+
+
+func test_wide_screen_world_leaves_room_for_the_palette() -> void:
+	var z := ScreenLayout.zero()
+	var off := ScreenLayout.world_offset(Vector2(1600, 720), z, 120.0)
+	near(off.x, 100.0, 0.001, "spare 320 - palette 120 = 200, split evenly")
+	check(ScreenLayout.world_offset(Vector2(1280, 720), z, 120.0).is_equal_approx(Vector2.ZERO), "16:9 unchanged")
+	near(ScreenLayout.world_offset(Vector2(1340, 720), z, 120.0).x, 0.0, 0.001, "never pushed off-screen")

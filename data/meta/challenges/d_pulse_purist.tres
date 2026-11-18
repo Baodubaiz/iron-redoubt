@@ -10,3 +10,4 @@ display_name = "Pulse Purist"
 description = "Clear level 2 without Nova."
 level = ExtResource("1_bnk33")
 banned_towers = Array[StringName]([&"nova"])
+cores = 13

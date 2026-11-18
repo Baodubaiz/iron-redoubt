@@ -76,6 +76,29 @@ func _reveal() -> void:
 	_fx_tween.tween_property(_scan, "modulate:a", 0.0, 0.36)
 
 
+## Mid-match checkpoint (MatchSnapshot) to rebuild on the next match scene; consumed there.
+var pending_resume: Dictionary = {}
+
+
+## Continues the saved campaign match (main menu "Continue").
+func resume_match(d: Dictionary) -> void:
+	var lvl := MatchSnapshot.level_of(Progression.model.campaign, d)
+	if lvl == null:
+		MatchSnapshot.clear()
+		return
+	pending_level = lvl
+	pending_challenge = null
+	pending_period = ""
+	pending_is_lab = false
+	pending_new_tower = null
+	var ids: Array[StringName] = []
+	for id in d.get("loadout", []):
+		ids.append(StringName(id))
+	pending_loadout = ids
+	pending_resume = d
+	_change(MATCH_SCENE)
+
+
 ## Campaign level: stop at the loadout screen first (pick which owned towers to bring).
 func play_level(level: LevelDef) -> void:
 	pending_level = level

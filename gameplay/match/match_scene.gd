@@ -15,6 +15,13 @@ var _match_id := ""
 var _shake := 0.0
 var _shake_amp := 0.0
 var _world_offset := Vector2.ZERO
+var camera: MatchCamera ## zoom / pan over the map
+var _saves := false ## campaign match: checkpoint at every cleared wave (MatchSnapshot)
+
+
+func _checkpoint() -> void:
+	if _saves and not controller.is_over():
+		MatchSnapshot.save(MatchSnapshot.capture(controller, _match_id, SceneRouter.pending_loadout))
 
 
 func _ready() -> void:
@@ -24,6 +31,10 @@ func _ready() -> void:
 		SceneRouter.pending_level = lvl
 	_is_lab = SceneRouter.pending_is_lab
 	_match_id = "%d-%08x" % [int(Time.get_unix_time_from_system() * 1000.0), randi()]
+	var resume: Dictionary = SceneRouter.pending_resume
+	SceneRouter.pending_resume = {}
+	if not resume.is_empty():
+		_match_id = String(resume.get("match_id", _match_id)) # same match: items stay "one use per match"
 	var mods: MatchModifiers = null
 	# Granted by SceneRouter.play_level(), before the loadout screen, so it's a real pick there
 	# (shown with a "New" badge) rather than silently forced into the match here.
@@ -35,7 +46,12 @@ func _ready() -> void:
 	controller = MatchController.new()
 	controller.name = "Match"
 	add_child(controller)
-	controller.setup(lvl, -1, null, mods)
+	controller.setup(lvl, int(resume.get("seed", -1)) if not resume.is_empty() else -1, null, mods)
+	_saves = not _is_lab and SceneRouter.pending_challenge == null # mid-match save: campaign only
+	if _saves:
+		if resume.is_empty() or not MatchSnapshot.apply(controller, resume):
+			MatchSnapshot.clear() # a fresh start (or an unusable save) replaces any old checkpoint
+		controller.waves.prep_started.connect(func(_i: int, _s: float) -> void: _checkpoint())
 	placement = PlacementController.new()
 	placement.name = "Placement"
 	placement.controller = controller
@@ -61,6 +77,11 @@ func _ready() -> void:
 		if e.is_boss():
 			shake(6.0, 0.5))
 	controller.enemy_escaped.connect(func(_e: Enemy) -> void: shake(2.0, 0.15))
+	camera = MatchCamera.new()
+	camera.name = "Camera"
+	camera.world = controller
+	camera.placement = placement
+	add_child(camera)
 	get_viewport().size_changed.connect(_relayout)
 	_relayout()
 
@@ -68,8 +89,12 @@ func _ready() -> void:
 ## Centres the 1280x720 world in the safe area and insets the HUD (notches, any aspect ratio).
 func _relayout() -> void:
 	var ins := ScreenLayout.insets(get_viewport())
-	_world_offset = ScreenLayout.world_offset(get_viewport().get_visible_rect().size, ins)
-	controller.position = _world_offset
+	_world_offset = ScreenLayout.world_offset(get_viewport().get_visible_rect().size, ins, Hud.PALETTE_W + 8.0)
+	var vis := get_viewport().get_visible_rect().size
+	# area the map may use: below the top bar, left of the tower palette, inside the safe area
+	var area := Rect2(ins["left"], ins["top"] + Hud.TOP_H,
+		vis.x - ins["left"] - ins["right"] - Hud.PALETTE_W - 8.0, vis.y - ins["top"] - ins["bottom"] - Hud.TOP_H)
+	camera.reset(_world_offset, area)
 	hud.apply_insets(ins)
 
 
@@ -84,15 +109,16 @@ func _process(delta: float) -> void:
 	if _shake > 0.0:
 		_shake = maxf(0.0, _shake - delta)
 		var k := _shake_amp * minf(1.0, _shake / 0.15)
-		controller.position = _world_offset + Vector2(randf_range(-k, k), randf_range(-k, k)).round()
-		if _shake <= 0.0:
-			controller.position = _world_offset
+		camera.shake = Vector2(randf_range(-k, k), randf_range(-k, k)).round() if _shake > 0.0 else Vector2.ZERO
+		camera.refresh()
 
 
 func _on_match_ended(_won: bool) -> void:
 	if _submitted:
 		return
 	_submitted = true
+	if _saves:
+		MatchSnapshot.clear() # finished: nothing to resume
 	if _is_lab:
 		hud.show_report({}, null)
 		return

@@ -12,4 +12,4 @@ params = {
 "counter": "interactions",
 "values": ["grounded", "conductive", "shatter", "meltdown"]
 }
-cores = 15
+cores = 20

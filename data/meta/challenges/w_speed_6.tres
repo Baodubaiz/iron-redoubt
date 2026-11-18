@@ -11,4 +11,4 @@ description = "Clear level 15 within 14 minutes."
 period = 1
 level = ExtResource("1_qlvvc")
 max_seconds = 840.0
-cores = 30
+cores = 39
