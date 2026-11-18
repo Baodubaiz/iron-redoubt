@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="AchievementDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/achievement_def.gd" id="1_a8xfx"]
+
+[resource]
+script = ExtResource("1_a8xfx")
+id = &"boss_sprint"
+display_name = "Monolith Breaker"
+description = "Defeat a boss within 90 s of its arrival."
+kind = 2
+params = {
+"seconds": 90
+}
+cores = 15

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="AchievementDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/achievement_def.gd" id="1_gfl2p"]
+
+[resource]
+script = ExtResource("1_gfl2p")
+id = &"eager"
+display_name = "Eager"
+description = "Start 10 waves early in one level."
+kind = 8
+params = {
+"stat": "early_starts",
+"target": 10
+}

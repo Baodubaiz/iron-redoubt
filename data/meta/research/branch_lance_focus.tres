@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ResearchDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/research_def.gd" id="1_qhe65"]
+
+[resource]
+script = ExtResource("1_qhe65")
+id = &"branch_lance_focus"
+display_name = "Focus Lens"
+description = "Unlocks Lance branch: Focus."
+kind = 0
+cost = 70
+tower_id = &"lance"
+requires_tower = &"lance"
+category = &"tower"

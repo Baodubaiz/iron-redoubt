@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ChallengeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/levels/level_07.tres" id="1_s861a"]
+[ext_resource type="Script" path="res://data/defs/challenge_def.gd" id="2_ef761"]
+
+[resource]
+script = ExtResource("2_ef761")
+id = &"w_lean_7"
+display_name = "Short Supply"
+description = "Clear level 21 with 80% starting currency."
+period = 1
+level = ExtResource("1_s861a")
+currency_multiplier = 0.8
+cores = 30

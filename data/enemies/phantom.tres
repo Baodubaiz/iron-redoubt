@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/boss_skill_def.gd" id="1_punew"]
+[ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="2_v2eiu"]
+
+[resource]
+script = ExtResource("2_v2eiu")
+id = &"phantom"
+display_name = "Phantom"
+category = 2
+max_hp = 115.5
+speed = 84.0
+resist_pct = {
+"kinetic": 0.3
+}
+bounty = 10
+base_damage = 2
+stealth = true
+radius = 12.0
+color = Color(0.8784314, 0.65882355, 1, 1)
+shape = 7
+threat_mult = 1.3

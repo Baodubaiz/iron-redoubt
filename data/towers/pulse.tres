@@ -1,0 +1,159 @@
+[gd_resource type="Resource" script_class="TowerDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/branch_def.gd" id="1_fshdm"]
+[ext_resource type="Script" path="res://data/defs/tier_def.gd" id="2_cfea6"]
+[ext_resource type="Script" path="res://data/defs/tower_def.gd" id="3_oq00l"]
+
+[sub_resource type="Resource" id="Resource_uuqpe"]
+script = ExtResource("2_cfea6")
+display_name = "Storm Array"
+description = "Every 20th shot fires a 6-shot burst at enemies in range"
+cost = 276
+stats = {
+"burst_count": 6,
+"burst_every": 20
+}
+
+[sub_resource type="Resource" id="Resource_qscba"]
+script = ExtResource("2_cfea6")
+display_name = "Rapid I"
+description = "Fire rate 2.6/s"
+cost = 40
+stats = {
+"fire_rate": 2.6
+}
+
+[sub_resource type="Resource" id="Resource_apx3q"]
+script = ExtResource("2_cfea6")
+display_name = "Rapid II"
+description = "Fire rate 3.4/s"
+cost = 78
+stats = {
+"fire_rate": 3.4
+}
+
+[sub_resource type="Resource" id="Resource_d6bbe"]
+script = ExtResource("2_cfea6")
+display_name = "Rapid III"
+description = "Fire rate 4.5/s, damage 14"
+cost = 152
+stats = {
+"damage": 6.3,
+"fire_rate": 4.5
+}
+
+[sub_resource type="Resource" id="Resource_ecy56"]
+script = ExtResource("1_fshdm")
+id = &"rapid"
+display_name = "Rapid"
+description = "Highest DPS, still weak vs armor."
+tiers = Array[ExtResource("2_cfea6")]([SubResource("Resource_qscba"), SubResource("Resource_apx3q"), SubResource("Resource_d6bbe")])
+evolution = SubResource("Resource_uuqpe")
+
+[sub_resource type="Resource" id="Resource_ld0gy"]
+script = ExtResource("2_cfea6")
+display_name = "Railspike"
+description = "Shots pierce up to 3 enemies in a line"
+cost = 276
+stats = {
+"pierce": 3
+}
+
+[sub_resource type="Resource" id="Resource_knkli"]
+script = ExtResource("2_cfea6")
+display_name = "Penetrator I"
+description = "Damage 20, armor pen 2"
+cost = 40
+stats = {
+"armor_pen": 2.0,
+"damage": 9.0
+}
+
+[sub_resource type="Resource" id="Resource_rmr2b"]
+script = ExtResource("2_cfea6")
+display_name = "Penetrator II"
+description = "Damage 30, pen 4, rate 1.6/s"
+cost = 78
+stats = {
+"armor_pen": 4.0,
+"damage": 13.5,
+"fire_rate": 1.6
+}
+
+[sub_resource type="Resource" id="Resource_vt1mh"]
+script = ExtResource("2_cfea6")
+display_name = "Penetrator III"
+description = "Damage 45, pen 6, range 180"
+cost = 152
+stats = {
+"armor_pen": 6.0,
+"attack_range": 180.0,
+"damage": 20.25
+}
+
+[sub_resource type="Resource" id="Resource_bbjrd"]
+script = ExtResource("1_fshdm")
+id = &"penetrator"
+display_name = "Penetrator"
+description = "Heavy armor-piercing rounds, lower fire rate."
+tiers = Array[ExtResource("2_cfea6")]([SubResource("Resource_knkli"), SubResource("Resource_rmr2b"), SubResource("Resource_vt1mh")])
+evolution = SubResource("Resource_ld0gy")
+
+[sub_resource type="Resource" id="Resource_upxwl"]
+script = ExtResource("2_cfea6")
+display_name = "Hunter Net"
+description = "Marked fliers are Grounded for 3 s (ground towers can hit them)"
+cost = 276
+stats = {
+"ground_marked_fliers": 3.0
+}
+
+[sub_resource type="Resource" id="Resource_pe202"]
+script = ExtResource("2_cfea6")
+display_name = "Sensor I"
+description = "Reveals stealth within 90"
+cost = 40
+stats = {
+"reveal_radius": 90.0
+}
+
+[sub_resource type="Resource" id="Resource_pdwv3"]
+script = ExtResource("2_cfea6")
+display_name = "Sensor II"
+description = "Hits Mark: +15% damage taken (3 s)"
+cost = 78
+stats = {
+"mark": 0.15,
+"mark_duration": 3.0
+}
+
+[sub_resource type="Resource" id="Resource_ee6y7"]
+script = ExtResource("2_cfea6")
+display_name = "Sensor III"
+description = "Mark +25%, +50% damage vs air"
+cost = 152
+stats = {
+"air_damage_mult": 1.5,
+"mark": 0.25
+}
+
+[sub_resource type="Resource" id="Resource_fjfdm"]
+script = ExtResource("1_fshdm")
+id = &"sensor"
+display_name = "Sensor"
+description = "Reveals stealth and marks targets for the team."
+tiers = Array[ExtResource("2_cfea6")]([SubResource("Resource_pe202"), SubResource("Resource_pdwv3"), SubResource("Resource_ee6y7")])
+evolution = SubResource("Resource_upxwl")
+requires_research = true
+
+[resource]
+script = ExtResource("3_oq00l")
+id = &"pulse"
+display_name = "Pulse"
+role = "Cheap single-target DPS. Hits air. Weak vs armor."
+cost = 57
+damage = 5.4
+fire_rate = 2.0
+projectile_speed = 650.0
+color = Color(0.30980393, 0.84705883, 1, 1)
+branches = Array[ExtResource("1_fshdm")]([SubResource("Resource_ecy56"), SubResource("Resource_bbjrd"), SubResource("Resource_fjfdm")])

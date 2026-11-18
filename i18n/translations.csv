@@ -1,0 +1,1152 @@
+keys,vi
+%s: none available,%s: chưa có
+(Combat Lab: no rewards),(Phòng thử nghiệm: không có thưởng)
+(Saving failed — will retry),(Lưu thất bại — sẽ thử lại)
+(strongest only),(chỉ lấy nguồn mạnh nhất)
++%d Cores,+%d Lõi
++%d early bonus,+%d thưởng gọi sớm
++%d%% range,+%d%% tầm
++%d%% rate,+%d%% tốc bắn
+"+10 per cleared wave (slow removed, reveal kept)","+10 mỗi wave hoàn thành (bỏ làm chậm, vẫn lộ diện)"
++15% damage,+15% sát thương
+"+16 per wave, aura 160","+16 mỗi wave, hào quang 160"
+"+20% damage, +10% range","+20% sát thương, +10% tầm"
++24 per wave; kills in aura +1,+24 mỗi wave; hạ địch trong hào quang +1
++25 more starting currency (+50 total).,Thêm +25 tiền khởi đầu (tổng +50).
++25 starting currency.,+25 tiền khởi đầu.
++3 Base HP.,+3 HP căn cứ.
++3 bomblets (10 dmg each),+3 bom con (mỗi quả 10 sát thương)
++4 every 10 s during waves,+4 mỗi 10 giây trong lúc có wave
+1 — First Contact,1 — Chạm Trán Đầu Tiên
+2 entrances,2 lối vào
+2 — Heavy Traffic,2 — Giao Thông Đông Đúc
+3 — Iron Convoy,3 — Đoàn Xe Thép
+4 — Twin Rivers,4 — Hai Dòng Sông
+5 — Shield Wall,5 — Bức Tường Khiên
+6 — The Monolith Stirs,6 — Cự Thạch Cựa Mình
+7 — Shifting Gates,7 — Cổng Dịch Chuyển
+8 — Prism Storm,8 — Bão Lăng Kính
+9 — Monolith Awakened,9 — Cự Thạch Thức Tỉnh
+Absolute Zero,Độ Không Tuyệt Đối
+Achievement: %s,Thành tựu: %s
+Achievements  %d/%d,Thành tựu  %d/%d
+Aegis,Khiên Chắn
+Aegis shields regenerate. Energy breaks them twice as fast.,Khiên của Khiên Chắn tự hồi. Năng lượng phá khiên nhanh gấp đôi.
+Air: no,Bắn không quân: không
+Air: yes,Bắn không quân: có
+Already evolved,Đã tiến hoá
+Also +15% attack rate,Thêm +15% tốc độ tấn công
+Amplifier,Khuếch Đại
+Amplifier I,Khuếch Đại I
+Amplifier II,Khuếch Đại II
+Amplifier III,Khuếch Đại III
+Annihilator,Huỷ Diệt
+Arc,Hồ Quang
+Arc I,Hồ Quang I
+Arc II,Hồ Quang II
+Arc III,Hồ Quang III
+Armor and the first fliers arrive. Lance pierces armor; Pulse hits air.,Địch giáp dày và địch bay đầu tiên xuất hiện. Thương Quang xuyên giáp; Xung Kích bắn được không quân.
+Aura %d,Hào quang %d
+Austerity,Thắt Lưng Buộc Bụng
+BOSS,TRÙM
+BOSS: %s,TRÙM: %s
+Back,Quay lại
+"Base HP %d/%d
+Waves %d/%d   Kills %d
+Time %d:%02d","HP căn cứ %d/%d
+Wave %d/%d   Hạ gục %d
+Thời gian %d:%02d"
+Beacon,Hải Đăng
+Beacon Evolution,Tiến Hoá Hải Đăng
+Beam,Tia
+Beam %d dps x%.1f,Tia %d dps x%.1f
+"Beam 40 dps, ramps to x3 over 3 s","Tia 40 dps, tăng dần tới x3 trong 3 giây"
+Bigger blasts and bomblets. Flak at tier 3.,Vụ nổ lớn hơn và bom con. Bậc 3 bắn được không quân.
+Blitz,Chớp Nhoáng
+Blocked terrain,Địa hình bị chặn
+Blunt Force,Sức Mạnh Thô
+Brittle,Giòn Tan
+Brute,Cự Binh
+"Brutes soak damage, Swarmlings come in floods. Splash matters.","Cự Binh chịu đòn rất tốt, Bầy Đàn kéo đến ồ ạt. Sát thương lan rất quan trọng."
+Buff,Tăng
+Buff: +%d%% dmg,Tăng: +%d%% sát thương
+Buffed: +%d%% dmg  +%d%% rate  +%d%% range,Được tăng: +%d%% ST  +%d%% tốc bắn  +%d%% tầm
+Buffs nearby towers (strongest Amplifier only). Loses slow.,Tăng sức mạnh tháp gần đó (chỉ lấy Khuếch Đại mạnh nhất). Mất khả năng làm chậm.
+Build,Xây
+"Build, then start",Xây tháp rồi bắt đầu
+Burn 10/s,Đốt 10/giây
+Burn 6/s for 3 s (ignores armor),Đốt 6/giây trong 3 giây (bỏ qua giáp)
+Burn ignores armor; burning enemies heal 50% less.,Đốt bỏ qua giáp; địch đang cháy được hồi máu ít hơn 50%.
+"Burning enemies explode on death (30 splash, no chain reactions)","Địch đang cháy phát nổ khi chết (30 sát thương lan, không nổ dây chuyền)"
+Buy  %d Cores,Mua  %d Lõi
+Buy %d,Mua %d
+Calibrating (%d/%d waves),Đang hiệu chỉnh (%d/%d wave)
+Campaign,Chiến dịch
+Campaign complete,Đã phá đảo chiến dịch
+Cancel,Huỷ
+Cannot build here,Không thể xây ở đây
+Cascade,Nổ Dây Chuyền
+Chain,Nảy
+Chains between enemies (60% damage per jump).,Nảy giữa các địch (60% sát thương mỗi lần nảy).
+Chains to 2 more enemies,Nảy sang thêm 2 địch
+Chains to 3,Nảy sang 3 địch
+"Chains to 4, x3 vs shields; Conductive: +1 jump between Chilled","Nảy sang 4 địch, x3 vào khiên; Dẫn Điện: +1 lần nảy giữa các địch bị làm lạnh"
+Challenge complete!,Hoàn thành thử thách!
+Challenges,Thử thách
+Challenges & Achievements,Thử thách & Thành tựu
+Cheap single-target DPS. Hits air. Weak vs armor.,DPS đơn mục tiêu giá rẻ. Bắn được không quân. Yếu trước giáp.
+Choose a branch first,Hãy chọn nhánh trước
+Circuit,Mạch Điện
+Clean Circuit,Mạch Sạch
+Clear %s first,Hãy qua %s trước
+Clear any Delta level without losing Base HP.,Qua một màn Châu Thổ bất kỳ mà căn cứ không mất máu.
+Clear level %d to unlock,Qua màn %d để mở khoá
+Clear level 1 with at most 5 Base HP.,Qua màn 1 với tối đa 5 HP căn cứ.
+Clear level 1 within 6 minutes.,Qua màn 1 trong vòng 6 phút.
+Clear level 2 within 8 minutes.,Qua màn 2 trong vòng 8 phút.
+Clear level 2 without Nova.,Qua màn 2 không dùng Pháo Nổ.
+Clear level 3 with 80% starting currency.,Qua màn 3 với 80% tiền khởi đầu.
+Clear level 3 without Pulse.,Qua màn 3 không dùng Xung Kích.
+Clear level 4 without Lance.,Qua màn 4 không dùng Thương Quang.
+Clear level 4 without Pulse.,Qua màn 4 không dùng Xung Kích.
+Clear level 4 without selling.,Qua màn 4 mà không bán tháp.
+Clear level 5 with 85% currency and no selling.,Qua màn 5 với 85% tiền và không bán tháp.
+Clear level 5 with at most 8 Base HP.,Qua màn 5 với tối đa 8 HP căn cứ.
+Clear level 6 with 85% starting currency.,Qua màn 6 với 85% tiền khởi đầu.
+Clear level 6 with at most 10 Base HP.,Qua màn 6 với tối đa 10 HP căn cứ.
+Clear level 6 within 14 minutes.,Qua màn 6 trong vòng 14 phút.
+Clear level 7 with 80% starting currency.,Qua màn 7 với 80% tiền khởi đầu.
+Clear level 7 without selling.,Qua màn 7 mà không bán tháp.
+Clear level 8 with at most 10 Base HP.,Qua màn 8 với tối đa 10 HP căn cứ.
+Clear level 8 without Nova.,Qua màn 8 không dùng Pháo Nổ.
+Clear level 9 with at most 15 Base HP.,Qua màn 9 với tối đa 15 HP căn cứ.
+Clear level 9 without owning Reserve Funds I.,Qua màn 9 khi chưa có Quỹ Dự Phòng I.
+Clear level 9 without selling.,Qua màn 9 mà không bán tháp.
+Clear level 9.,Qua màn 9.
+Clear levels 1-3 without losing Base HP.,Qua màn 1-3 mà căn cứ không mất máu.
+Cleared  best %d/%d HP,Đã qua  tốt nhất %d/%d HP
+Close,Đóng
+Close Call,Thoát Hiểm
+Cluster,Chùm Nổ
+Cluster I,Chùm Nổ I
+Cluster II,Chùm Nổ II
+Cluster III,Chùm Nổ III
+Combat Lab (dev test),Phòng thử nghiệm (dev)
+Combat Lab (dev),Phòng thử nghiệm (dev)
+Commitment,Cam Kết
+Completed,Đã hoàn thành
+Completed ✓,Đã hoàn thành ✓
+Conductive,Dẫn Điện
+Conductive +2 jumps; chain hits Stagger 0.4 s,"Dẫn Điện +2 lần nảy; đòn nảy gây choáng nhẹ 0,4 giây"
+"Confirm
++%d","Xác nhận
++%d"
+Continuous beam that ramps up on one target.,"Tia liên tục, mạnh dần khi giữ một mục tiêu."
+Cores,Lõi
+Cores: %d,Lõi: %d
+Cryo,Băng Giá
+Cryo I,Băng Giá I
+Cryo II,Băng Giá II
+Cryo III,Băng Giá III
+DEFENSE PROTOCOL,GIAO THỨC PHÒNG THỦ
+DISRUPTED %.1fs,BỊ VÔ HIỆU %.1fs
+Daily,Hằng ngày
+Damage 120,Sát thương 120
+"Damage 170, pen 8","Sát thương 170, xuyên 8"
+"Damage 20, armor pen 2","Sát thương 20, xuyên giáp 2"
+"Damage 240, +25% vs boss","Sát thương 240, +25% với trùm"
+"Damage 30, pen 4, rate 1.6/s","Sát thương 30, xuyên 4, tốc bắn 1,6/giây"
+"Damage 45, pen 6, range 180","Sát thương 45, xuyên 6, tầm 180"
+"Damage 60, Stagger 0.3 s","Sát thương 60, choáng nhẹ 0,3 giây"
+Dart,Phi Tiêu
+Day,Ngày
+Day/Night,Ngày/Đêm
+Defeat,Thất bại
+Defeat 1000 Swarmlings (lifetime).,Hạ 1000 Bầy Đàn (cộng dồn).
+Defeat a Monolith within 90 s of its arrival.,Hạ một Cự Thạch trong vòng 90 giây kể từ khi nó xuất hiện.
+Delta,Châu Thổ
+Device language,Theo ngôn ngữ máy
+Dmg,Sát thương
+Dmg %d,ST %d
+Drone,Drone
+EMP incoming!,EMP sắp phát!
+Eager,Nôn Nóng
+Early-start bonus +25%.,Thưởng gọi sớm +25%.
+Economy. Diminishing returns per extra Relay. Loses slow.,Kinh tế. Hiệu quả giảm dần với mỗi Trạm Tiếp Vận thêm. Mất khả năng làm chậm.
+Elite mixes and three gate switches. Hedge your coverage.,Đội hình tinh nhuệ và ba lần đổi cổng. Hãy phủ tầm cả hai đường.
+Enemies: %d,Địch: %d
+Energy complex. Gates reroute the enemy mid-battle.,Tổ hợp năng lượng. Cổng đổi đường địch giữa trận.
+Every 20th shot fires a 6-shot burst at enemies in range,Mỗi phát thứ 20 bắn loạt 6 viên vào địch trong tầm
+Every 4th shell detonates again after 0.5 s,"Mỗi quả đạn thứ 4 nổ lần nữa sau 0,5 giây"
+Every 4th shell stuns ground enemies 0.8 s (bosses: slow),"Mỗi quả đạn thứ 4 làm choáng địch mặt đất 0,8 giây (trùm: làm chậm)"
+Every 4th shot deals x3 damage,Mỗi phát thứ 4 gây x3 sát thương
+Everything you have learned. Defeat the awakened Monolith in wave 20.,Vận dụng mọi điều đã học. Hạ Cự Thạch thức tỉnh ở wave 20.
+Evolution,Tiến hoá
+Evolution limit (%d per match),Giới hạn tiến hoá (%d mỗi trận)
+Evolve %d,Tiến hoá %d
+Evolve every tower type (lifetime).,Tiến hoá mọi loại tháp (cộng dồn).
+Evolved,Đã tiến hoá
+Exit,Thoát
+Exterminator,Kẻ Diệt Trừ
+"Fewer particles, no screen shake or flashes.","Ít hạt hơn, không rung màn hình, không chớp sáng."
+Field Scanner,Máy Quét Chiến Trường
+Fire rate 2.6/s,"Tốc bắn 2,6/giây"
+Fire rate 3.4/s,"Tốc bắn 3,4/giây"
+"Fire rate 4.5/s, damage 14","Tốc bắn 4,5/giây, sát thương 14"
+First clear,Thưởng lần đầu
+First clear!,Lần đầu hoàn thành!
+First clear: %d Cores,Lần đầu qua màn: %d Lõi
+Flawless bonus,Thưởng không mất máu
+Focus,Hội Tụ
+Focus I,Hội Tụ I
+Focus II,Hội Tụ II
+Focus III,Hội Tụ III
+Focus Lens,Thấu Kính Hội Tụ
+Frozen enemies take +50% explosive damage (Shatter),Địch bị đóng băng chịu +50% sát thương nổ (Vỡ Băng)
+Frugal Commander,Chỉ Huy Tằn Tiện
+Full Evolution,Tiến Hoá Toàn Diện
+Gate: route %s,Cổng: đường %s
+Gates switch the open route at waves 6 and 11. Fliers take the southern corridor.,Cổng đổi đường mở ở wave 6 và 11. Địch bay đi theo hành lang phía nam.
+Glass Core,Lõi Thuỷ Tinh
+Glider,Tàu Lượn
+Ground War,Chiến Tranh Mặt Đất
+Grounded,Hạ Cánh
+HP %d/%d,HP %d/%d
+Heavy Metal,Kim Loại Nặng
+"Heavy armor-piercing rounds, lower fire rate.","Đạn xuyên giáp hạng nặng, tốc bắn thấp hơn."
+"Highest DPS, still weak vs armor.","DPS cao nhất, vẫn yếu trước giáp."
+Hits Mark: +15% damage taken (3 s),Đòn bắn đánh dấu: chịu thêm 15% sát thương (3 giây)
+Hunter Net,Lưới Săn
+Incendiary,Hoả Thiêu
+Incendiary I,Hoả Thiêu I
+Incendiary II,Hoả Thiêu II
+Incendiary III,Hoả Thiêu III
+Income +%d / wave (diminishing per extra Relay),Thu nhập +%d / wave (giảm dần với mỗi Trạm thêm)
+Inferno,Hoả Ngục
+Invested %d,Đã đầu tư %d
+Iron Discipline,Kỷ Luật Thép
+LOCKED — clear the previous level,ĐÃ KHOÁ — hãy qua màn trước
+Lance,Thương Quang
+Lance Evolution,Tiến Hoá Thương Quang
+Language,Ngôn ngữ
+Last Stand,Trận Chiến Cuối
+Lean Budget,Ngân Sách Eo Hẹp
+Learn to build: survive 8 waves of Drones and Darts.,Học cách xây tháp: trụ vững 8 wave Drone và Phi Tiêu.
+"Leaves a fire patch (2 s, radius 40)","Để lại vùng lửa (2 giây, bán kính 40)"
+Level %d · %s,Màn %d · %s
+Locked,Đã khoá
+Locked: 2 branches chosen,Đã khoá: đã chọn 2 nhánh
+Long-range armor-piercing energy. Targets the strongest. Energy x2 vs shields.,Năng lượng tầm xa xuyên giáp. Nhắm địch mạnh nhất. Năng lượng x2 vào khiên.
+Main branch to tier 3 (+1 secondary branch up to tier 2). Max %d evolved towers per match.,Nhánh chính lên bậc 3 (+1 nhánh phụ tối đa bậc 2). Tối đa %d tháp tiến hoá mỗi trận.
+"Mark +25%, +50% damage vs air","Đánh dấu +25%, +50% sát thương với địch bay"
+Marked fliers are Grounded for 3 s (ground towers can hit them),Địch bay bị đánh dấu bị Hạ Cánh 3 giây (tháp mặt đất bắn được)
+Massive single hits. Overkill on small enemies.,Đòn đơn cực mạnh. Phí sức với địch nhỏ.
+Match over,Trận đã kết thúc
+Max tier,Bậc tối đa
+Maxed,Tối đa
+Meltdown,Nóng Chảy
+Mender,Y Sĩ
+Menders heal their escorts. Defeat the Monolith in wave 15.,Y Sĩ hồi máu cho đồng đội. Hạ Cự Thạch ở wave 15.
+Minimalist,Tối Giản
+Mint,Xưởng Đúc
+Monolith,Cự Thạch
+Monolith Breaker,Kẻ Phá Cự Thạch
+Monolith Fallen,Cự Thạch Sụp Đổ
+Monolith fractures — faster!,Cự Thạch nứt vỡ — nhanh hơn!
+Monolith on a Thread,Treo Sợi Tóc
+Monolith: EMP phase — spread out!,Cự Thạch: pha EMP — hãy dàn tháp ra!
+Music,Nhạc nền
+NEW,MỚI
+Nearby towers +10% damage (slow removed),Tháp gần đó +10% sát thương (bỏ làm chậm)
+Need %d more,Thiếu %d
+Need %d more Cores,Thiếu %d Lõi
+New,Mới
+New tower unlocked: %s,Mở khoá tháp mới: %s
+Next level,Màn tiếp theo
+Next wave in %ds,Wave tiếp sau %ds
+Night,Đêm
+Night Watch,Canh Đêm
+No Fireworks,Không Pháo Hoa
+No Refunds,Không Hoàn Tiền
+No Second Thoughts,Không Hối Hận
+No selling,Không được bán
+No such branch,Không có nhánh này
+No tower,Không có tháp
+North,Bắc
+Not available,Chưa khả dụng
+Not enough currency,Không đủ tiền
+Nova,Pháo Nổ
+Nova Evolution,Tiến Hoá Pháo Nổ
+Outside the build area,Ngoài khu vực xây dựng
+Overcharge,Quá Tải
+Overcharge I,Quá Tải I
+Overcharge II,Quá Tải II
+Overcharge III,Quá Tải III
+Overclock Core,Lõi Ép Xung
+Overlaps another tower,Chồng lên tháp khác
+Overload nodes,Nút quá tải
+Owned,Đã sở hữu
+Paused,Tạm dừng
+Pen,Xuyên giáp
+Pen %d,Xuyên %d
+Penetrator,Xuyên Giáp
+Penetrator I,Xuyên Giáp I
+Penetrator II,Xuyên Giáp II
+Penetrator III,Xuyên Giáp III
+Phantom,U Linh
+Phase Beam,Tia Xuyên Pha
+Plated,Giáp Sắt
+Play,Chơi
+Power facility. Overload nodes boost tower range.,Nhà máy điện. Nút quá tải tăng tầm bắn cho tháp.
+Precision Only,Chỉ Cần Chính Xác
+Prism,Lăng Kính
+Profile data was repaired on load (%s).,Dữ liệu tiến trình đã được sửa khi tải (%s).
+Pulse,Xung Kích
+Pulse Evolution,Tiến Hoá Xung Kích
+Pulse Purist,Tín Đồ Xung Kích
+Quake,Địa Chấn
+Quick Deploy,Triển Khai Nhanh
+"Radius 75, damage 45, Flak: can target air","Bán kính 75, sát thương 45, Phòng không: bắn được địch bay"
+Railspike,Đinh Ray
+Ramp up to x4,Tăng dần tới x4
+Range,Tầm
+Range %d,Tầm %d
+Range 220,Tầm 220
+Range 280,Tầm 280
+Rapid,Liên Thanh
+Rapid I,Liên Thanh I
+Rapid II,Liên Thanh II
+Rapid III,Liên Thanh III
+Rate,Tốc bắn
+Reduce effects,Giảm hiệu ứng
+Reinforced Core,Căn Cứ Gia Cố
+Relay,Tiếp Vận
+Relay I,Tiếp Vận I
+Relay II,Tiếp Vận II
+Relay III,Tiếp Vận III
+Relay Network,Mạng Tiếp Vận
+Requires %s,Cần %s
+Requires research,Cần nghiên cứu
+Requires tier 3,Cần bậc 3
+Research,Nghiên cứu
+Research unlocks options rather than raw power. Every level can be beaten without it.,Nghiên cứu mở thêm lựa chọn chứ không chỉ tăng sức mạnh. Mọi màn đều có thể thắng mà không cần nó.
+Reserve Funds I,Quỹ Dự Phòng I
+Reserve Funds II,Quỹ Dự Phòng II
+Resets in %dh %02dm,Làm mới sau %dg %02dp
+Restart level,Chơi lại màn
+Result already recorded,Kết quả đã được ghi nhận
+Resume,Tiếp tục
+Reveals stealth,Lộ diện tàng hình
+Reveals stealth and marks targets for the team.,Lộ diện tàng hình và đánh dấu mục tiêu cho đồng đội.
+Reveals stealth within 90,Lộ diện tàng hình trong bán kính 90
+Rush Hour,Giờ Cao Điểm
+Scanner — next: ,Máy quét — tiếp theo: 
+Schedule uses the device clock (UTC) and can be changed by editing the phone time.,Lịch dùng giờ của máy (UTC) nên đổi giờ điện thoại sẽ làm lịch thay đổi.
+Secondary max (tier 2),Nhánh phụ tối đa (bậc 2)
+Select a level.,Chọn một màn.
+Sell +%d,Bán +%d
+Sensor,Cảm Biến
+Sensor Array,Dàn Cảm Biến
+Sensor I,Cảm Biến I
+Sensor II,Cảm Biến II
+Sensor III,Cảm Biến III
+Settings,Cài đặt
+Shatter,Vỡ Băng
+Shifting gates,Cổng dịch chuyển
+Short Supply,Thiếu Hụt
+Shots pierce up to 3 enemies in a line,Đạn xuyên tối đa 3 địch trên một đường thẳng
+Shows the next wave's composition during preparation.,Hiện đội hình wave tiếp theo trong lúc chuẩn bị.
+Shred -2 armor per hit (stacks to -6),Giảm 2 giáp mỗi đòn (cộng dồn tới -6)
+"Shreds armor, long range, staggers.","Phá giáp, tầm xa, gây choáng nhẹ."
+Siege,Công Thành
+Siege I,Công Thành I
+Siege II,Công Thành II
+Siege III,Công Thành III
+Siege Protocol,Giao Thức Công Thành
+Slow,Làm chậm
+Slow %d%%,Làm chậm %d%%
+Slow 30%,Làm chậm 30%
+Slow 40%,Làm chậm 40%
+Slow 50%; Freeze 1 s every 6 s (non-boss),Làm chậm 50%; đóng băng 1 giây mỗi 6 giây (trừ trùm)
+Sold %s +%d,Đã bán %s +%d
+Sound effects,Hiệu ứng âm thanh
+South,Nam
+Splash,Lan
+Splash %d,Lan %d
+Splash crowd control. Ground only. Splash hurts hidden stealth units.,Sát thương lan khống chế đám đông. Chỉ bắn mặt đất. Vụ nổ vẫn trúng địch tàng hình.
+Splash radius 70,Bán kính nổ 70
+Sprint,Nước Rút
+Start 10 waves early in one level.,Gọi sớm 10 wave trong một màn.
+Start early +%d,Gọi sớm +%d
+Start wave 1,Bắt đầu wave 1
+Storm Array,Dàn Bão Đạn
+Stronger slow; periodic freeze.,Làm chậm mạnh hơn; định kỳ đóng băng.
+Support aura: reveals stealth; base aura slows 20%. No damage.,Hào quang hỗ trợ: lộ diện tàng hình; mặc định làm chậm 20%. Không gây sát thương.
+Swarmling,Bầy Đàn
+Synergist,Bậc Thầy Cộng Hưởng
+Synergy: %s,Cộng hưởng: %s
+Tap the map to place %s,Chạm bản đồ để đặt %s
+Tesla Web,Lưới Tesla
+Test sector. Two entrances and nights that shorten tower range.,"Khu thử nghiệm. Hai lối vào, ban đêm tháp bị giảm tầm."
+The beam pierces every enemy along its line,Tia xuyên qua mọi địch trên đường thẳng
+Thin Shield,Khiên Mỏng
+Too close to the path,Quá sát đường đi
+"Trigger Grounded, Conductive, Shatter and Meltdown (lifetime).","Kích hoạt Hạ Cánh, Dẫn Điện, Vỡ Băng và Nóng Chảy (cộng dồn)."
+Two entrances merge. Night waves hide Phantoms and dim towers outside Beacon light.,Hai lối vào nhập làm một. Wave ban đêm giấu U Linh và làm giảm tầm các tháp nằm ngoài ánh sáng Hải Đăng.
+Unknown,Không rõ
+Unlock %s first,Mở khoá %s trước
+Unlocked: %s,Đã mở: %s
+Unlocks Beacon branch: Relay.,Mở nhánh Hải Đăng: Tiếp Vận.
+Unlocks Lance branch: Focus.,Mở nhánh Thương Quang: Hội Tụ.
+Unlocks Nova branch: Siege.,Mở nhánh Pháo Nổ: Công Thành.
+Unlocks Pulse branch: Sensor.,Mở nhánh Xung Kích: Cảm Biến.
+Unlocks evolutions for Beacon branches.,Mở tiến hoá cho các nhánh Hải Đăng.
+Unlocks evolutions for Lance branches.,Mở tiến hoá cho các nhánh Thương Quang.
+Unlocks evolutions for Nova branches.,Mở tiến hoá cho các nhánh Pháo Nổ.
+Unlocks evolutions for Pulse branches.,Mở tiến hoá cho các nhánh Xung Kích.
+Use the x1/x2 button in a match to change speed. Targeting is automatic.,Dùng nút x1/x2 trong trận để đổi tốc độ. Tháp tự chọn mục tiêu.
+Victory,Chiến thắng
+Wave %d,Wave %d
+Wave %d cleared,Đã dọn wave %d
+Wave %d cleared  +%d,Hoàn thành wave %d  +%d
+Wave %d/%d,Wave %d/%d
+Waves,Số wave
+Waves %d  ·  Start %d  ·  Base HP %d  ·  Towers: %s,Wave %d  ·  Tiền đầu %d  ·  HP căn cứ %d  ·  Tháp: %s
+Weekly,Hằng tuần
+Win a level building only 2 tower types.,Thắng một màn chỉ dùng 2 loại tháp.
+Win a level with exactly 1 Base HP left.,Thắng một màn khi căn cứ còn đúng 1 HP.
+Win level 5 or later without building Nova.,Thắng màn 5 trở đi mà không xây Pháo Nổ.
+flawless,không mất máu
+offline build,bản offline
+unlocks %s,mở khoá %s
+Rift,Khe Nứt
+"A tear in the grid. Every mechanic at once, and two bosses.","Vết rách trên lưới năng lượng. Đủ mọi cơ chế cùng lúc, và hai trùm."
+Summoning!,Đang triệu hồi!
+Hardening shell!,Đang cứng vỏ!
+Overclocking!,Đang ép xung!
+Launching fighters!,Đang phóng tiêm kích!
+Cloaking!,Đang tàng hình!
+Adapting plating!,Đang đổi lớp giáp!
+Jamming towers!,Đang gây nhiễu tháp!
+Shielding escorts!,Đang bọc khiên hộ tống!
+Rift jump!,Nhảy qua khe nứt!
+Warden overclocks — it sprints between shells!,Cai Ngục ép xung — nó lao nhanh giữa các lần cứng vỏ!
+Carrier cloak field online — keep Beacons close!,Mẫu Hạm bật trường tàng hình — đặt Hải Đăng gần đường!
+Chimera jammer online — towers nearby recharge slower!,Biến Thể bật gây nhiễu — tháp gần nó nạp đạn chậm hơn!
+Chimera unstable — plating shifts twice as fast!,Biến Thể mất ổn định — đổi giáp nhanh gấp đôi!
+Colossus tears the Rift — it jumps ahead!,Cự Thần xé khe nứt — nó nhảy vọt lên trước!
+Colossus overdrive — its escort speeds up!,Cự Thần quá tải — đoàn hộ tống chạy nhanh hơn!
+Carrier,Mẫu Hạm
+Chimera,Biến Thể
+Colossus,Cự Thần
+Warden,Cai Ngục
+"Armor and the first fliers arrive. The Warden guards wave 12: it hardens its shell, then sprints.","Địch giáp dày và địch bay đầu tiên xuất hiện. Cai Ngục canh giữ wave 12: nó cứng vỏ, rồi lao nhanh."
+6 — Night Carrier,6 — Mẫu Hạm Bóng Đêm
+Menders heal their escorts. The Carrier arrives in wave 15: it launches fighters and cloaks — keep Beacons by the lane.,Y Sĩ hồi máu cho đồng đội. Mẫu Hạm đến ở wave 15: nó phóng tiêm kích và tàng hình — đặt Hải Đăng cạnh đường.
+10 — Rift Breach,10 — Khe Nứt Mở Ra
+The Rift opens. Every enemy type at once — overload nodes are your edge.,Khe Nứt mở ra. Mọi loại địch cùng lúc — nút quá tải là lợi thế của bạn.
+11 — Twin Fault,11 — Đứt Gãy Kép
+Two entrances meet at the core. Night falls every third wave.,Hai lối vào gặp nhau ở lõi. Cứ ba wave lại có một đêm.
+12 — Fault Lines,12 — Đường Đứt Gãy
+Gates switch between a long and a short lane. Fliers cut straight across.,Cổng đổi giữa đường dài và đường ngắn. Địch bay cắt thẳng qua.
+13 — Dark Spiral,13 — Xoắn Ốc Tối
+A long spiral in the dark. Light the lane with Beacons.,Một đường xoắn dài trong bóng tối. Thắp sáng đường bằng Hải Đăng.
+14 — Chimera,14 — Biến Thể
+The Chimera swaps armor for shields and jams your towers. Mix damage types.,"Biến Thể luân phiên giáp và khiên, và gây nhiễu tháp của bạn. Hãy trộn nhiều loại sát thương."
+15 — Three Gates,15 — Ba Cổng
+"Three lanes, one open at a time — and the middle one is short.","Ba đường, mỗi lúc mở một — và đường giữa rất ngắn."
+16 — Pincer,16 — Gọng Kìm
+Two columns close in from north and south.,Hai đoàn quân khép lại từ phía bắc và phía nam.
+17 — Shortcut,17 — Lối Tắt
+A gate opens a shortcut straight to the core. Guard both.,Một cổng mở lối tắt thẳng tới lõi. Hãy canh cả hai đường.
+18 — Eclipse,18 — Nhật Thực
+"Darkness, stealth and shields from both flanks.","Bóng tối, tàng hình và khiên từ cả hai cánh."
+19 — Colossus,19 — Cự Thần
+"The Colossus shields its escort, jumps through the Rift and overdrives in its last phase.","Cự Thần bọc khiên cho đoàn hộ tống, nhảy qua khe nứt và quá tải ở pha cuối."
+Circuit — Turbine Hall,Mạch Điện — Sảnh Tua-bin
+Circuit — Core Spiral,Mạch Điện — Xoắn Lõi
+Delta — Floodgate,Châu Thổ — Cửa Xả
+Delta — Night Harbor,Châu Thổ — Cảng Đêm
+Prism — Twin Halls,Lăng Kính — Sảnh Đôi
+Prism — Mirror Core,Lăng Kính — Lõi Gương
+Rift — Breach,Khe Nứt — Lỗ Thủng
+Rift — Twin Fault,Khe Nứt — Đứt Gãy Kép
+Rift — Fault Lines,Khe Nứt — Đường Đứt Gãy
+Rift — Dark Spiral,Khe Nứt — Xoắn Ốc Tối
+Rift — Chimera Den,Khe Nứt — Hang Biến Thể
+Rift — Three Gates,Khe Nứt — Ba Cổng
+Rift — Pincer,Khe Nứt — Gọng Kìm
+Rift — Shortcut,Khe Nứt — Lối Tắt
+Rift — Eclipse,Khe Nứt — Nhật Thực
+Rift — Colossus Gate,Khe Nứt — Cổng Cự Thần
+Defeat a boss within 90 s of its arrival.,Hạ một trùm trong vòng 90 giây kể từ khi nó xuất hiện.
+Rift Sealed,Phong Ấn Khe Nứt
+Clear level 19.,Qua màn 19.
+Static field!,Trường tĩnh điện!
+Capacitor charging!,Tụ điện đang nạp!
+Submerging!,Đang lặn!
+Raising the fallen!,Đang hồi sinh quái!
+Splitting light!,Đang tách ánh sáng!
+Prismatic shield!,Khiên lăng kính!
+Dynamo capacitor online — big hits are capped!,Máy Phát bật tụ điện — đòn mạnh bị chặn bớt!
+Dynamo overload — it speeds up!,Máy Phát quá tải — nó chạy nhanh hơn!
+Leviathan calls the fallen back — finish them twice!,Thủy Quái gọi quái đã chết trở lại — phải hạ chúng lần nữa!
+Leviathan dives twice as often!,Thủy Quái lặn thường gấp đôi!
+Refractor prismatic shield — it resists one damage type at a time!,Khúc Xạ bật khiên lăng kính — nó kháng từng loại sát thương một!
+Dynamo,Máy Phát
+Leviathan,Thủy Quái
+Refractor,Khúc Xạ
+5 — Iron Convoy,5 — Đoàn Xe Thép
+11 — Twin Rivers,11 — Hai Dòng Sông
+12 — Shield Wall,12 — Bức Tường Khiên
+15 — Night Carrier,15 — Mẫu Hạm Bóng Đêm
+21 — Shifting Gates,21 — Cổng Dịch Chuyển
+22 — Prism Storm,22 — Bão Lăng Kính
+30 — Monolith Awakened,30 — Cự Thạch Thức Tỉnh
+31 — Rift Breach,31 — Khe Nứt Mở Ra
+32 — Twin Fault,32 — Đứt Gãy Kép
+33 — Fault Lines,33 — Đường Đứt Gãy
+34 — Dark Spiral,34 — Xoắn Ốc Tối
+35 — Chimera,35 — Biến Thể
+36 — Three Gates,36 — Ba Cổng
+37 — Pincer,37 — Gọng Kìm
+38 — Shortcut,38 — Lối Tắt
+39 — Eclipse,39 — Nhật Thực
+40 — Colossus,40 — Cự Thần
+3 — Relay Yard,3 — Bãi Rơ-le
+Zig-zag lines meet at sharp corners. Build in the corners.,Đường zíc-zắc gặp nhau ở các góc nhọn. Hãy xây ở các góc.
+4 — Coil Maze,4 — Mê Cung Cuộn Dây
+A tight coil: one tower can cover two lanes.,Cuộn dây chật: một tháp có thể phủ hai đoạn đường.
+6 — Crossroads,6 — Ngã Tư Điện
+The lane crosses itself. Towers at the crossing hit twice.,Đường tự cắt qua chính nó. Tháp ở giao điểm bắn được hai lần.
+7 — Step Down,7 — Bậc Hạ Áp
+A staircase of short lanes. Overload nodes sit in every step.,Một cầu thang những đoạn đường ngắn. Mỗi bậc có một nút quá tải.
+8 — Grid Lock,8 — Kẹt Lưới
+Four long rows. Fliers cut straight down the middle.,Bốn hàng dài. Địch bay cắt thẳng qua giữa.
+9 — Arc Furnace,9 — Lò Hồ Quang
+The lane wraps around the furnace and ends inside it.,Đường vòng quanh lò rồi kết thúc bên trong.
+10 — Dynamo,10 — Máy Phát
+"The Dynamo shortens your towers' range, caps every hit and overloads at the end. Spread out and use many fast hits.","Máy Phát làm tháp giảm tầm, chặn mọi đòn đánh quá mạnh và quá tải ở cuối. Hãy dàn tháp ra và dùng nhiều đòn nhanh."
+13 — Marsh Fork,13 — Ngã Ba Đầm Lầy
+Two diagonal entrances meet early. Night falls every third wave.,Hai lối vào chéo gặp nhau sớm. Cứ ba wave lại có một đêm.
+14 — Twin Canal,14 — Kênh Đôi
+"One column from the north, one from the west.","Một đoàn từ phía bắc, một đoàn từ phía tây."
+16 — Flood Plain,16 — Bãi Bồi
+Both columns pour in from the top and wind down to the core.,Cả hai đoàn tràn vào từ phía trên rồi uốn xuống lõi.
+17 — Reed Maze,17 — Mê Cung Lau Sậy
+They rise from the south. Keep Beacons on the shared lane.,Chúng tiến lên từ phía nam. Đặt Hải Đăng trên đoạn đường chung.
+18 — Delta Bridge,18 — Cầu Châu Thổ
+Steep diagonal bridges. Splash towers love the turns.,Những cây cầu chéo dốc. Tháp sát thương lan rất hợp ở các khúc cua.
+19 — Mangrove,19 — Rừng Ngập Mặn
+The lane crosses the southern entrance. Watch both.,Đường cắt ngang lối vào phía nam. Hãy canh cả hai.
+20 — Leviathan,20 — Thủy Quái
+The Leviathan dives out of reach and raises your kills again. Hit hard while it surfaces.,Thủy Quái lặn khỏi tầm bắn và hồi sinh những quái bạn vừa hạ. Dồn sát thương khi nó nổi lên.
+23 — Facet Hall,23 — Sảnh Mặt Cắt
+Two angled lanes around a crystal hall. Gates switch every five waves.,Hai đường gấp khúc quanh sảnh pha lê. Cổng đổi mỗi năm wave.
+24 — Lens Array,24 — Dàn Thấu Kính
+"Three gates: left loop, straight drop, right loop.","Ba cổng: vòng trái, thẳng xuống, vòng phải."
+25 — Refractor,25 — Khúc Xạ
+The Refractor sends mirror decoys ahead and resists one damage type at a time. Mix your towers.,Khúc Xạ tung phân thân mồi nhử lên trước và kháng từng loại sát thương một. Hãy trộn nhiều loại tháp.
+26 — Split Beam,26 — Tia Tách
+The open gate decides: a deep dip or the straight beam.,Cổng đang mở quyết định: vòng trũng sâu hay tia thẳng.
+27 — Kaleidoscope,27 — Kính Vạn Hoa
+"A loop or a shortcut through its middle, then a long tail.","Một vòng lặp hoặc lối tắt xuyên giữa, rồi một đoạn đuôi dài."
+28 — Spectrum,28 — Quang Phổ
+The northern gate adds a long detour; the southern one does not.,Cổng phía bắc thêm một vòng dài; cổng phía nam thì không.
+29 — Helix,29 — Xoắn Ốc Quang
+The outer ring is open or shut by the gate. The core waits in the middle.,Vòng ngoài được cổng mở hoặc đóng. Lõi nằm ở giữa.
+Circuit — Relay Yard,Mạch Điện — Bãi Rơ-le
+Circuit — Coil Maze,Mạch Điện — Mê Cung Cuộn Dây
+Circuit — Crossroads,Mạch Điện — Ngã Tư Điện
+Circuit — Step Down,Mạch Điện — Bậc Hạ Áp
+Circuit — Grid Lock,Mạch Điện — Kẹt Lưới
+Circuit — Arc Furnace,Mạch Điện — Lò Hồ Quang
+Circuit — Dynamo Core,Mạch Điện — Lõi Máy Phát
+Delta — Marsh Fork,Châu Thổ — Ngã Ba Đầm Lầy
+Delta — Twin Canal,Châu Thổ — Kênh Đôi
+Delta — Flood Plain,Châu Thổ — Bãi Bồi
+Delta — Reed Maze,Châu Thổ — Mê Cung Lau Sậy
+Delta — Delta Bridge,Châu Thổ — Cầu Châu Thổ
+Delta — Mangrove,Châu Thổ — Rừng Ngập Mặn
+Delta — Leviathan Lagoon,Châu Thổ — Đầm Thủy Quái
+Prism — Facet Hall,Lăng Kính — Sảnh Mặt Cắt
+Prism — Lens Array,Lăng Kính — Dàn Thấu Kính
+Prism — Refraction Core,Lăng Kính — Lõi Khúc Xạ
+Prism — Split Beam,Lăng Kính — Tia Tách
+Prism — Kaleidoscope,Lăng Kính — Kính Vạn Hoa
+Prism — Spectrum,Lăng Kính — Quang Phổ
+Prism — Helix,Lăng Kính — Xoắn Ốc Quang
+Clear level 30.,Qua màn 30.
+"Clear levels 1, 2 and 5 without losing Base HP.","Qua màn 1, 2 và 5 mà không mất máu căn cứ."
+Clear level 30 without owning Reserve Funds I.,Qua màn 30 khi chưa có Quỹ Dự Phòng I.
+Clear level 40.,Qua màn 40.
+Clear level 12 with at most 8 Base HP.,Qua màn 12 với tối đa 8 HP căn cứ.
+Clear level 22 with at most 10 Base HP.,Qua màn 22 với tối đa 10 HP căn cứ.
+Clear level 5 with 80% starting currency.,Qua màn 5 với 80% tiền khởi đầu.
+Clear level 15 with 85% starting currency.,Qua màn 15 với 85% tiền khởi đầu.
+Clear level 11 without Lance.,Qua màn 11 không dùng Thương Quang.
+Clear level 5 without Pulse.,Qua màn 5 không dùng Xung Kích.
+Clear level 11 without selling.,Qua màn 11 mà không bán tháp.
+Clear level 21 without selling.,Qua màn 21 mà không bán tháp.
+Clear level 15 with at most 10 Base HP.,Qua màn 110 với tối đa 5 HP căn cứ.
+Clear level 30 with at most 15 Base HP.,Qua màn 30 với tối đa 15 HP căn cứ.
+Clear level 21 with 80% starting currency.,Qua màn 21 với 80% tiền khởi đầu.
+Clear level 12 with 85% currency and no selling.,Qua màn 12 với 85% tiền và không bán tháp.
+Clear level 22 without Nova.,Qua màn 22 không dùng Pháo Nổ.
+Clear level 11 without Pulse.,Qua màn 11 không dùng Xung Kích.
+Clear level 30 without selling.,Qua màn 30 mà không bán tháp.
+Clear level 15 within 14 minutes.,Qua màn 15 trong vòng 14 phút.
+Two lens-shaped lanes around a crystal. The gate picks one.,Hai đường hình thấu kính quanh một khối pha lê. Cổng chọn một đường.
+"The beam splits above or below the crystal, then rejoins.",Tia tách lên trên hoặc xuống dưới khối pha lê rồi nhập lại.
+"North or south around the ring, then a spiral into the core.","Đi vòng phía bắc hoặc phía nam, rồi xoắn vào lõi."
+Kinetic,Vật lý
+Explosive,Nổ
+Energy,Năng lượng
+True,Chuẩn
+Burn,Cháy
+Damage over time that ignores armor; heals 50% less.,"Sát thương theo thời gian, bỏ qua giáp; hồi máu giảm 50%."
+Cloak,Tàng hình
+Untargetable until revealed; splash still hits.,Không thể bị nhắm cho tới khi bị lộ; sát thương lan vẫn trúng.
+EMP,EMP
+Tower cannot attack.,Tháp không thể tấn công.
+Freeze,Đóng băng
+Frozen solid; explosive hits shatter it for bonus damage.,Bị đóng băng; đòn nổ làm vỡ băng và gây thêm sát thương.
+A flier forced down: ground towers can hit it.,Quái bay bị ép xuống đất: tháp mặt đất bắn được.
+Haste,Tăng tốc
+Runs faster (Colossus overdrive).,Chạy nhanh hơn (Cự Thần quá tải).
+Capacitor,Tụ điện
+Every hit deals at most a fixed amount.,Mỗi đòn chỉ gây tối đa một lượng cố định.
+Jammed,Bị nhiễu
+Tower recharges at half speed.,Tháp nạp đạn chậm một nửa.
+Mark,Đánh dấu
+Takes extra damage from every source.,Nhận thêm sát thương từ mọi nguồn.
+Overshield,Khiên tạm
+Temporary shield that absorbs damage first.,"Khiên tạm thời, hấp thụ sát thương trước."
+Poison,Độc
+Damage over time; stacks up to 5 times.,Sát thương theo thời gian; cộng dồn tối đa 5 lần.
+Prismatic shield,Khiên lăng kính
+Resists one damage type at a time.,Kháng từng loại sát thương một.
+Revealed,Bị lộ
+A stealthed enemy that towers can now target.,"Quái tàng hình đã bị lộ, tháp có thể nhắm."
+Shred,Bào giáp
+Armor reduced; stacks up to a cap.,Giảm giáp; cộng dồn tới giới hạn.
+Moves slower inside a Beacon aura (Cryo: stronger).,Đi chậm hơn trong hào quang Hải Đăng (Cryo: mạnh hơn).
+Stagger,Loạng choạng
+Briefly slowed (what bosses get instead of stun).,Bị chậm trong chốc lát (trùm nhận thay cho choáng).
+Static,Tĩnh điện
+Tower range reduced.,Tầm bắn của tháp bị giảm.
+Stun,Choáng
+Cannot move. Bosses only stagger.,Không thể di chuyển. Trùm chỉ bị loạng choạng.
+Submerged,Đang lặn
+Untargetable and immune to all damage.,Không thể bị nhắm và miễn mọi sát thương.
+Damage,Sát thương
+Fire rate,Tốc bắn
+Armor pen,Xuyên giáp
+Hits air,Bắn trên không
+Vs air,Với quái bay
+Vs boss,Với trùm
+Vs tag,Theo nhãn
+On hit,Khi trúng
+Buff dmg,Tăng sát thương
+Buff range,Tăng tầm
+Buff rate,Tăng tốc bắn
+Beam pierce,Tia xuyên
+Ramp,Tăng dần
+Ramp time,Thời gian tăng
+Bomblets,Bom con
+Bomblet dmg,ST bom con
+Burn time,Thời gian cháy
+Fire patch,Vùng lửa
+Patch size,Cỡ vùng lửa
+Death blast,Nổ khi chết
+Shred cap,Giới hạn bào giáp
+Stun every,Choáng mỗi
+Echo every,Dư chấn mỗi
+Echo delay,Trễ dư chấn
+Crit every,Chí mạng mỗi
+Crit,Chí mạng
+Burst every,Loạt bắn mỗi
+Burst,Loạt bắn
+Pierce,Xuyên mục tiêu
+Chain dmg,ST tia nảy
+Chain vs shield,Tia nảy với khiên
+Chain stagger,Tia nảy gây loạng choạng
+Conductive jumps,Nảy dẫn điện
+Mark time,Thời gian đánh dấu
+Ground fliers,Ép đất quái bay
+Reveal,Làm lộ
+Freeze every,Đóng băng mỗi
+Wave income,Thu nhập mỗi wave
+Kill bonus,Thưởng khi hạ
+Mint every,Đúc tiền mỗi
+HP,Máu
+Speed,Tốc độ
+Armor,Giáp
+Shield,Khiên
+Bounty,Tiền thưởng
+Base damage,Sát thương căn cứ
+Charging!,Đang tích năng!
+Healing!,Đang hồi máu!
+Codex,Bách Khoa
+Ground only,Chỉ bắn mặt đất
+Branches,Nhánh nâng cấp
+Each tower takes one main branch (tier 3 + evolution) and one secondary branch (up to tier 2).,Mỗi tháp có một nhánh chính (tới bậc 3 + tiến hoá) và một nhánh phụ (tối đa bậc 2).
+Not met yet. Meet it in a battle to unlock this entry.,Chưa gặp. Gặp nó trong trận để mở mục này.
+Flying,Bay
+Stealth,Tàng hình
+Heals allies,Hồi máu đồng đội
+phases,pha
+Skills,Kỹ năng
+Phase,Pha
+"Every %s s, warning %s s.","Mỗi %s giây, báo trước %s giây."
+On enemies,Lên quái
+On towers,Lên tháp
+Ignores armor,Bỏ qua giáp
+Always ignores armor,Luôn bỏ qua giáp
+"Ignores armor, unless the enemy specifically resists it","Bỏ qua giáp, trừ khi quái kháng riêng loại này"
+"A few enemies are built to resist poison specifically (e.g. machines) -- it does less to them even with 0 regular armor.","Vài loại quái được thiết kế để kháng riêng độc (vd máy móc) -- độc gây ít sát thương hơn lên chúng dù giáp thường = 0."
+At least %d%% passes armor,Luôn xuyên ít nhất %d%% qua giáp
+x%s vs shields,x%s với khiên
+Dealt by:,Gây bởi:
+Armor subtracts from every hit; armor-piercing lowers it. Shields absorb damage before HP.,Giáp trừ vào mỗi đòn; xuyên giáp làm giảm giáp. Khiên hấp thụ sát thương trước máu.
+Levels %d–%d,Màn %d–%d
+Map mechanics,Cơ chế bản đồ
+Towers built on a node get extra range.,Tháp xây trên nút được thêm tầm bắn.
+Night waves shorten tower range unless a Beacon lights the tower.,"Wave ban đêm làm giảm tầm tháp, trừ khi tháp được Hải Đăng chiếu sáng."
+Gates switch which lane is open; the switch is announced a wave ahead.,Cổng đổi đường đang mở; được báo trước một wave.
+Enemies come from more than one side.,Địch tới từ nhiều phía.
+Bosses,Trùm
+Level %d,Màn %d
+Towers,Tháp
+Enemies,Quái
+Effects,Hiệu ứng
+Damage & combos,Sát thương & combo
+Regions,Khu vực
+"Basic walker. Anything kills it -- except Venom, which it resists specifically (it's a machine).","Quái đi bộ cơ bản. Tháp nào cũng hạ được -- trừ Phun Độc, nó kháng riêng loại này (vì là máy móc)."
+Very fast and fragile. Pulse and slows catch it.,Rất nhanh và yếu. Xung Kích và làm chậm bắt được nó.
+Tiny and comes in floods. Nova splash shreds them.,Nhỏ và đến thành bầy. Sát thương lan của Pháo Nổ quét sạch.
+"Lots of HP, slow. Focus fire on it.","Nhiều máu, chậm. Dồn hỏa lực vào nó."
+"Heavy armor. Lance, Venom (poison ignores armor entirely) or Siege shred.","Giáp dày. Dùng Thương Quang, Phun Độc (độc xuyên giáp hoàn toàn) hoặc bào giáp của nhánh Công Thành."
+"Regenerating shield. Energy (Lance, Arc) breaks it twice as fast.","Khiên tự hồi. Năng lượng (Thương Quang, Hồ Quang) phá khiên nhanh gấp đôi."
+"Flies over the lane. Pulse, Lance or Flak Nova; Sensor can ground it.","Bay trên đường. Dùng Xung Kích, Thương Quang hoặc Pháo Nổ Flak; Cảm Biến ép nó xuống đất."
+Stealthed until revealed. Beacon light or Sensor; splash still hits.,Tàng hình tới khi bị lộ. Dùng ánh sáng Hải Đăng hoặc Cảm Biến; sát thương lan vẫn trúng.
+Heals nearby allies. Kill it first; Burn halves its healing.,Hồi máu đồng đội gần đó. Hạ nó trước; Cháy làm giảm nửa lượng hồi.
+Carapace,Cứng vỏ
+Hardens its shell: a temporary shield worth part of its HP.,Cứng vỏ: khiên tạm bằng một phần máu của nó.
+Overclock,Ép xung
+Sprints at high speed for a few seconds.,Lao rất nhanh trong vài giây.
+Hangar,Phóng tiêm kích
+Launches flying fighters from its deck.,Phóng tiêm kích bay từ boong tàu.
+Cloak field,Trường tàng hình
+Cloaks itself and nearby escorts. Beacons and Sensors reveal them.,Tàng hình chính nó và hộ tống gần đó. Hải Đăng và Cảm Biến làm chúng lộ.
+Adaptive plating,Đổi giáp
+Swaps between thick armor and a regenerating energy shield.,Luân phiên giữa giáp dày và khiên năng lượng tự hồi.
+Jammer,Gây nhiễu
+Towers nearby recharge at half speed.,Tháp gần nó nạp đạn chậm một nửa.
+Bulwark,Tường khiên
+Shields every ally around it.,Bọc khiên cho mọi đồng minh xung quanh.
+Rift blink,Nhảy khe nứt
+Jumps forward along the lane (never right into the core).,Nhảy vọt lên trước dọc đường (không bao giờ nhảy thẳng vào lõi).
+Static field,Trường tĩnh điện
+Towers nearby lose range.,Tháp gần nó bị giảm tầm.
+Every hit on it is capped.,Mỗi đòn trúng nó bị giới hạn sát thương.
+Submerge,Lặn
+Dives: cannot be targeted or damaged for a moment.,Lặn xuống: trong chốc lát không thể bị nhắm hay gây sát thương.
+Revive,Hồi sinh
+Raises recently killed enemies near it.,Hồi sinh quái vừa bị hạ gần nó.
+Mirror decoys,Phân thân
+Sends fragile copies ahead of it.,Tung các bản sao yếu chạy lên trước.
+"Resists one damage type at a time, cycling.",Kháng lần lượt từng loại sát thương.
+Effect field,Trường hiệu ứng
+Spreads an effect around it.,Tỏa một hiệu ứng ra xung quanh.
+Summon,Triệu hồi
+Calls in minions.,Gọi thêm quái.
+Mending wave,Sóng hồi máu
+Heals allies around it.,Hồi máu đồng minh xung quanh.
+Overload,Quá tải
+Permanently faster.,Nhanh hơn vĩnh viễn.
+Overdrive,Bứt tốc
+Escorts around it run faster and it regenerates.,Hộ tống quanh nó chạy nhanh hơn và nó tự hồi máu.
+Aura,Hào quang
+Allies around it are empowered.,Đồng minh quanh nó được cường hoá.
+Calls in Swarmlings.,Gọi Bầy Đàn.
+Towers near it stop attacking.,Tháp gần nó ngừng tấn công.
+Fracture,Nứt vỡ
+Faster; splits into shards when it dies.,Nhanh hơn; vỡ thành mảnh khi chết.
+Sensor marks hit a flier: it is grounded and ground towers can hit it.,"Dấu của Cảm Biến trúng quái bay: nó bị ép xuống đất, tháp mặt đất bắn được."
+Arc chains jump extra times between chilled (slowed or frozen) enemies.,Tia Hồ Quang nảy thêm giữa các quái bị lạnh (bị làm chậm hoặc đóng băng).
+Explosive hits on a frozen enemy deal bonus damage.,Đòn nổ lên quái đang đóng băng gây thêm sát thương.
+Burn deals +50% to enemies whose armor is heavily shredded.,Cháy gây thêm 50% lên quái đã bị bào giáp nặng.
+Burning enemies explode when they die.,Quái đang cháy phát nổ khi chết.
+Nova shells detonate a second time.,Đạn Pháo Nổ phát nổ thêm một lần.
+Combat,Chiến đấu
+Common,Phổ thông
+Standard issue. Available from the start or very early.,Trang bị tiêu chuẩn. Có từ đầu hoặc mở rất sớm.
+Uncommon,Khá hiếm
+Specialised. Unlocked early in the campaign.,Chuyên dụng. Mở sớm trong chiến dịch.
+Rare,Hiếm
+Powerful specialists. Unlocked mid-campaign.,Chuyên gia mạnh. Mở ở giữa chiến dịch.
+Epic,Sử thi
+Elite towers earned from bosses or late regions.,"Tháp tinh nhuệ, nhận từ trùm hoặc các khu vực cuối."
+Legendary,Huyền thoại
+The rarest towers. Reserved for the hardest challenges.,Những tháp hiếm nhất. Dành cho thử thách khó nhất.
+New tower: %s,Tháp mới: %s
+Field,Trường bảo vệ
+"Bastion field: towers inside ignore EMP, jamming and debuffs.","Trường Lá Chắn: tháp bên trong miễn nhiễm EMP, gây nhiễu và hiệu ứng làm yếu."
+Shock,Điện giật
+Slowed and zapped while standing on a trap.,Bị làm chậm và giật điện khi đứng trên bẫy.
+Regeneration,Tự hồi máu
+Heals a little every second.,Hồi một ít máu mỗi giây.
+Venom,Phun Độc
+Stacking poison that ignores armor (Venom tower).,"Độc cộng dồn, bỏ qua giáp (tháp Phun Độc)."
+Diver,Kẻ Lặn
+Escort,Hộ Vệ
+Prismling,Lăng Trụ Nhỏ
+Shade,Bóng Đêm
+Sludge,Bùn Lỏng
+Sprinter,Kẻ Tăng Tốc
+Trap time,Thời gian bẫy
+Trap size,Cỡ bẫy
+Trap slow,Bẫy làm chậm
+Trap damage,Sát thương bẫy
+Trap hold,Bẫy giữ chân
+Trap exposure,Bẫy làm yếu
+Poison stacks,Tầng độc
+Poison time,Thời gian độc
+Corrode,Ăn mòn giáp
+Poison exposure,Độc làm yếu
+Poison slow,Độc làm chậm
+Field slow,Trường làm chậm
+Field exposure,Trường làm yếu
+Citadel,Thành Trì
+Field 280,Trường 280
+Expanse I,Mở Rộng I
+Field 170,Trường 170
+Expanse II,Mở Rộng II
+Field 200,Trường 200
+Expanse III,Mở Rộng III
+Field 230,Trường 230
+Expanse,Mở Rộng
+A wider field.,Trường rộng hơn.
+Gravity Well,Giếng Trọng Lực
+Gravity I,Trọng Lực I
+Slow 10% in the field,Làm chậm 10% trong trường
+Gravity II,Trọng Lực II
+Slow 15%,Làm chậm 15%
+Gravity III,Trọng Lực III
+Slow 20%,Làm chậm 20%
+Gravity,Trọng Lực
+Enemies inside the field are slowed.,Quái trong trường bị làm chậm.
+Overexposure,Phơi Nhiễm
++16%,+16%
+Exposure I,Làm Yếu I
++5% damage taken in the field,Nhận thêm 5% sát thương trong trường
+Exposure II,Làm Yếu II
++8%,+8%
+Exposure III,Làm Yếu III
++12%,+12%
+Exposure,Làm Yếu
+Enemies inside the field take more damage.,Quái trong trường nhận thêm sát thương.
+Bastion,Lá Chắn Điện Từ
+"Field generator: towers inside are immune to EMP, jamming and other tower debuffs. No attack.","Máy phát trường: tháp bên trong miễn nhiễm EMP, gây nhiễu và các hiệu ứng làm yếu tháp. Không tấn công."
+Executioner,Đao Phủ
+Every 2nd shot is a crit,Cứ 2 phát có 1 phát chí mạng
+Deadeye I,Mắt Ưng I
+Every 4th shot x2,Phát thứ 4 gây x2
+Deadeye II,Mắt Ưng II
+Every 3rd shot x2,Phát thứ 3 gây x2
+Deadeye III,Mắt Ưng III
+Crits x2.5,Chí mạng x2.5
+Deadeye,Mắt Ưng
+Critical hits.,Đòn chí mạng.
+Railgun,Súng Điện Từ
+"Pierces 5, pen 10","Xuyên 5 quái, xuyên giáp 10"
+"Pierces 2 enemies, pen 6","Xuyên 2 quái, xuyên giáp 6"
+Pierces 3,Xuyên 3 quái
+Damage 150,Sát thương 150
+Rounds pass through enemies.,Đạn bắn xuyên qua quái.
+Overwatch,Canh Gác
+Range 420,Tầm 420
+Spotter I,Trinh Sát I
+Hits Mark: +10% damage taken (4 s),Đánh dấu: nhận thêm 10% sát thương (4 giây)
+Spotter II,Trinh Sát II
+Reveals stealth within 120,Làm lộ quái tàng hình trong 120
+Spotter III,Trinh Sát III
+Mark +15%,Đánh dấu +15%
+Spotter,Trinh Sát
+Marks targets for the team.,Đánh dấu mục tiêu cho cả đội.
+Marksman,Thiện Xạ
+"Very long range, slow and heavy shots. Bonus damage against bosses.","Tầm rất xa, bắn chậm nhưng mạnh. Thêm sát thương lên trùm."
+Stasis Net,Lưới Đóng Băng
+Traps hold enemies in place (bosses only slowed),Bẫy giữ chân quái tại chỗ (trùm chỉ bị chậm)
+Snare I,Bẫy Chân I
+Slow 45%,Làm chậm 45%
+Snare II,Bẫy Chân II
+Traps last 3 s,Bẫy kéo dài 3 giây
+Snare III,Bẫy Chân III
+Slow 50%,Làm chậm 50%
+Snare,Bẫy Chân
+"Stronger, longer-lasting slow.",Làm chậm mạnh và lâu hơn.
+Arc Mine,Mìn Hồ Quang
+Trap damage 18/s; zapped enemies take +10% damage,Bẫy gây 18/giây; quái bị giật nhận thêm 10% sát thương
+Live Wire I,Dây Điện I
+Trap damage 6/s,Bẫy gây 6/giây
+Live Wire II,Dây Điện II
+Trap damage 9/s,Bẫy gây 9/giây
+Live Wire III,Dây Điện III
+"Trap damage 13/s, shell damage 14","Bẫy gây 13/giây, đạn gây 14"
+Live Wire,Dây Điện
+Traps zap harder.,Bẫy giật mạnh hơn.
+Carpet,Rải Thảm
+Fire rate 1/s,Tốc bắn 1/giây
+Minefield I,Bãi Mìn I
+Trap radius 42,Cỡ bẫy 42
+Minefield II,Bãi Mìn II
+Fire rate 0.7/s,Tốc bắn 0.7/giây
+Minefield III,Bãi Mìn III
+Trap radius 50,Cỡ bẫy 50
+Minefield,Bãi Mìn
+"Bigger traps, thrown more often.","Bẫy to hơn, ném thường xuyên hơn."
+Shock Trap,Bẫy Điện
+Lobs shock traps onto the lane: enemies on them are slowed and zapped. Ground only.,Ném bẫy điện xuống đường: quái đứng trên bẫy bị làm chậm và giật điện. Chỉ trúng quái mặt đất.
+Neurotoxin,Độc Thần Kinh
+Up to 6 stacks; poisoned enemies are slowed 15%,Tối đa 6 tầng; quái trúng độc bị chậm 15%
+Potency I,Cường Độc I
+Poison 3.2/s per stack,Độc 3.2/giây mỗi tầng
+Potency II,Cường Độc II
+Poison 4/s per stack,Độc 4/giây mỗi tầng
+Potency III,Cường Độc III
+Poison 5/s per stack,Độc 5/giây mỗi tầng
+Potency,Cường Độc
+Stronger poison.,Độc mạnh hơn.
+Acid Bath,Bể Axit
+Each stack: +3% damage taken,Mỗi tầng: nhận thêm 3% sát thương
+Corrosion I,Ăn Mòn I
+-0.5 armor per stack,-0.5 giáp mỗi tầng
+Corrosion II,Ăn Mòn II
+-1 armor per stack,-1 giáp mỗi tầng
+Corrosion III,Ăn Mòn III
+-1.5 armor per stack,-1.5 giáp mỗi tầng
+Corrosion,Ăn Mòn
+Poison eats armor.,Độc ăn mòn giáp.
+Plague Cloud,Mây Dịch Bệnh
+Fire rate 1.6/s,Tốc bắn 1.6/giây
+Spray I,Phun Rộng I
+"Cloud radius 22, lasts 3 s","Bán kính mây 22, kéo dài 3 giây"
+Spray II,Phun Rộng II
+"Cloud radius 28, lasts 4 s","Bán kính mây 28, kéo dài 4 giây"
+Spray III,Phun Rộng III
+"Cloud radius 36, lasts 5 s","Bán kính mây 36, kéo dài 5 giây"
+Spray,Phun Rộng
+Shots leave a lingering poison cloud instead of hitting one target.,Mỗi phát bắn để lại mây độc kéo dài thay vì chỉ trúng 1 mục tiêu.
+Cloud size,Cỡ mây
+Cloud time,Thời gian mây
+"Stacking poison that ignores armor. Slow to kill, great against tough or regenerating enemies.","Độc cộng dồn, bỏ qua giáp. Hạ địch chậm nhưng rất hợp với quái trâu máu hoặc tự hồi máu."
+Shields allies around it. Kill it first.,Bọc khiên cho đồng đội xung quanh. Hạ nó trước.
+Regenerates quickly. Poison and burst damage beat it.,Hồi máu nhanh. Độc và dồn sát thương sẽ hạ được nó.
+Flying and stealthed. Needs a Beacon and an anti-air tower.,Vừa bay vừa tàng hình. Cần Hải Đăng và tháp bắn được trên không.
+Bursts of speed. Traps and slows hold it.,Lao nhanh từng đợt. Bẫy và làm chậm giữ được nó.
+Jams towers near it. Outrange it or protect towers with a Bastion.,Gây nhiễu tháp gần nó. Bắn từ xa hoặc dùng Lá Chắn Điện Từ bảo vệ tháp.
+Resists one damage type at a time. Mix your towers.,Kháng lần lượt từng loại sát thương. Hãy trộn nhiều loại tháp.
+Dives out of reach. Hit hard while it surfaces.,Lặn khỏi tầm bắn. Dồn sát thương khi nó nổi lên.
+Standard issue: cheap and simple.,Trang bị tiêu chuẩn: rẻ và đơn giản.
+Specialised: strong at one job.,Chuyên dụng: mạnh ở một việc.
+Powerful specialists.,Chuyên gia mạnh.
+Coming in a future update,Sẽ có trong bản cập nhật sau
+Eternity,Vĩnh Hằng
+Field 300,Trường 300
+Field 260,Trường 260
+A wider time field.,Trường thời gian rộng hơn.
+Time Lock,Khoá Thời Gian
+Freeze 2 s,Đóng băng 2 giây
+Stasis I,Ngưng Đọng I
+Freeze every 6.5 s,Đóng băng mỗi 6.5 giây
+Stasis II,Ngưng Đọng II
+Freeze 1.3 s,Đóng băng 1.3 giây
+Stasis III,Ngưng Đọng III
+Freeze every 5 s,Đóng băng mỗi 5 giây
+Stasis,Ngưng Đọng
+Freezes more often and for longer.,Đóng băng thường xuyên và lâu hơn.
+Overclock Field,Trường Ép Xung
+Towers +18%,Tháp +18%
+Acceleration I,Gia Tốc I
+Towers +10% fire rate,Tháp +10% tốc bắn
+Acceleration II,Gia Tốc II
+Towers +12%,Tháp +12%
+Acceleration III,Gia Tốc III
+Towers +14%,Tháp +14%
+Acceleration,Gia Tốc
+Towers in the field fire faster.,Tháp trong trường bắn nhanh hơn.
+Chronos,Thời Không
+Time field: enemies inside are slowed 30% and take +6% damage; towers inside are immune to EMP and debuffs and fire 7% faster. Every 8 s it freezes regular enemies for 1 s.,"Trường thời gian: quái bên trong chậm 30% và nhận thêm 6% sát thương; tháp bên trong miễn nhiễm EMP, hiệu ứng làm yếu và bắn nhanh hơn 7%. Cứ 8 giây đóng băng quái thường 1 giây."
+Thunderhead,Mây Giông
+Chains to 6,Nảy sang 6 quái
+Tempest I,Bão Tố I
+Chains to 4,Nảy sang 4 quái
+Tempest II,Bão Tố II
+Chain damage 75% per jump,Mỗi lần nảy còn 75% sát thương
+Tempest III,Bão Tố III
+Chains to 5,Nảy sang 5 quái
+Tempest,Bão Tố
+Lightning jumps further.,Sét nảy xa hơn.
+Superconductor,Siêu Dẫn
+Overload I,Quá Áp I
+Damage 75,Sát thương 75
+Overload II,Quá Áp II
+Every 3rd shot is a crit,Cứ 3 phát có 1 phát chí mạng
+Overload III,Quá Áp III
+Crits x3,Chí mạng x3
+Heavier critical strikes.,Chí mạng mạnh hơn.
+Ion Storm,Bão Ion
+"Conductive +2 jumps, Mark +15%","Dẫn điện +2 lần nảy, đánh dấu +15%"
+Ion I,Ion I
+Chains x2 vs shields,Tia nảy x2 với khiên
+Ion II,Ion II
+Hits Mark: +10% damage taken (3 s),Đánh dấu: nhận thêm 10% sát thương (3 giây)
+Ion III,Ion III
+Conductive: +1 jump between chilled enemies,Dẫn điện: nảy thêm 1 lần giữa các quái bị lạnh
+Ion,Ion
+Breaks shields and exposes enemies.,Phá khiên và làm quái lộ điểm yếu.
+Stormcaller,Lôi Thần
+Chain lightning: every shot jumps to 3 more enemies. Every 5th shot is a x2.3 critical. Chained enemies stagger briefly.,Sét chuỗi: mỗi phát nảy sang thêm 3 quái. Cứ phát thứ 5 chí mạng x2.3. Quái bị nảy trúng khựng nhẹ.
+Spotted,Bị đánh dấu
+Marked by a Marker: takes extra damage from every tower.,Bị Tháp Đánh Dấu đánh dấu: nhận thêm sát thương từ mọi tháp.
+Mark armor break,Dấu phá giáp
+Mark slow,Dấu làm chậm
+Kill Mark,Dấu Tử
+Marked enemies also lose 1 armor,Quái bị đánh dấu mất thêm 1 giáp
+Lock-On I,Khoá Mục Tiêu I
+Mark +10% damage taken,Dấu: +10% sát thương nhận vào
+Lock-On II,Khoá Mục Tiêu II
+Mark +12% damage taken,Dấu: +12% sát thương nhận vào
+Lock-On III,Khoá Mục Tiêu III
+Mark +15% damage taken,Dấu: +15% sát thương nhận vào
+Lock-On,Khoá Mục Tiêu
+Stronger marks.,Dấu mạnh hơn.
+Lead Mark,Dấu Chì
+Marked enemies are slowed 10%,Quái bị đánh dấu chậm 10%
+Tracer I,Truy Vết I
++30% damage vs stealth,+30% sát thương lên quái tàng hình
+Tracer II,Truy Vết II
++20% damage vs flying,+20% sát thương lên quái bay
+Tracer III,Truy Vết III
+Damage 7,Sát thương 7
+Tracer,Truy Vết
+Hunts special enemies.,Săn quái đặc biệt.
+Piercing Beam,Tia Xuyên
+Wide Scan I,Quét Rộng I
+Fire rate 1.4/s,"Tốc bắn 1,4/s"
+Wide Scan II,Quét Rộng II
+Fire rate 1.8/s,"Tốc bắn 1,8/s"
+Wide Scan III,Quét Rộng III
+Range 200,Tầm 200
+Wide Scan,Quét Rộng
+Marks more enemies.,Đánh dấu được nhiều quái hơn.
+Support. Weak shots mark enemies: marked enemies take +8% damage from every tower. Hits air.,Hỗ trợ. Đạn yếu đánh dấu quái: quái bị đánh dấu nhận thêm 8% sát thương từ mọi tháp. Bắn được quái bay.
+Marker,Tháp Đánh Dấu
+Shards complete,Đã đủ mảnh
+No more ads today,Hết lượt quảng cáo hôm nay
+Need %d more shards,Cần thêm %d mảnh
++%d %s shards,+%d mảnh %s
+JACKPOT!,NỔ TO!
+Armory: %d shards + %d Cores,Kho Tháp: %d mảnh + %d Lõi
+Armory,Kho Tháp
+Bosses (levels 5 and 10 of every region) can drop blueprint shards for a random tower. Each ad gives 1 shard for the tower you pick.,Trùm (màn 5 và 10 mỗi khu vực) có thể rơi mảnh thiết kế của một tháp ngẫu nhiên. Mỗi quảng cáo cho 1 mảnh của tháp bạn chọn.
+Ads left today: %d / %d,Lượt quảng cáo còn lại hôm nay: %d / %d
+(test ads),(quảng cáo thử)
+Watch ad  +%d,Xem QC  +%d
+"Elite towers: collect blueprint shards from bosses or ads, then buy them in the Armory.","Tháp tinh nhuệ: gom mảnh thiết kế từ trùm hoặc quảng cáo, rồi mua trong Kho Tháp."
+None owned,Chưa có
+Already used this match,Đã dùng trong trận này
+"Items — buy with Cores, use in a match (no cooldown; one of each per match).","Vật phẩm — mua bằng Lõi, dùng trong trận (không hồi chiêu; mỗi loại 1 lần/trận)."
+Owned: %d,Đang có: %d
+Buy  +1  (%d Cores),Mua  +1  (%d Lõi)
+Airstrike,Không Kích
+Instant 150 explosive damage in a radius around the toughest enemy on screen.,Gây ngay 150 sát thương nổ quanh con quái trâu máu nhất trên màn hình.
+Every tower fires 25% faster for 8 s.,Mọi tháp bắn nhanh hơn 25% trong 8 giây.
+Repair Kit,Bộ Sửa Chữa
+Instantly restores 3 Base HP.,Hồi ngay 3 máu căn cứ.
+Stasis Charge,Kíp Đóng Băng
+Freezes every regular enemy on screen for 2 s (bosses only stagger).,Đóng băng mọi quái thường trên màn hình trong 2 giây (trùm chỉ khựng lại).
+Loadout,Đội Hình
+%s — pick up to %d towers to bring,%s — chọn tối đa %d tháp mang theo
+Enter level,Vào Màn
+%d / %d selected,%d / %d đã chọn
+Tower Upgrades,Nâng Cấp Tháp
+Support,Hỗ Trợ
+SS tower,Tháp SS
+Coming soon,Sắp ra mắt
+Exposure Protocol,Giao Thức Phơi Bày
+Unlocks Bastion branch: Exposure.,Mở nhánh Lá Chắn Điện Từ: Phơi Bày.
+Spotter Protocol,Giao Thức Trinh Sát
+Unlocks Marksman branch: Spotter.,Mở nhánh Thiện Xạ: Trinh Sát.
+Wide Scan Protocol,Giao Thức Quét Rộng
+Unlocks Marker branch: Wide Scan.,Mở nhánh Tháp Đánh Dấu: Quét Rộng.
+Minefield Protocol,Giao Thức Bãi Mìn
+Unlocks Shock Trap branch: Minefield.,Mở nhánh Bẫy Điện: Bãi Mìn.
+Spray Protocol,Giao Thức Phun Sương
+Unlocks Venom branch: Spray.,Mở nhánh Phun Độc: Phun Sương.
+Bastion Evolution,Tiến Hoá Lá Chắn Điện Từ
+Unlocks evolutions for Bastion branches.,Mở tiến hoá cho các nhánh Lá Chắn Điện Từ.
+Chronos Evolution,Tiến Hoá Thời Không
+Unlocks evolutions for Chronos branches.,Mở tiến hoá cho các nhánh Thời Không.
+Marksman Evolution,Tiến Hoá Thiện Xạ
+Unlocks evolutions for Marksman branches.,Mở tiến hoá cho các nhánh Thiện Xạ.
+Marker Evolution,Tiến Hoá Tháp Đánh Dấu
+Unlocks evolutions for Marker branches.,Mở tiến hoá cho các nhánh Tháp Đánh Dấu.
+Stormcaller Evolution,Tiến Hoá Lôi Thần
+Unlocks evolutions for Stormcaller branches.,Mở tiến hoá cho các nhánh Lôi Thần.
+Shock Trap Evolution,Tiến Hoá Bẫy Điện
+Unlocks evolutions for Shock Trap branches.,Mở tiến hoá cho các nhánh Bẫy Điện.
+Venom Evolution,Tiến Hoá Phun Độc
+Unlocks evolutions for Venom branches.,Mở tiến hoá cho các nhánh Phun Độc.
+No towers match this filter.,Không có tháp nào khớp bộ lọc.
+All,Tất cả
+Unfinished only,Chỉ hiện chưa xong
+Unseen only,Chỉ hiện chưa gặp
+Armored,Có giáp
+C,C
+B,B
+A,A
+S,S
+SS,SS
+First,Đầu
+Strongest,Khoẻ
+Cluster,Đông
+Air,Bay
+Hide items,Ẩn vật phẩm
+Show items,Hiện vật phẩm
+Skips shields entirely,Bỏ qua khiên hoàn toàn
+"+%d innate armor pierce","+%d xuyên giáp sẵn có"
+"Some heavily-built enemies resist Plasma specifically, even without regular armor.","Vài loại quái thân hình chắc nặng kháng riêng Plasma, dù giáp thường = 0."
+"A few enemies (e.g. goo) resist Energy specifically, even without regular armor.","Vài loại quái (vd chất nhầy) kháng riêng Điện, dù giáp thường = 0."
+Plasma,Plasma
+"Lots of HP, slow. Focus fire on it. Resists Plasma (Spotter) specifically.","Máu nhiều, chậm. Tập trung hoả lực vào nó. Kháng riêng Plasma (Thương Quang)."
+"Regenerates quickly. Poison and burst damage beat it. Resists Energy (Lance, Storm) specifically.","Hồi máu nhanh. Độc và dồn sát thương sẽ hạ được nó. Kháng riêng Điện (Lance, Storm)."
+"Support. Weak shots mark enemies: marked enemies take +8% damage from every tower. Hits air. Shots skip shields entirely (Plasma).","Hỗ trợ. Bắn yếu đánh dấu quái: quái bị đánh dấu nhận +8% sát thương từ mọi tháp. Bắn được quái bay. Đạn bỏ qua khiên hoàn toàn (Plasma)."
+"Stealthed until revealed. Beacon light or Sensor; splash still hits. -30% from plain Kinetic hits (Pulse, Sniper) -- a tower's own %-damage bonus (e.g. Beacon's buff) counters this, armor pierce does not.","Tàng hình cho tới khi bị lộ diện. Ánh sáng Hải Đăng hoặc Sensor; splash vẫn trúng. -30% với đòn Kinetic thường (Pulse, Sniper) -- bonus % sát thương riêng của tháp (vd buff Hải Đăng) khắc được, xuyên giáp thì không."
+"Regenerating shield. Energy (Lance, Arc) breaks it twice as fast. Periodically jams nearby towers' fire rate.","Khiên tự hồi. Năng lượng (Lance, Arc) phá nhanh gấp đôi. Định kị làm chậm tốc bắn trìu quanh."
+"Flies over the lane. Pulse, Lance or Flak Nova; Sensor can ground it. Periodically shortens nearby towers' range.","Bay qua đường. Pulse, Lance hoỷc Flak Nova; Sensor hạ được nó. Định kỳ giảm tầm bắn trìu quanh."
+Main branch to tier 3 (+1 secondary branch up to tier 2). All towers can evolve.,Nhánh chính lên cấp 3 (+1 nhánh phụ tối đa cấp 2). Mọi tháp đều có thể tiến hoá.
+Jams towers in 180 px — they attack at 40% speed for 4 s. Kill it fast or spread towers wide.,Gây nhiễu tháp trong 180 px — tháp chỉ bắn với 40% tốc độ trong 4 giây. Diệt nhanh hoặc đặt tháp dàn trải.
+Heavy tank that fires a static field shrinking nearby tower range by 45% for 4.5 s. Long-range towers (Sniper) suffer least.,"Xe tăng nặng phát trường tĩnh điện, giảm 45% tầm bắn của tháp gần đó trong 4,5 giây. Tháp tầm xa (Sniper) bị ảnh hưởng ít nhất."
+Stealthy sprinter that bursts an EMP disabling all towers in 150 px for 2 s. Beacon reveals it; splash still hits.,"Kẻ chạy nhanh tàng hình, phát xung EMP vô hiệu mọi tháp trong 150 px trong 2 giây. Beacon làm lộ nó; sát thương lan vẫn trúng."
+"Armored frontliner. Shields every ally in 200 px with 130 HP overshield for 6 s. Burst-AOE (Nova, Pulse) shreds shields fast.","Tiền tuyến bọc giáp. Tạo giáp tạm 130 HP cho mọi đồng minh trong 200 px trong 6 giây. Sát thương diện rộng dồn dập (Nova, Pulse) phá giáp nhanh."
+Grants nearby allies +35% speed for 4 s every 7 s. Kill it first — freeze/slow counters its haste burst.,Cứ 7 giây tăng +35% tốc độ cho đồng minh gần đó trong 4 giây. Diệt nó trước — đóng băng/làm chậm khắc chế đợt tăng tốc.
+Cloaks itself and all allies in 160 px for 5 s. Beacon or Sensor reveals the pack; splash still hits.,Tàng hình bản thân và mọi đồng minh trong 160 px trong 5 giây. Beacon hoặc Sensor làm lộ cả bầy; sát thương lan vẫn trúng.
+"Pulses a heal burst restoring 15% max HP to allies in 180 px, plus a passive trickle. Burn halves all healing received.","Phát xung hồi 15% máu tối đa cho đồng minh trong 180 px, kèm hồi máu thụ động. Thiêu đốt giảm một nửa lượng hồi máu nhận được."
+Cloaker,Kẻ Ẩn Hình
+Disruptor,Kẻ Phá Sóng
+Mender Elite,Y Sĩ Tinh Anh
+Rallier,Kẻ Cổ Vũ
+Static Crawler,Bò Tĩnh Điện
+Vanguard,Tiên Phong
+Wraith,U Linh
+A staircase of short lanes with overload nodes. The armored Vanguard arrives to shield allied lines.,"Bậc thang những làn ngắn với các nút quá tải. Tiên Phong bọc giáp xuất hiện, che chắn hàng quân đồng minh."
+"Four long rows. The Disruptor arrives, jamming tower recharge rates along the corridors.","Bốn hàng dài. Kẻ Phá Sóng xuất hiện, làm chậm tốc độ nạp của tháp dọc các hành lang."
+"The lane wraps around the furnace. The Static Crawler pulses static fields, shrinking tower range.","Làn đường vòng quanh lò nung. Bò Tĩnh Điện phát trường tĩnh điện, thu hẹp tầm bắn của tháp."
+"One column from north, one from west. The Rallier deploys speed haste bursts to advancing troops.","Một cột từ phía bắc, một cột từ phía tây. Kẻ Cổ Vũ tung các đợt tăng tốc cho quân đang tiến."
+Both columns pour in from top. The Cloaker shrouds nearby enemy packs in optical invisibility.,Cả hai cột tràn vào từ phía trên. Kẻ Ẩn Hình che giấu các bầy địch gần đó khỏi tầm nhìn.
+Steep diagonal bridges. The stealth Wraith darts in with tower-disabling EMP pulse charges.,Những cây cầu chéo dốc. U Linh tàng hình lao tới với xung EMP vô hiệu hoá tháp.
+The beam splits around the crystal. Mender Elites project wide restorative wave pulses.,Tia sáng tách quanh khối pha lê. Y Sĩ Tinh Anh phát các đợt sóng hồi phục diện rộng.
+Support. Weak shots explode on impact (AOE 60) and mark all enemies hit: marked enemies take +8% damage from every tower. Hits air. Shots skip shields entirely (Plasma).,Hỗ trợ. Đạn yếu nổ khi trúng (diện rộng 60) và đánh dấu mọi kẻ địch trúng đạn: kẻ bị đánh dấu nhận thêm 8% sát thương từ mọi tháp. Bắn được mục tiêu bay. Đạn bỏ qua hoàn toàn khiên (Plasma).

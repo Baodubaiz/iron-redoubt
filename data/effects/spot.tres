@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="EffectDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_in8p8"]
+
+[resource]
+script = ExtResource("1_in8p8")
+id = &"spot"
+display_name = "Spotted"
+description = "Marked by a Marker: takes extra damage from every tower."
+icon = "mark"
+color = Color(1, 0.47843137, 0.6039216, 1)
+builtin = true

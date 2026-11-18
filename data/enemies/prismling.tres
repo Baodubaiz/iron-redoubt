@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/boss_skill_def.gd" id="1_qyvq6"]
+[ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="2_2p6bf"]
+
+[sub_resource type="Resource" id="Resource_awgtt"]
+script = ExtResource("1_qyvq6")
+action = &"prism"
+interval = 5.0
+telegraph = 0.6
+params = {
+"duration": 3.0
+}
+
+[resource]
+script = ExtResource("2_2p6bf")
+id = &"prismling"
+display_name = "Prismling"
+category = 2
+max_hp = 231.0
+speed = 63.0
+armor = 1.1
+bounty = 12
+base_damage = 2
+radius = 12.0
+color = Color(0.78039217, 0.6509804, 1, 1)
+shape = 7
+threat_mult = 1.2
+boss_params = {
+"first_skill": 2.0
+}
+boss_skills = Array[ExtResource("1_qyvq6")]([SubResource("Resource_awgtt")])

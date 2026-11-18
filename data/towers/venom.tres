@@ -1,0 +1,164 @@
+[gd_resource type="Resource" script_class="TowerDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/branch_def.gd" id="1_pqo5b"]
+[ext_resource type="Script" path="res://data/defs/tier_def.gd" id="2_4w8h6"]
+[ext_resource type="Script" path="res://data/defs/tower_def.gd" id="3_gda2j"]
+
+[sub_resource type="Resource" id="Resource_gumtn"]
+script = ExtResource("2_4w8h6")
+display_name = "Neurotoxin"
+description = "Up to 6 stacks; poisoned enemies are slowed 15%"
+cost = 386
+stats = {
+"venom_slow_pct": 0.15,
+"venom_stacks": 6
+}
+
+[sub_resource type="Resource" id="Resource_2xg0a"]
+script = ExtResource("2_4w8h6")
+display_name = "Potency I"
+description = "Poison 3.2/s per stack"
+cost = 57
+stats = {
+"venom_dps": 1.6
+}
+
+[sub_resource type="Resource" id="Resource_tdamb"]
+script = ExtResource("2_4w8h6")
+display_name = "Potency II"
+description = "Poison 4/s per stack"
+cost = 115
+stats = {
+"venom_dps": 2.0
+}
+
+[sub_resource type="Resource" id="Resource_e60kp"]
+script = ExtResource("2_4w8h6")
+display_name = "Potency III"
+description = "Poison 5/s per stack"
+cost = 215
+stats = {
+"venom_dps": 2.5
+}
+
+[sub_resource type="Resource" id="Resource_32we1"]
+script = ExtResource("1_pqo5b")
+id = &"potency"
+display_name = "Potency"
+description = "Stronger poison."
+tiers = Array[ExtResource("2_4w8h6")]([SubResource("Resource_2xg0a"), SubResource("Resource_tdamb"), SubResource("Resource_e60kp")])
+evolution = SubResource("Resource_gumtn")
+
+[sub_resource type="Resource" id="Resource_ithff"]
+script = ExtResource("2_4w8h6")
+display_name = "Acid Bath"
+description = "Each stack: +3% damage taken"
+cost = 386
+stats = {
+"venom_vuln": 1.03
+}
+
+[sub_resource type="Resource" id="Resource_w8fb4"]
+script = ExtResource("2_4w8h6")
+display_name = "Corrosion I"
+description = "-0.5 armor per stack"
+cost = 57
+stats = {
+"venom_armor": 0.5
+}
+
+[sub_resource type="Resource" id="Resource_b4djj"]
+script = ExtResource("2_4w8h6")
+display_name = "Corrosion II"
+description = "-1 armor per stack"
+cost = 115
+stats = {
+"venom_armor": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_w3y06"]
+script = ExtResource("2_4w8h6")
+display_name = "Corrosion III"
+description = "-1.5 armor per stack"
+cost = 215
+stats = {
+"venom_armor": 1.5
+}
+
+[sub_resource type="Resource" id="Resource_2hldi"]
+script = ExtResource("1_pqo5b")
+id = &"corrosion"
+display_name = "Corrosion"
+description = "Poison eats armor."
+tiers = Array[ExtResource("2_4w8h6")]([SubResource("Resource_w8fb4"), SubResource("Resource_b4djj"), SubResource("Resource_w3y06")])
+evolution = SubResource("Resource_ithff")
+
+[sub_resource type="Resource" id="Resource_1517n"]
+script = ExtResource("2_4w8h6")
+display_name = "Plague Cloud"
+description = "Fire rate 1.6/s"
+cost = 386
+stats = {
+"fire_rate": 1.6
+}
+
+[sub_resource type="Resource" id="Resource_i64ji"]
+script = ExtResource("2_4w8h6")
+display_name = "Spray I"
+description = "Cloud radius 22, lasts 3 s"
+cost = 57
+stats = {
+"venom_patch_duration": 3.0,
+"venom_patch_radius": 22.0
+}
+
+[sub_resource type="Resource" id="Resource_u4amo"]
+script = ExtResource("2_4w8h6")
+display_name = "Spray II"
+description = "Cloud radius 28, lasts 4 s"
+cost = 115
+stats = {
+"venom_patch_duration": 4.0,
+"venom_patch_radius": 28.0
+}
+
+[sub_resource type="Resource" id="Resource_ij8tq"]
+script = ExtResource("2_4w8h6")
+display_name = "Spray III"
+description = "Cloud radius 36, lasts 5 s"
+cost = 215
+stats = {
+"venom_patch_duration": 5.0,
+"venom_patch_radius": 36.0
+}
+
+[sub_resource type="Resource" id="Resource_otrjp"]
+script = ExtResource("1_pqo5b")
+id = &"spray"
+display_name = "Spray"
+description = "Shots leave a lingering poison cloud instead of hitting one target."
+tiers = Array[ExtResource("2_4w8h6")]([SubResource("Resource_i64ji"), SubResource("Resource_u4amo"), SubResource("Resource_ij8tq")])
+evolution = SubResource("Resource_1517n")
+requires_research = true
+
+[resource]
+script = ExtResource("3_gda2j")
+id = &"venom"
+display_name = "Venom"
+rarity = &"B"
+role = "Stacking poison that ignores armor. Slow to kill, great against tough or regenerating enemies."
+cost = 92
+damage = 2.5
+damage_type = 3
+fire_rate = 1.5
+attack_range = 160.0
+projectile_speed = 520.0
+targeting = 2
+color = Color(0.54509807, 0.8901961, 0.41568628, 1)
+shape = 3
+base_params = {
+"venom_dps": 1.1,
+"venom_duration": 4.0,
+"venom_stacks": 4
+}
+branches = Array[ExtResource("1_pqo5b")]([SubResource("Resource_32we1"), SubResource("Resource_2hldi"), SubResource("Resource_otrjp")])

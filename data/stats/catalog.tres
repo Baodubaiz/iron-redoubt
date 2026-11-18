@@ -1,0 +1,486 @@
+[gd_resource type="Resource" script_class="StatCatalog" format=3]
+
+[ext_resource type="Script" path="res://data/defs/stat_catalog.gd" id="1_jb0dq"]
+[ext_resource type="Script" path="res://data/defs/stat_def.gd" id="2_5udet"]
+
+[sub_resource type="Resource" id="Resource_mar7i"]
+script = ExtResource("2_5udet")
+id = &"damage"
+label = "Damage"
+
+[sub_resource type="Resource" id="Resource_hjj4j"]
+script = ExtResource("2_5udet")
+id = &"fire_rate"
+label = "Fire rate"
+unit = "/s"
+
+[sub_resource type="Resource" id="Resource_tlqc6"]
+script = ExtResource("2_5udet")
+id = &"attack_range"
+label = "Range"
+unit = "px"
+
+[sub_resource type="Resource" id="Resource_sqtlh"]
+script = ExtResource("2_5udet")
+id = &"armor_pen"
+label = "Armor pen"
+
+[sub_resource type="Resource" id="Resource_4toid"]
+script = ExtResource("2_5udet")
+id = &"splash_radius"
+label = "Splash"
+unit = "px"
+
+[sub_resource type="Resource" id="Resource_wugj7"]
+script = ExtResource("2_5udet")
+id = &"can_target_air"
+label = "Hits air"
+stack = 1
+
+[sub_resource type="Resource" id="Resource_vgct8"]
+script = ExtResource("2_5udet")
+id = &"air_damage_mult"
+label = "Vs air"
+unit = "x"
+
+[sub_resource type="Resource" id="Resource_k6dvh"]
+script = ExtResource("2_5udet")
+id = &"boss_mult"
+label = "Vs boss"
+unit = "x"
+
+[sub_resource type="Resource" id="Resource_6obkn"]
+script = ExtResource("2_5udet")
+id = &"tag_mult"
+label = "Vs tag"
+stack = 4
+unit = "x"
+
+[sub_resource type="Resource" id="Resource_pjc46"]
+script = ExtResource("2_5udet")
+id = &"on_hit_effects"
+label = "On hit"
+stack = 4
+
+[sub_resource type="Resource" id="Resource_5e4xb"]
+script = ExtResource("2_5udet")
+id = &"amp_damage"
+label = "Buff dmg"
+percent = true
+
+[sub_resource type="Resource" id="Resource_7epq5"]
+script = ExtResource("2_5udet")
+id = &"amp_range"
+label = "Buff range"
+percent = true
+
+[sub_resource type="Resource" id="Resource_d4pin"]
+script = ExtResource("2_5udet")
+id = &"amp_rate"
+label = "Buff rate"
+percent = true
+
+[sub_resource type="Resource" id="Resource_106c2"]
+script = ExtResource("2_5udet")
+id = &"slow"
+label = "Slow"
+percent = true
+
+[sub_resource type="Resource" id="Resource_sn0pw"]
+script = ExtResource("2_5udet")
+id = &"beam_dps"
+label = "Beam"
+unit = "/s"
+
+[sub_resource type="Resource" id="Resource_be20j"]
+script = ExtResource("2_5udet")
+id = &"beam_pierce"
+label = "Beam pierce"
+stack = 1
+
+[sub_resource type="Resource" id="Resource_t3d2r"]
+script = ExtResource("2_5udet")
+id = &"ramp_max"
+label = "Ramp"
+unit = "x"
+
+[sub_resource type="Resource" id="Resource_k5dkp"]
+script = ExtResource("2_5udet")
+id = &"ramp_time"
+label = "Ramp time"
+unit = "s"
+shown = false
+
+[sub_resource type="Resource" id="Resource_d05w6"]
+script = ExtResource("2_5udet")
+id = &"bomblets"
+label = "Bomblets"
+
+[sub_resource type="Resource" id="Resource_48hig"]
+script = ExtResource("2_5udet")
+id = &"bomblet_damage"
+label = "Bomblet dmg"
+
+[sub_resource type="Resource" id="Resource_7ls8l"]
+script = ExtResource("2_5udet")
+id = &"burn_dps"
+label = "Burn"
+unit = "/s"
+
+[sub_resource type="Resource" id="Resource_ytri4"]
+script = ExtResource("2_5udet")
+id = &"burn_duration"
+label = "Burn time"
+unit = "s"
+shown = false
+
+[sub_resource type="Resource" id="Resource_q3id5"]
+script = ExtResource("2_5udet")
+id = &"fire_patch_duration"
+label = "Fire patch"
+unit = "s"
+
+[sub_resource type="Resource" id="Resource_06ast"]
+script = ExtResource("2_5udet")
+id = &"fire_patch_radius"
+label = "Patch size"
+unit = "px"
+shown = false
+
+[sub_resource type="Resource" id="Resource_4cesx"]
+script = ExtResource("2_5udet")
+id = &"death_explosion"
+label = "Death blast"
+
+[sub_resource type="Resource" id="Resource_55gxr"]
+script = ExtResource("2_5udet")
+id = &"shred"
+label = "Shred"
+
+[sub_resource type="Resource" id="Resource_s401c"]
+script = ExtResource("2_5udet")
+id = &"shred_cap"
+label = "Shred cap"
+shown = false
+
+[sub_resource type="Resource" id="Resource_hwmam"]
+script = ExtResource("2_5udet")
+id = &"stagger"
+label = "Stagger"
+unit = "s"
+
+[sub_resource type="Resource" id="Resource_gve6c"]
+script = ExtResource("2_5udet")
+id = &"stun_every"
+label = "Stun every"
+
+[sub_resource type="Resource" id="Resource_wim6x"]
+script = ExtResource("2_5udet")
+id = &"stun_duration"
+label = "Stun"
+unit = "s"
+
+[sub_resource type="Resource" id="Resource_wymyh"]
+script = ExtResource("2_5udet")
+id = &"echo_every"
+label = "Echo every"
+
+[sub_resource type="Resource" id="Resource_3iayu"]
+script = ExtResource("2_5udet")
+id = &"echo_delay"
+label = "Echo delay"
+unit = "s"
+shown = false
+
+[sub_resource type="Resource" id="Resource_q4llr"]
+script = ExtResource("2_5udet")
+id = &"crit_every"
+label = "Crit every"
+
+[sub_resource type="Resource" id="Resource_pe7fx"]
+script = ExtResource("2_5udet")
+id = &"crit_mult"
+label = "Crit"
+unit = "x"
+
+[sub_resource type="Resource" id="Resource_3dmew"]
+script = ExtResource("2_5udet")
+id = &"burst_every"
+label = "Burst every"
+
+[sub_resource type="Resource" id="Resource_lcv41"]
+script = ExtResource("2_5udet")
+id = &"burst_count"
+label = "Burst"
+
+[sub_resource type="Resource" id="Resource_h27cu"]
+script = ExtResource("2_5udet")
+id = &"pierce"
+label = "Pierce"
+
+[sub_resource type="Resource" id="Resource_3w213"]
+script = ExtResource("2_5udet")
+id = &"chain"
+label = "Chain"
+
+[sub_resource type="Resource" id="Resource_hwalv"]
+script = ExtResource("2_5udet")
+id = &"chain_falloff"
+label = "Chain dmg"
+percent = true
+shown = false
+
+[sub_resource type="Resource" id="Resource_nyd2e"]
+script = ExtResource("2_5udet")
+id = &"chain_shield_mult"
+label = "Chain vs shield"
+unit = "x"
+
+[sub_resource type="Resource" id="Resource_u8b5d"]
+script = ExtResource("2_5udet")
+id = &"chain_stagger"
+label = "Chain stagger"
+unit = "s"
+
+[sub_resource type="Resource" id="Resource_4cdu5"]
+script = ExtResource("2_5udet")
+id = &"conductive"
+label = "Conductive"
+stack = 1
+
+[sub_resource type="Resource" id="Resource_wtnp2"]
+script = ExtResource("2_5udet")
+id = &"conductive_bonus"
+label = "Conductive jumps"
+
+[sub_resource type="Resource" id="Resource_pivl1"]
+script = ExtResource("2_5udet")
+id = &"mark"
+label = "Mark"
+percent = true
+
+[sub_resource type="Resource" id="Resource_8po2c"]
+script = ExtResource("2_5udet")
+id = &"mark_duration"
+label = "Mark time"
+unit = "s"
+shown = false
+
+[sub_resource type="Resource" id="Resource_g38j2"]
+script = ExtResource("2_5udet")
+id = &"ground_marked_fliers"
+label = "Ground fliers"
+unit = "s"
+
+[sub_resource type="Resource" id="Resource_y3ylu"]
+script = ExtResource("2_5udet")
+id = &"reveal_radius"
+label = "Reveal"
+unit = "px"
+
+[sub_resource type="Resource" id="Resource_cx2eg"]
+script = ExtResource("2_5udet")
+id = &"freeze_every"
+label = "Freeze every"
+unit = "s"
+
+[sub_resource type="Resource" id="Resource_lts3x"]
+script = ExtResource("2_5udet")
+id = &"freeze_duration"
+label = "Freeze"
+unit = "s"
+
+[sub_resource type="Resource" id="Resource_cbtqq"]
+script = ExtResource("2_5udet")
+id = &"shatter"
+label = "Shatter"
+percent = true
+
+[sub_resource type="Resource" id="Resource_8jh6m"]
+script = ExtResource("2_5udet")
+id = &"wave_income"
+label = "Wave income"
+
+[sub_resource type="Resource" id="Resource_sjh68"]
+script = ExtResource("2_5udet")
+id = &"bounty_bonus"
+label = "Kill bonus"
+
+[sub_resource type="Resource" id="Resource_nacew"]
+script = ExtResource("2_5udet")
+id = &"mint_amount"
+label = "Mint"
+
+[sub_resource type="Resource" id="Resource_dwp6s"]
+script = ExtResource("2_5udet")
+id = &"mint_interval"
+label = "Mint every"
+unit = "s"
+shown = false
+
+[sub_resource type="Resource" id="Resource_1puuv"]
+script = ExtResource("2_5udet")
+id = &"trap_duration"
+label = "Trap time"
+unit = "s"
+
+[sub_resource type="Resource" id="Resource_4wtdp"]
+script = ExtResource("2_5udet")
+id = &"trap_radius"
+label = "Trap size"
+unit = "px"
+
+[sub_resource type="Resource" id="Resource_glai5"]
+script = ExtResource("2_5udet")
+id = &"trap_slow_pct"
+label = "Trap slow"
+percent = true
+
+[sub_resource type="Resource" id="Resource_eqqvm"]
+script = ExtResource("2_5udet")
+id = &"trap_dps"
+label = "Trap damage"
+unit = "/s"
+
+[sub_resource type="Resource" id="Resource_po7yp"]
+script = ExtResource("2_5udet")
+id = &"trap_stop"
+label = "Trap hold"
+stack = 1
+
+[sub_resource type="Resource" id="Resource_wwvhj"]
+script = ExtResource("2_5udet")
+id = &"trap_vuln"
+label = "Trap exposure"
+unit = "x"
+
+[sub_resource type="Resource" id="Resource_l5hae"]
+script = ExtResource("2_5udet")
+id = &"venom_dps"
+label = "Poison"
+unit = "/s"
+
+[sub_resource type="Resource" id="Resource_jjhhh"]
+script = ExtResource("2_5udet")
+id = &"venom_stacks"
+label = "Poison stacks"
+
+[sub_resource type="Resource" id="Resource_1gvp8"]
+script = ExtResource("2_5udet")
+id = &"venom_duration"
+label = "Poison time"
+unit = "s"
+shown = false
+
+[sub_resource type="Resource" id="Resource_huck5"]
+script = ExtResource("2_5udet")
+id = &"venom_armor"
+label = "Corrode"
+
+[sub_resource type="Resource" id="Resource_hs64d"]
+script = ExtResource("2_5udet")
+id = &"venom_vuln"
+label = "Poison exposure"
+unit = "x"
+
+[sub_resource type="Resource" id="Resource_w1lgf"]
+script = ExtResource("2_5udet")
+id = &"venom_slow_pct"
+label = "Poison slow"
+percent = true
+
+[sub_resource type="Resource" id="Resource_12gyd"]
+script = ExtResource("2_5udet")
+id = &"venom_patch_radius"
+label = "Cloud size"
+unit = "px"
+
+[sub_resource type="Resource" id="Resource_pq5sw"]
+script = ExtResource("2_5udet")
+id = &"venom_patch_duration"
+label = "Cloud time"
+unit = "s"
+
+[sub_resource type="Resource" id="Resource_j06st"]
+script = ExtResource("2_5udet")
+id = &"spot_vuln"
+label = "Mark"
+unit = "x"
+
+[sub_resource type="Resource" id="Resource_g8lyc"]
+script = ExtResource("2_5udet")
+id = &"spot_duration"
+label = "Mark time"
+unit = "s"
+shown = false
+
+[sub_resource type="Resource" id="Resource_xs2jg"]
+script = ExtResource("2_5udet")
+id = &"spot_armor"
+label = "Mark armor break"
+
+[sub_resource type="Resource" id="Resource_ybt5l"]
+script = ExtResource("2_5udet")
+id = &"spot_slow_pct"
+label = "Mark slow"
+percent = true
+
+[sub_resource type="Resource" id="Resource_ox2gc"]
+script = ExtResource("2_5udet")
+id = &"field"
+label = "Field"
+stack = 1
+shown = false
+
+[sub_resource type="Resource" id="Resource_da67s"]
+script = ExtResource("2_5udet")
+id = &"field_slow_pct"
+label = "Field slow"
+percent = true
+
+[sub_resource type="Resource" id="Resource_qihe5"]
+script = ExtResource("2_5udet")
+id = &"field_vuln"
+label = "Field exposure"
+unit = "x"
+
+[sub_resource type="Resource" id="Resource_3yyj0"]
+script = ExtResource("2_5udet")
+id = &"max_hp"
+label = "HP"
+owner = 1
+
+[sub_resource type="Resource" id="Resource_llbe2"]
+script = ExtResource("2_5udet")
+id = &"speed"
+label = "Speed"
+owner = 1
+unit = "px/s"
+
+[sub_resource type="Resource" id="Resource_80ooh"]
+script = ExtResource("2_5udet")
+id = &"armor"
+label = "Armor"
+owner = 1
+
+[sub_resource type="Resource" id="Resource_vlf27"]
+script = ExtResource("2_5udet")
+id = &"shield"
+label = "Shield"
+owner = 1
+
+[sub_resource type="Resource" id="Resource_tsu5b"]
+script = ExtResource("2_5udet")
+id = &"bounty"
+label = "Bounty"
+owner = 1
+
+[sub_resource type="Resource" id="Resource_vxdwk"]
+script = ExtResource("2_5udet")
+id = &"base_damage"
+label = "Base damage"
+owner = 1
+
+[resource]
+script = ExtResource("1_jb0dq")
+stats = Array[ExtResource("2_5udet")]([SubResource("Resource_mar7i"), SubResource("Resource_hjj4j"), SubResource("Resource_tlqc6"), SubResource("Resource_sqtlh"), SubResource("Resource_4toid"), SubResource("Resource_wugj7"), SubResource("Resource_vgct8"), SubResource("Resource_k6dvh"), SubResource("Resource_6obkn"), SubResource("Resource_pjc46"), SubResource("Resource_5e4xb"), SubResource("Resource_7epq5"), SubResource("Resource_d4pin"), SubResource("Resource_106c2"), SubResource("Resource_sn0pw"), SubResource("Resource_be20j"), SubResource("Resource_t3d2r"), SubResource("Resource_k5dkp"), SubResource("Resource_d05w6"), SubResource("Resource_48hig"), SubResource("Resource_7ls8l"), SubResource("Resource_ytri4"), SubResource("Resource_q3id5"), SubResource("Resource_06ast"), SubResource("Resource_4cesx"), SubResource("Resource_55gxr"), SubResource("Resource_s401c"), SubResource("Resource_hwmam"), SubResource("Resource_gve6c"), SubResource("Resource_wim6x"), SubResource("Resource_wymyh"), SubResource("Resource_3iayu"), SubResource("Resource_q4llr"), SubResource("Resource_pe7fx"), SubResource("Resource_3dmew"), SubResource("Resource_lcv41"), SubResource("Resource_h27cu"), SubResource("Resource_3w213"), SubResource("Resource_hwalv"), SubResource("Resource_nyd2e"), SubResource("Resource_u8b5d"), SubResource("Resource_4cdu5"), SubResource("Resource_wtnp2"), SubResource("Resource_pivl1"), SubResource("Resource_8po2c"), SubResource("Resource_g38j2"), SubResource("Resource_y3ylu"), SubResource("Resource_cx2eg"), SubResource("Resource_lts3x"), SubResource("Resource_cbtqq"), SubResource("Resource_8jh6m"), SubResource("Resource_sjh68"), SubResource("Resource_nacew"), SubResource("Resource_dwp6s"), SubResource("Resource_1puuv"), SubResource("Resource_4wtdp"), SubResource("Resource_glai5"), SubResource("Resource_eqqvm"), SubResource("Resource_po7yp"), SubResource("Resource_wwvhj"), SubResource("Resource_l5hae"), SubResource("Resource_jjhhh"), SubResource("Resource_1gvp8"), SubResource("Resource_huck5"), SubResource("Resource_hs64d"), SubResource("Resource_w1lgf"), SubResource("Resource_12gyd"), SubResource("Resource_pq5sw"), SubResource("Resource_j06st"), SubResource("Resource_g8lyc"), SubResource("Resource_xs2jg"), SubResource("Resource_ybt5l"), SubResource("Resource_ox2gc"), SubResource("Resource_da67s"), SubResource("Resource_qihe5"), SubResource("Resource_3yyj0"), SubResource("Resource_llbe2"), SubResource("Resource_80ooh"), SubResource("Resource_vlf27"), SubResource("Resource_tsu5b"), SubResource("Resource_vxdwk")])

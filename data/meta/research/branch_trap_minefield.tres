@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ResearchDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/research_def.gd" id="1_yl3ro"]
+
+[resource]
+script = ExtResource("1_yl3ro")
+id = &"branch_trap_minefield"
+display_name = "Minefield Protocol"
+description = "Unlocks Shock Trap branch: Minefield."
+kind = 0
+cost = 35
+tower_id = &"trap"
+requires_tower = &"trap"
+category = &"tower"

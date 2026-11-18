@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="EffectDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_gs5l6"]
+
+[resource]
+script = ExtResource("1_gs5l6")
+id = &"mark"
+display_name = "Mark"
+description = "Takes extra damage from every source."
+icon = "mark"
+color = Color(1, 0.3254902, 0.40784314, 1)
+builtin = true

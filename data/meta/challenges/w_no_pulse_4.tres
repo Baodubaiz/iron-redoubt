@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ChallengeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/levels/level_04.tres" id="1_iyafi"]
+[ext_resource type="Script" path="res://data/defs/challenge_def.gd" id="2_u3tv7"]
+
+[resource]
+script = ExtResource("2_u3tv7")
+id = &"w_no_pulse_4"
+display_name = "Ground War"
+description = "Clear level 11 without Pulse."
+period = 1
+level = ExtResource("1_iyafi")
+banned_towers = Array[StringName]([&"pulse"])
+cores = 30

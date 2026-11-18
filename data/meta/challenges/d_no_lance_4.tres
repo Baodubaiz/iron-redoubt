@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ChallengeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/levels/level_04.tres" id="1_tubjv"]
+[ext_resource type="Script" path="res://data/defs/challenge_def.gd" id="2_7m6yu"]
+
+[resource]
+script = ExtResource("2_7m6yu")
+id = &"d_no_lance_4"
+display_name = "Blunt Force"
+description = "Clear level 11 without Lance."
+level = ExtResource("1_tubjv")
+banned_towers = Array[StringName]([&"lance"])
+cores = 12

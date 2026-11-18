@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MapDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/map_def.gd" id="1_s58wq"]
+
+[resource]
+script = ExtResource("1_s58wq")
+id = &"prism"
+display_name = "Prism"
+region = &"prism"
+routes = Array[PackedVector2Array]([PackedVector2Array(-40, 360, 260, 360, 260, 140, 900, 140, 900, 360, 1080, 360, 1080, 655), PackedVector2Array(-40, 360, 260, 360, 260, 580, 900, 580, 900, 360, 1080, 360, 1080, 655)])
+air_routes = Array[PackedVector2Array]([PackedVector2Array(40, 70, 560, 640, 700, 470, 1000, 470, 1080, 655)])
+blocked_rects = Array[Rect2]([Rect2(530, 310, 100, 100), Rect2(60, 160, 120, 90)])
+range_bonus_zones = PackedVector3Array()
+dynamic_routes = true
+background_color = Color(0.05882353, 0.05490196, 0.08235294, 1)

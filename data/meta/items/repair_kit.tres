@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ConsumableDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/consumable_def.gd" id="1_detwo"]
+
+[resource]
+script = ExtResource("1_detwo")
+id = &"repair_kit"
+display_name = "Repair Kit"
+description = "Instantly restores 3 Base HP."
+icon = "heart"
+cost = 60
+kind = 1
+heal_amount = 3

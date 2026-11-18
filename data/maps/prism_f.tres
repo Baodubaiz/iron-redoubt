@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="MapDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/map_def.gd" id="1_yixrh"]
+
+[resource]
+script = ExtResource("1_yixrh")
+id = &"prism_f"
+display_name = "Prism — Refraction Core"
+region = &"prism"
+routes = Array[PackedVector2Array]([PackedVector2Array(-40, 600, 160, 600, 160, 360, 360, 160, 560, 360, 760, 160, 960, 360, 1080, 360, 1080, 120), PackedVector2Array(-40, 600, 160, 600, 160, 360, 360, 560, 560, 360, 760, 560, 960, 360, 1080, 360, 1080, 120)])
+air_routes = Array[PackedVector2Array]([PackedVector2Array(40, 700, 1080, 120)])
+blocked_rects = Array[Rect2]([Rect2(320, 330, 80, 60), Rect2(720, 330, 80, 60)])
+range_bonus_zones = PackedVector3Array()
+dynamic_routes = true

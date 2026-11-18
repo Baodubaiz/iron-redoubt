@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="AchievementDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/achievement_def.gd" id="1_5w34b"]
+
+[resource]
+script = ExtResource("1_5w34b")
+id = &"synergist"
+display_name = "Synergist"
+description = "Trigger Grounded, Conductive, Shatter and Meltdown (lifetime)."
+kind = 5
+params = {
+"counter": "interactions",
+"values": ["grounded", "conductive", "shatter", "meltdown"]
+}
+cores = 15

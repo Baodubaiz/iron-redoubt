@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ChallengeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/levels/level_08.tres" id="1_8wfgm"]
+[ext_resource type="Script" path="res://data/defs/challenge_def.gd" id="2_dscug"]
+
+[resource]
+script = ExtResource("2_dscug")
+id = &"w_no_nova_8"
+display_name = "Precision Only"
+description = "Clear level 22 without Nova."
+period = 1
+level = ExtResource("1_8wfgm")
+banned_towers = Array[StringName]([&"nova"])
+cores = 35

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/boss_skill_def.gd" id="1_5dxu0"]
+[ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="2_axj3x"]
+
+[resource]
+script = ExtResource("2_axj3x")
+id = &"plated"
+display_name = "Plated"
+category = 1
+max_hp = 231.0
+speed = 57.800000000000004
+armor = 8.4
+bounty = 14
+base_damage = 2
+radius = 13.0
+color = Color(0.8509804, 0.8509804, 0.8509804, 1)
+shape = 4

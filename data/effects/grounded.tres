@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="EffectDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_vc4a0"]
+
+[resource]
+script = ExtResource("1_vc4a0")
+id = &"grounded"
+display_name = "Grounded"
+description = "A flier forced down: ground towers can hit it."
+icon = "grounded"
+color = Color(0.3019608, 0.9019608, 0.6313726, 1)
+builtin = true

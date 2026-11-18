@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ChallengeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/levels/level_01.tres" id="1_x7kba"]
+[ext_resource type="Script" path="res://data/defs/challenge_def.gd" id="2_v2xkd"]
+
+[resource]
+script = ExtResource("2_v2xkd")
+id = &"d_glass_1"
+display_name = "Glass Core"
+description = "Clear level 1 with at most 5 Base HP."
+level = ExtResource("1_x7kba")
+base_hp_cap = 5
+cores = 8

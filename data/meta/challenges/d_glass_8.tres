@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ChallengeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/levels/level_08.tres" id="1_l2qw5"]
+[ext_resource type="Script" path="res://data/defs/challenge_def.gd" id="2_f731m"]
+
+[resource]
+script = ExtResource("2_f731m")
+id = &"d_glass_8"
+display_name = "Brittle"
+description = "Clear level 22 with at most 10 Base HP."
+level = ExtResource("1_l2qw5")
+base_hp_cap = 10
+cores = 15

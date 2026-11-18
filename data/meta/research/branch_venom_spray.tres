@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ResearchDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/research_def.gd" id="1_q21dc"]
+
+[resource]
+script = ExtResource("1_q21dc")
+id = &"branch_venom_spray"
+display_name = "Spray Protocol"
+description = "Unlocks Venom branch: Spray."
+kind = 0
+cost = 60
+tower_id = &"venom"
+requires_tower = &"venom"
+category = &"tower"

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ResearchDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/research_def.gd" id="1_oh1c1"]
+
+[resource]
+script = ExtResource("1_oh1c1")
+id = &"evo_trap"
+display_name = "Shock Trap Evolution"
+description = "Unlocks evolutions for Shock Trap branches."
+kind = 1
+cost = 75
+tower_id = &"trap"
+requires_tower = &"trap"
+category = &"tower"

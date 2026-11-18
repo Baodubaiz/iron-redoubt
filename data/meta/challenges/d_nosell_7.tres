@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ChallengeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/levels/level_07.tres" id="1_m1wt3"]
+[ext_resource type="Script" path="res://data/defs/challenge_def.gd" id="2_sbfrp"]
+
+[resource]
+script = ExtResource("2_sbfrp")
+id = &"d_nosell_7"
+display_name = "Commitment"
+description = "Clear level 21 without selling."
+level = ExtResource("1_m1wt3")
+no_selling = true
+cores = 12

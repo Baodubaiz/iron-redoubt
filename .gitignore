@@ -1,0 +1,7 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Phase 6: exported builds and local credentials
+build/
+.secrets/

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ConsumableDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/consumable_def.gd" id="1_nlhn2"]
+
+[resource]
+script = ExtResource("1_nlhn2")
+id = &"overclock"
+display_name = "Overclock"
+description = "Every tower fires 25% faster for 8 s."
+icon = "fast"
+cost = 35
+kind = 3
+haste_mult = 1.25
+haste_duration = 8.0

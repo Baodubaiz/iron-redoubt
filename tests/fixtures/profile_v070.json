@@ -1,0 +1,135 @@
+{
+	"achievements": {
+		"duo": true,
+		"flawless_circuit": true,
+		"flawless_delta": true,
+		"no_nova": true
+	},
+	"challenges": {},
+	"ledger": {
+		"ach:duo": 10,
+		"ach:flawless_circuit": 10,
+		"ach:flawless_delta": 10,
+		"ach:no_nova": 10,
+		"clear:level_01": 10,
+		"clear:level_02": 10,
+		"clear:level_03": 15,
+		"clear:level_04": 15,
+		"clear:level_05": 20,
+		"clear:level_06": 30,
+		"flawless:level_01": 5,
+		"flawless:level_02": 5,
+		"flawless:level_03": 5,
+		"flawless:level_04": 5,
+		"flawless:level_05": 5,
+		"flawless:level_06": 5
+	},
+	"levels": {
+		"level_01": {
+			"best_hp": 20,
+			"best_time": 500.0,
+			"cleared": true,
+			"clears": 1,
+			"flawless": true
+		},
+		"level_02": {
+			"best_hp": 20,
+			"best_time": 500.0,
+			"cleared": true,
+			"clears": 1,
+			"flawless": true
+		},
+		"level_03": {
+			"best_hp": 20,
+			"best_time": 500.0,
+			"cleared": true,
+			"clears": 1,
+			"flawless": true
+		},
+		"level_04": {
+			"best_hp": 20,
+			"best_time": 500.0,
+			"cleared": true,
+			"clears": 1,
+			"flawless": true
+		},
+		"level_05": {
+			"best_hp": 20,
+			"best_time": 500.0,
+			"cleared": true,
+			"clears": 1,
+			"flawless": true
+		},
+		"level_06": {
+			"best_hp": 25,
+			"best_time": 500.0,
+			"cleared": true,
+			"clears": 1,
+			"flawless": true
+		}
+	},
+	"lifetime": {
+		"counters": {
+			"kills_aegis": 13,
+			"kills_brute": 16,
+			"kills_dart": 15,
+			"kills_drone": 36,
+			"kills_glider": 28,
+			"kills_mender": 5,
+			"kills_plated": 15,
+			"kills_swarmling": 55,
+			"matches": 6
+		},
+		"sets": {
+			"evolved_types": [],
+			"interactions": []
+		}
+	},
+	"processed_matches": [
+		"lay0",
+		"1794491028812-7e9da7eb",
+		"1794490994350-0c62bb6c",
+		"1794490752161-4da5f29e",
+		"1794490691366-fffa579c",
+		"1794490639592-6324a73b",
+		"1794490605778-f9f3139c",
+		"1794490573346-149d1454",
+		"1794490543258-dcc475e3",
+		"1794490510388-b479e508",
+		"1794490471296-ebcf3482",
+		"1794490405203-1ee62b41",
+		"1794490365478-9eae1dc6",
+		"1794489621396-2128b3a0",
+		"1794489588562-c66dcd49",
+		"1794489531783-99b6409d",
+		"1794489526351-b794c38f",
+		"lay1",
+		"lay2",
+		"lay3",
+		"lay4",
+		"lay5"
+	],
+	"research": [
+		"branch_pulse_sensor",
+		"branch_nova_siege",
+		"branch_lance_focus",
+		"branch_beacon_relay",
+		"evo_pulse",
+		"evo_nova",
+		"evo_lance",
+		"evo_beacon",
+		"reserve_1",
+		"reserve_2",
+		"reinforced_core",
+		"quick_deploy",
+		"field_scanner"
+	],
+	"revision": 35,
+	"schema": 1,
+	"towers": [
+		"pulse",
+		"nova",
+		"lance",
+		"beacon"
+	]
+}

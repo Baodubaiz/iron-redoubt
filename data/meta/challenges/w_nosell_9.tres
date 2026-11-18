@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ChallengeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/levels/level_09.tres" id="1_c20dv"]
+[ext_resource type="Script" path="res://data/defs/challenge_def.gd" id="2_ymnn6"]
+
+[resource]
+script = ExtResource("2_ymnn6")
+id = &"w_nosell_9"
+display_name = "No Second Thoughts"
+description = "Clear level 30 without selling."
+period = 1
+level = ExtResource("1_c20dv")
+no_selling = true
+cores = 40

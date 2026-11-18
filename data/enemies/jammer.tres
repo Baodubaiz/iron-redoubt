@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/boss_skill_def.gd" id="1_qeq0f"]
+[ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="2_gcted"]
+
+[sub_resource type="Resource" id="Resource_2inkm"]
+script = ExtResource("1_qeq0f")
+action = &"jam"
+interval = 9.0
+telegraph = 1.2
+params = {
+"duration": 3.0,
+"factor": 0.6,
+"radius": 130.0
+}
+
+[resource]
+script = ExtResource("2_gcted")
+id = &"jammer"
+display_name = "Jammer"
+category = 2
+max_hp = 273.0
+speed = 52.5
+armor = 3.2
+bounty = 14
+base_damage = 2
+radius = 13.0
+color = Color(1, 0.6666667, 0.27058825, 1)
+shape = 4
+threat_mult = 1.2
+boss_params = {
+"first_skill": 4.0
+}
+boss_skills = Array[ExtResource("1_qeq0f")]([SubResource("Resource_2inkm")])

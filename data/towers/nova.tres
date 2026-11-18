@@ -1,0 +1,167 @@
+[gd_resource type="Resource" script_class="TowerDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/branch_def.gd" id="1_5yikl"]
+[ext_resource type="Script" path="res://data/defs/tier_def.gd" id="2_4qf4c"]
+[ext_resource type="Script" path="res://data/defs/tower_def.gd" id="3_8dyre"]
+
+[sub_resource type="Resource" id="Resource_4wh6e"]
+script = ExtResource("2_4qf4c")
+display_name = "Cascade"
+description = "Every 4th shell detonates again after 0.5 s"
+cost = 483
+stats = {
+"echo_delay": 0.5,
+"echo_every": 4
+}
+
+[sub_resource type="Resource" id="Resource_ln3lv"]
+script = ExtResource("2_4qf4c")
+display_name = "Cluster I"
+description = "Splash radius 70"
+cost = 69
+stats = {
+"splash_radius": 70.0
+}
+
+[sub_resource type="Resource" id="Resource_ll4b8"]
+script = ExtResource("2_4qf4c")
+display_name = "Cluster II"
+description = "+3 bomblets (10 dmg each)"
+cost = 139
+stats = {
+"bomblet_damage": 4.5,
+"bomblets": 3
+}
+
+[sub_resource type="Resource" id="Resource_ijinh"]
+script = ExtResource("2_4qf4c")
+display_name = "Cluster III"
+description = "Radius 75, damage 45, Flak: can target air"
+cost = 266
+stats = {
+"can_target_air": true,
+"damage": 20.25,
+"splash_radius": 75.0
+}
+
+[sub_resource type="Resource" id="Resource_gcny4"]
+script = ExtResource("1_5yikl")
+id = &"cluster"
+display_name = "Cluster"
+description = "Bigger blasts and bomblets. Flak at tier 3."
+tiers = Array[ExtResource("2_4qf4c")]([SubResource("Resource_ln3lv"), SubResource("Resource_ll4b8"), SubResource("Resource_ijinh")])
+evolution = SubResource("Resource_4wh6e")
+
+[sub_resource type="Resource" id="Resource_prfkr"]
+script = ExtResource("2_4qf4c")
+display_name = "Inferno"
+description = "Burning enemies explode on death (30 splash, no chain reactions)"
+cost = 483
+stats = {
+"death_explosion": 30.0
+}
+
+[sub_resource type="Resource" id="Resource_lvat3"]
+script = ExtResource("2_4qf4c")
+display_name = "Incendiary I"
+description = "Burn 6/s for 3 s (ignores armor)"
+cost = 69
+stats = {
+"burn_dps": 2.7,
+"burn_duration": 3.0
+}
+
+[sub_resource type="Resource" id="Resource_ansm1"]
+script = ExtResource("2_4qf4c")
+display_name = "Incendiary II"
+description = "Burn 10/s"
+cost = 139
+stats = {
+"burn_dps": 4.5
+}
+
+[sub_resource type="Resource" id="Resource_pny6e"]
+script = ExtResource("2_4qf4c")
+display_name = "Incendiary III"
+description = "Leaves a fire patch (2 s, radius 40)"
+cost = 266
+stats = {
+"fire_patch_duration": 2.0,
+"fire_patch_radius": 40.0
+}
+
+[sub_resource type="Resource" id="Resource_vpx6v"]
+script = ExtResource("1_5yikl")
+id = &"incendiary"
+display_name = "Incendiary"
+description = "Burn ignores armor; burning enemies heal 50% less."
+tiers = Array[ExtResource("2_4qf4c")]([SubResource("Resource_lvat3"), SubResource("Resource_ansm1"), SubResource("Resource_pny6e")])
+evolution = SubResource("Resource_prfkr")
+
+[sub_resource type="Resource" id="Resource_p6ugd"]
+script = ExtResource("2_4qf4c")
+display_name = "Quake"
+description = "Every 4th shell stuns ground enemies 0.8 s (bosses: slow)"
+cost = 483
+stats = {
+"stun_duration": 0.8,
+"stun_every": 4
+}
+
+[sub_resource type="Resource" id="Resource_grvqv"]
+script = ExtResource("2_4qf4c")
+display_name = "Siege I"
+description = "Shred -2 armor per hit (stacks to -6)"
+cost = 69
+stats = {
+"shred": 2.0,
+"shred_cap": 6.0
+}
+
+[sub_resource type="Resource" id="Resource_0nlpk"]
+script = ExtResource("2_4qf4c")
+display_name = "Siege II"
+description = "Range 220"
+cost = 139
+stats = {
+"attack_range": 220.0
+}
+
+[sub_resource type="Resource" id="Resource_hunlq"]
+script = ExtResource("2_4qf4c")
+display_name = "Siege III"
+description = "Damage 60, Stagger 0.3 s"
+cost = 266
+stats = {
+"damage": 27.0,
+"stagger": 0.3
+}
+
+[sub_resource type="Resource" id="Resource_41nmx"]
+script = ExtResource("1_5yikl")
+id = &"siege"
+display_name = "Siege"
+description = "Shreds armor, long range, staggers."
+tiers = Array[ExtResource("2_4qf4c")]([SubResource("Resource_grvqv"), SubResource("Resource_0nlpk"), SubResource("Resource_hunlq")])
+evolution = SubResource("Resource_p6ugd")
+requires_research = true
+
+[resource]
+script = ExtResource("3_8dyre")
+id = &"nova"
+display_name = "Nova"
+rarity = &"B"
+role = "Splash crowd control. Ground only. Splash hurts hidden stealth units."
+cost = 101
+damage = 13.5
+damage_type = 1
+fire_rate = 0.6
+attack_range = 170.0
+splash_radius = 55.0
+projectile_speed = 380.0
+homing = false
+can_target_air = false
+targeting = 1
+color = Color(1, 0.62352943, 0.2627451, 1)
+shape = 1
+branches = Array[ExtResource("1_5yikl")]([SubResource("Resource_gcny4"), SubResource("Resource_vpx6v"), SubResource("Resource_41nmx")])

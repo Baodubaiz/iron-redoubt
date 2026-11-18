@@ -1,0 +1,157 @@
+[gd_resource type="Resource" script_class="TowerDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/branch_def.gd" id="1_m1bup"]
+[ext_resource type="Script" path="res://data/defs/tier_def.gd" id="2_ua8wp"]
+[ext_resource type="Script" path="res://data/defs/tower_def.gd" id="3_krq6i"]
+
+[sub_resource type="Resource" id="Resource_0p6g1"]
+script = ExtResource("2_ua8wp")
+display_name = "Citadel"
+description = "Field 280"
+cost = 524
+stats = {
+"attack_range": 280.0
+}
+
+[sub_resource type="Resource" id="Resource_sk1cc"]
+script = ExtResource("2_ua8wp")
+display_name = "Expanse I"
+description = "Field 170"
+cost = 81
+stats = {
+"attack_range": 170.0
+}
+
+[sub_resource type="Resource" id="Resource_81ngj"]
+script = ExtResource("2_ua8wp")
+display_name = "Expanse II"
+description = "Field 200"
+cost = 157
+stats = {
+"attack_range": 200.0
+}
+
+[sub_resource type="Resource" id="Resource_6nbh8"]
+script = ExtResource("2_ua8wp")
+display_name = "Expanse III"
+description = "Field 230"
+cost = 291
+stats = {
+"attack_range": 230.0
+}
+
+[sub_resource type="Resource" id="Resource_7o6f4"]
+script = ExtResource("1_m1bup")
+id = &"expanse"
+display_name = "Expanse"
+description = "A wider field."
+tiers = Array[ExtResource("2_ua8wp")]([SubResource("Resource_sk1cc"), SubResource("Resource_81ngj"), SubResource("Resource_6nbh8")])
+evolution = SubResource("Resource_0p6g1")
+
+[sub_resource type="Resource" id="Resource_5ybtm"]
+script = ExtResource("2_ua8wp")
+display_name = "Gravity Well"
+description = "Slow 30%"
+cost = 524
+stats = {
+"field_slow_pct": 0.3
+}
+
+[sub_resource type="Resource" id="Resource_we6o7"]
+script = ExtResource("2_ua8wp")
+display_name = "Gravity I"
+description = "Slow 10% in the field"
+cost = 81
+stats = {
+"field_slow_pct": 0.1
+}
+
+[sub_resource type="Resource" id="Resource_aid54"]
+script = ExtResource("2_ua8wp")
+display_name = "Gravity II"
+description = "Slow 15%"
+cost = 157
+stats = {
+"field_slow_pct": 0.15
+}
+
+[sub_resource type="Resource" id="Resource_d0a2d"]
+script = ExtResource("2_ua8wp")
+display_name = "Gravity III"
+description = "Slow 20%"
+cost = 291
+stats = {
+"field_slow_pct": 0.2
+}
+
+[sub_resource type="Resource" id="Resource_0x3w6"]
+script = ExtResource("1_m1bup")
+id = &"gravity"
+display_name = "Gravity"
+description = "Enemies inside the field are slowed."
+tiers = Array[ExtResource("2_ua8wp")]([SubResource("Resource_we6o7"), SubResource("Resource_aid54"), SubResource("Resource_d0a2d")])
+evolution = SubResource("Resource_5ybtm")
+
+[sub_resource type="Resource" id="Resource_6mexv"]
+script = ExtResource("2_ua8wp")
+display_name = "Overexposure"
+description = "+16%"
+cost = 524
+stats = {
+"field_vuln": 1.16
+}
+
+[sub_resource type="Resource" id="Resource_7yvxh"]
+script = ExtResource("2_ua8wp")
+display_name = "Exposure I"
+description = "+5% damage taken in the field"
+cost = 81
+stats = {
+"field_vuln": 1.05
+}
+
+[sub_resource type="Resource" id="Resource_s0hn6"]
+script = ExtResource("2_ua8wp")
+display_name = "Exposure II"
+description = "+8%"
+cost = 157
+stats = {
+"field_vuln": 1.08
+}
+
+[sub_resource type="Resource" id="Resource_q434u"]
+script = ExtResource("2_ua8wp")
+display_name = "Exposure III"
+description = "+12%"
+cost = 291
+stats = {
+"field_vuln": 1.12
+}
+
+[sub_resource type="Resource" id="Resource_daqi0"]
+script = ExtResource("1_m1bup")
+id = &"exposure"
+display_name = "Exposure"
+description = "Enemies inside the field take more damage."
+tiers = Array[ExtResource("2_ua8wp")]([SubResource("Resource_7yvxh"), SubResource("Resource_s0hn6"), SubResource("Resource_q434u")])
+evolution = SubResource("Resource_6mexv")
+requires_research = true
+
+[resource]
+script = ExtResource("3_krq6i")
+id = &"bastion"
+display_name = "Bastion"
+rarity = &"A"
+role = "Field generator: towers inside are immune to EMP, jamming and other tower debuffs. No attack."
+cost = 138
+damage = 0.0
+attack_range = 140.0
+projectile_speed = 0.0
+targeting = 4
+attack_mode = 1
+color = Color(0.49803922, 0.69803923, 1, 1)
+shape = 3
+base_params = {
+"field": true
+}
+branches = Array[ExtResource("1_m1bup")]([SubResource("Resource_7o6f4"), SubResource("Resource_0x3w6"), SubResource("Resource_daqi0")])

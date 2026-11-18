@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/boss_skill_def.gd" id="1_7fk26"]
+[ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="2_7rlms"]
+
+[sub_resource type="Resource" id="Resource_7fk26"]
+script = ExtResource("1_7fk26")
+action = &"static"
+interval = 10.0
+params = {
+"duration": 3.0,
+"factor": 0.85,
+"radius": 150.0
+}
+
+[resource]
+script = ExtResource("2_7rlms")
+id = &"glider"
+display_name = "Glider"
+category = 2
+max_hp = 94.5
+speed = 89.30000000000001
+bounty = 8
+base_damage = 2
+flying = true
+radius = 12.0
+color = Color(0.61960787, 1, 0.7882353, 1)
+shape = 6
+threat_mult = 1.2
+boss_params = {
+"first_skill": 4.0
+}
+boss_skills = Array[ExtResource("1_7fk26")]([SubResource("Resource_7fk26")])

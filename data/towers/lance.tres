@@ -1,0 +1,166 @@
+[gd_resource type="Resource" script_class="TowerDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/branch_def.gd" id="1_d7gfa"]
+[ext_resource type="Script" path="res://data/defs/tier_def.gd" id="2_uj75d"]
+[ext_resource type="Script" path="res://data/defs/tower_def.gd" id="3_46q6m"]
+
+[sub_resource type="Resource" id="Resource_fklxx"]
+script = ExtResource("2_uj75d")
+display_name = "Annihilator"
+description = "Every 4th shot deals x3 damage"
+cost = 621
+stats = {
+"crit_every": 4,
+"crit_mult": 3.0
+}
+
+[sub_resource type="Resource" id="Resource_egbtk"]
+script = ExtResource("2_uj75d")
+display_name = "Overcharge I"
+description = "Damage 120"
+cost = 92
+stats = {
+"damage": 54.0
+}
+
+[sub_resource type="Resource" id="Resource_migl5"]
+script = ExtResource("2_uj75d")
+display_name = "Overcharge II"
+description = "Damage 170, pen 8"
+cost = 181
+stats = {
+"armor_pen": 8.0,
+"damage": 76.5
+}
+
+[sub_resource type="Resource" id="Resource_15xbd"]
+script = ExtResource("2_uj75d")
+display_name = "Overcharge III"
+description = "Damage 240, +25% vs boss"
+cost = 342
+stats = {
+"boss_mult": 1.25,
+"damage": 108.0
+}
+
+[sub_resource type="Resource" id="Resource_588tp"]
+script = ExtResource("1_d7gfa")
+id = &"overcharge"
+display_name = "Overcharge"
+description = "Massive single hits. Overkill on small enemies."
+tiers = Array[ExtResource("2_uj75d")]([SubResource("Resource_egbtk"), SubResource("Resource_migl5"), SubResource("Resource_15xbd")])
+evolution = SubResource("Resource_fklxx")
+
+[sub_resource type="Resource" id="Resource_c2nic"]
+script = ExtResource("2_uj75d")
+display_name = "Tesla Web"
+description = "Conductive +2 jumps; chain hits Stagger 0.4 s"
+cost = 621
+stats = {
+"chain_stagger": 0.4,
+"conductive_bonus": 2
+}
+
+[sub_resource type="Resource" id="Resource_elodk"]
+script = ExtResource("2_uj75d")
+display_name = "Arc I"
+description = "Chains to 2 more enemies"
+cost = 92
+stats = {
+"chain": 2,
+"chain_falloff": 0.6
+}
+
+[sub_resource type="Resource" id="Resource_ycuax"]
+script = ExtResource("2_uj75d")
+display_name = "Arc II"
+description = "Chains to 3"
+cost = 181
+stats = {
+"chain": 3
+}
+
+[sub_resource type="Resource" id="Resource_xbj8t"]
+script = ExtResource("2_uj75d")
+display_name = "Arc III"
+description = "Chains to 4, x3 vs shields; Conductive: +1 jump between Chilled"
+cost = 342
+stats = {
+"chain": 4,
+"chain_shield_mult": 3.0,
+"conductive": true,
+"conductive_bonus": 1
+}
+
+[sub_resource type="Resource" id="Resource_opun1"]
+script = ExtResource("1_d7gfa")
+id = &"arc"
+display_name = "Arc"
+description = "Chains between enemies (60% damage per jump)."
+tiers = Array[ExtResource("2_uj75d")]([SubResource("Resource_elodk"), SubResource("Resource_ycuax"), SubResource("Resource_xbj8t")])
+evolution = SubResource("Resource_c2nic")
+
+[sub_resource type="Resource" id="Resource_ms3yu"]
+script = ExtResource("2_uj75d")
+display_name = "Phase Beam"
+description = "The beam pierces every enemy along its line"
+cost = 621
+stats = {
+"beam_pierce": true
+}
+
+[sub_resource type="Resource" id="Resource_y4m5l"]
+script = ExtResource("2_uj75d")
+display_name = "Focus I"
+description = "Beam 40 dps, ramps to x3 over 3 s"
+cost = 92
+stats = {
+"beam_dps": 18.0,
+"ramp_max": 3.0,
+"ramp_time": 3.0
+}
+
+[sub_resource type="Resource" id="Resource_f4o0h"]
+script = ExtResource("2_uj75d")
+display_name = "Focus II"
+description = "Range 280"
+cost = 181
+stats = {
+"attack_range": 280.0
+}
+
+[sub_resource type="Resource" id="Resource_16jo8"]
+script = ExtResource("2_uj75d")
+display_name = "Focus III"
+description = "Ramp up to x4"
+cost = 342
+stats = {
+"ramp_max": 4.0
+}
+
+[sub_resource type="Resource" id="Resource_77tif"]
+script = ExtResource("1_d7gfa")
+id = &"focus"
+display_name = "Focus"
+description = "Continuous beam that ramps up on one target."
+tiers = Array[ExtResource("2_uj75d")]([SubResource("Resource_y4m5l"), SubResource("Resource_f4o0h"), SubResource("Resource_16jo8")])
+evolution = SubResource("Resource_ms3yu")
+requires_research = true
+
+[resource]
+script = ExtResource("3_46q6m")
+id = &"lance"
+display_name = "Lance"
+rarity = &"A"
+role = "Long-range armor-piercing energy. Targets the strongest. Energy x2 vs shields."
+cost = 129
+damage = 36.0
+damage_type = 2
+armor_pen = 6.0
+fire_rate = 0.4
+attack_range = 240.0
+projectile_speed = 1400.0
+targeting = 2
+color = Color(1, 0.41960785, 0.8392157, 1)
+shape = 2
+branches = Array[ExtResource("1_d7gfa")]([SubResource("Resource_588tp"), SubResource("Resource_opun1"), SubResource("Resource_77tif")])

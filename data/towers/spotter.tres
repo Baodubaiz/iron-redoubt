@@ -1,0 +1,160 @@
+[gd_resource type="Resource" script_class="TowerDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/branch_def.gd" id="1_vcgax"]
+[ext_resource type="Script" path="res://data/defs/tier_def.gd" id="2_mt6kv"]
+[ext_resource type="Script" path="res://data/defs/tower_def.gd" id="3_se1ld"]
+
+[sub_resource type="Resource" id="Resource_d1kqt"]
+script = ExtResource("2_mt6kv")
+display_name = "Kill Mark"
+description = "Marked enemies also lose 1 armor"
+cost = 235
+stats = {
+"spot_armor": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_bpph2"]
+script = ExtResource("2_mt6kv")
+display_name = "Lock-On I"
+description = "Mark +10% damage taken"
+cost = 35
+stats = {
+"spot_vuln": 1.1
+}
+
+[sub_resource type="Resource" id="Resource_c80sy"]
+script = ExtResource("2_mt6kv")
+display_name = "Lock-On II"
+description = "Mark +12% damage taken"
+cost = 66
+stats = {
+"spot_vuln": 1.12
+}
+
+[sub_resource type="Resource" id="Resource_abmqq"]
+script = ExtResource("2_mt6kv")
+display_name = "Lock-On III"
+description = "Mark +15% damage taken"
+cost = 127
+stats = {
+"spot_vuln": 1.15
+}
+
+[sub_resource type="Resource" id="Resource_blokh"]
+script = ExtResource("1_vcgax")
+id = &"lockon"
+display_name = "Lock-On"
+description = "Stronger marks."
+tiers = Array[ExtResource("2_mt6kv")]([SubResource("Resource_bpph2"), SubResource("Resource_c80sy"), SubResource("Resource_abmqq")])
+evolution = SubResource("Resource_d1kqt")
+
+[sub_resource type="Resource" id="Resource_kixll"]
+script = ExtResource("2_mt6kv")
+display_name = "Lead Mark"
+description = "Marked enemies are slowed 10%"
+cost = 235
+stats = {
+"spot_slow_pct": 0.1
+}
+
+[sub_resource type="Resource" id="Resource_4jdg0"]
+script = ExtResource("2_mt6kv")
+display_name = "Tracer I"
+description = "+30% damage vs stealth"
+cost = 35
+stats = {
+"tag_mult": {
+"stealth": 1.3
+}
+}
+
+[sub_resource type="Resource" id="Resource_b1d8c"]
+script = ExtResource("2_mt6kv")
+display_name = "Tracer II"
+description = "+20% damage vs flying"
+cost = 66
+stats = {
+"tag_mult": {
+"flying": 1.2,
+"stealth": 1.3
+}
+}
+
+[sub_resource type="Resource" id="Resource_0uhgt"]
+script = ExtResource("2_mt6kv")
+display_name = "Tracer III"
+description = "Damage 7"
+cost = 127
+stats = {
+"damage": 3.15
+}
+
+[sub_resource type="Resource" id="Resource_t36ih"]
+script = ExtResource("1_vcgax")
+id = &"tracer"
+display_name = "Tracer"
+description = "Hunts special enemies."
+tiers = Array[ExtResource("2_mt6kv")]([SubResource("Resource_4jdg0"), SubResource("Resource_b1d8c"), SubResource("Resource_0uhgt")])
+evolution = SubResource("Resource_kixll")
+
+[sub_resource type="Resource" id="Resource_80gxu"]
+script = ExtResource("2_mt6kv")
+display_name = "Piercing Beam"
+description = "Shots pierce up to 3 enemies in a line"
+cost = 235
+stats = {
+"pierce": 3
+}
+
+[sub_resource type="Resource" id="Resource_b70vu"]
+script = ExtResource("2_mt6kv")
+display_name = "Wide Scan I"
+description = "Fire rate 1.4/s"
+cost = 35
+stats = {
+"fire_rate": 1.4
+}
+
+[sub_resource type="Resource" id="Resource_g8r25"]
+script = ExtResource("2_mt6kv")
+display_name = "Wide Scan II"
+description = "Fire rate 1.8/s"
+cost = 66
+stats = {
+"fire_rate": 1.8
+}
+
+[sub_resource type="Resource" id="Resource_tr2ux"]
+script = ExtResource("2_mt6kv")
+display_name = "Wide Scan III"
+description = "Range 200"
+cost = 127
+stats = {
+"attack_range": 200.0
+}
+
+[sub_resource type="Resource" id="Resource_3owqh"]
+script = ExtResource("1_vcgax")
+id = &"widescan"
+display_name = "Wide Scan"
+description = "Marks more enemies."
+tiers = Array[ExtResource("2_mt6kv")]([SubResource("Resource_b70vu"), SubResource("Resource_g8r25"), SubResource("Resource_tr2ux")])
+evolution = SubResource("Resource_80gxu")
+requires_research = true
+
+[resource]
+script = ExtResource("3_se1ld")
+id = &"spotter"
+display_name = "Marker"
+role = "Support. Weak shots explode on impact (AOE 60) and mark all enemies hit: marked enemies take +8% damage from every tower. Hits air. Shots skip shields entirely (Plasma)."
+cost = 52
+damage = 1.8
+damage_type = 4
+attack_range = 170.0
+projectile_speed = 620.0
+color = Color(1, 0.47843137, 0.6039216, 1)
+base_params = {
+"spot_duration": 3.0,
+"spot_vuln": 1.08
+}
+branches = Array[ExtResource("1_vcgax")]([SubResource("Resource_blokh"), SubResource("Resource_t36ih"), SubResource("Resource_3owqh")])

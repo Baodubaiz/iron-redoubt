@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ResearchDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/research_def.gd" id="1_x2ldj"]
+
+[resource]
+script = ExtResource("1_x2ldj")
+id = &"branch_beacon_relay"
+display_name = "Relay Network"
+description = "Unlocks Beacon branch: Relay."
+kind = 0
+cost = 50
+tower_id = &"beacon"
+requires_tower = &"beacon"
+category = &"tower"

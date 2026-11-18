@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EffectDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_3bvfh"]
+
+[resource]
+script = ExtResource("1_3bvfh")
+id = &"sludge_regen"
+display_name = "Regeneration"
+description = "Heals a little every second."
+icon = "heart"
+color = Color(0.60784316, 0.8784314, 0.47843137, 1)
+duration = 3.2
+components = {
+"regen_frac": 0.035
+}
+builtin = true

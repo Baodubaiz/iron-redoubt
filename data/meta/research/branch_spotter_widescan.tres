@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ResearchDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/research_def.gd" id="1_kqar1"]
+
+[resource]
+script = ExtResource("1_kqar1")
+id = &"branch_spotter_widescan"
+display_name = "Wide Scan Protocol"
+description = "Unlocks Marker branch: Wide Scan."
+kind = 0
+cost = 30
+tower_id = &"spotter"
+requires_tower = &"spotter"
+category = &"tower"

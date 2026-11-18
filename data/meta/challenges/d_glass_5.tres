@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ChallengeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/levels/level_05.tres" id="1_use0x"]
+[ext_resource type="Script" path="res://data/defs/challenge_def.gd" id="2_0x10k"]
+
+[resource]
+script = ExtResource("2_0x10k")
+id = &"d_glass_5"
+display_name = "Thin Shield"
+description = "Clear level 12 with at most 8 Base HP."
+level = ExtResource("1_use0x")
+base_hp_cap = 8
+cores = 12

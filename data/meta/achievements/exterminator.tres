@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="AchievementDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/achievement_def.gd" id="1_yklwg"]
+
+[resource]
+script = ExtResource("1_yklwg")
+id = &"exterminator"
+display_name = "Exterminator"
+description = "Defeat 1000 Swarmlings (lifetime)."
+kind = 6
+params = {
+"counter": "kills_swarmling",
+"target": 1000
+}
+cores = 10

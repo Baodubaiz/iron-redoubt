@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="EffectDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_vq6h0"]
+
+[resource]
+script = ExtResource("1_vq6h0")
+id = &"stagger"
+display_name = "Stagger"
+description = "Briefly slowed (what bosses get instead of stun)."
+icon = "stun"
+color = Color(1, 0.8784314, 0.47843137, 1)
+builtin = true

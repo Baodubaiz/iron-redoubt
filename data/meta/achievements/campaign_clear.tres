@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AchievementDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/achievement_def.gd" id="1_mfq7i"]
+
+[resource]
+script = ExtResource("1_mfq7i")
+id = &"campaign_clear"
+display_name = "Monolith Fallen"
+description = "Clear level 30."
+params = {
+"level": "level_09"
+}
+cores = 20

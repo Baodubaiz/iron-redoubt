@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ChallengeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/levels/level_03.tres" id="1_ginfe"]
+[ext_resource type="Script" path="res://data/defs/challenge_def.gd" id="2_0lble"]
+
+[resource]
+script = ExtResource("2_0lble")
+id = &"d_no_pulse_3"
+display_name = "Heavy Metal"
+description = "Clear level 5 without Pulse."
+level = ExtResource("1_ginfe")
+banned_towers = Array[StringName]([&"pulse"])
+cores = 12

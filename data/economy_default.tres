@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="EconomyConfig" format=3]
+
+[ext_resource type="Script" path="res://data/defs/economy_config.gd" id="1_yye4c"]
+
+[resource]
+script = ExtResource("1_yye4c")
+seed_money_multiplier = 1.1

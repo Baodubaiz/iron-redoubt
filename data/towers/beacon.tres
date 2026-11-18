@@ -1,0 +1,165 @@
+[gd_resource type="Resource" script_class="TowerDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/branch_def.gd" id="1_38vpk"]
+[ext_resource type="Script" path="res://data/defs/tier_def.gd" id="2_rvova"]
+[ext_resource type="Script" path="res://data/defs/tower_def.gd" id="3_70aa3"]
+
+[sub_resource type="Resource" id="Resource_tiitw"]
+script = ExtResource("2_rvova")
+display_name = "Overclock Core"
+description = "Also +15% attack rate"
+cost = 414
+stats = {
+"amp_rate": 0.15
+}
+
+[sub_resource type="Resource" id="Resource_1dncb"]
+script = ExtResource("2_rvova")
+display_name = "Amplifier I"
+description = "Nearby towers +10% damage (slow removed)"
+cost = 57
+stats = {
+"amp_damage": 0.1,
+"slow": 0.0
+}
+
+[sub_resource type="Resource" id="Resource_vd3xx"]
+script = ExtResource("2_rvova")
+display_name = "Amplifier II"
+description = "+15% damage"
+cost = 115
+stats = {
+"amp_damage": 0.15
+}
+
+[sub_resource type="Resource" id="Resource_556it"]
+script = ExtResource("2_rvova")
+display_name = "Amplifier III"
+description = "+20% damage, +10% range"
+cost = 221
+stats = {
+"amp_damage": 0.2,
+"amp_range": 0.1
+}
+
+[sub_resource type="Resource" id="Resource_n0cy7"]
+script = ExtResource("1_38vpk")
+id = &"amplifier"
+display_name = "Amplifier"
+description = "Buffs nearby towers (strongest Amplifier only). Loses slow."
+tiers = Array[ExtResource("2_rvova")]([SubResource("Resource_1dncb"), SubResource("Resource_vd3xx"), SubResource("Resource_556it")])
+evolution = SubResource("Resource_tiitw")
+
+[sub_resource type="Resource" id="Resource_ew0nm"]
+script = ExtResource("2_rvova")
+display_name = "Absolute Zero"
+description = "Frozen enemies take +50% explosive damage (Shatter)"
+cost = 414
+stats = {
+"shatter": 0.5
+}
+
+[sub_resource type="Resource" id="Resource_k778l"]
+script = ExtResource("2_rvova")
+display_name = "Cryo I"
+description = "Slow 30%"
+cost = 57
+stats = {
+"slow": 0.3
+}
+
+[sub_resource type="Resource" id="Resource_l5d0q"]
+script = ExtResource("2_rvova")
+display_name = "Cryo II"
+description = "Slow 40%"
+cost = 115
+stats = {
+"slow": 0.4
+}
+
+[sub_resource type="Resource" id="Resource_pppqa"]
+script = ExtResource("2_rvova")
+display_name = "Cryo III"
+description = "Slow 50%; Freeze 1 s every 6 s (non-boss)"
+cost = 221
+stats = {
+"freeze_duration": 1.0,
+"freeze_every": 6.0,
+"slow": 0.5
+}
+
+[sub_resource type="Resource" id="Resource_d8jla"]
+script = ExtResource("1_38vpk")
+id = &"cryo"
+display_name = "Cryo"
+description = "Stronger slow; periodic freeze."
+tiers = Array[ExtResource("2_rvova")]([SubResource("Resource_k778l"), SubResource("Resource_l5d0q"), SubResource("Resource_pppqa")])
+evolution = SubResource("Resource_ew0nm")
+
+[sub_resource type="Resource" id="Resource_fe3wa"]
+script = ExtResource("2_rvova")
+display_name = "Mint"
+description = "+4 every 10 s during waves"
+cost = 414
+stats = {
+"mint_amount": 4,
+"mint_interval": 10.0
+}
+
+[sub_resource type="Resource" id="Resource_enlo5"]
+script = ExtResource("2_rvova")
+display_name = "Relay I"
+description = "+10 per cleared wave (slow removed, reveal kept)"
+cost = 57
+stats = {
+"slow": 0.0,
+"wave_income": 10.0
+}
+
+[sub_resource type="Resource" id="Resource_fhmx6"]
+script = ExtResource("2_rvova")
+display_name = "Relay II"
+description = "+16 per wave, aura 160"
+cost = 115
+stats = {
+"attack_range": 160.0,
+"wave_income": 16.0
+}
+
+[sub_resource type="Resource" id="Resource_mvakf"]
+script = ExtResource("2_rvova")
+display_name = "Relay III"
+description = "+24 per wave; kills in aura +1"
+cost = 221
+stats = {
+"bounty_bonus": 1,
+"wave_income": 24.0
+}
+
+[sub_resource type="Resource" id="Resource_30k0p"]
+script = ExtResource("1_38vpk")
+id = &"relay"
+display_name = "Relay"
+description = "Economy. Diminishing returns per extra Relay. Loses slow."
+tiers = Array[ExtResource("2_rvova")]([SubResource("Resource_enlo5"), SubResource("Resource_fhmx6"), SubResource("Resource_mvakf")])
+evolution = SubResource("Resource_fe3wa")
+requires_research = true
+
+[resource]
+script = ExtResource("3_70aa3")
+id = &"beacon"
+display_name = "Beacon"
+rarity = &"B"
+role = "Support aura: reveals stealth; base aura slows 20%. No damage."
+cost = 86
+damage = 0.0
+attack_range = 130.0
+projectile_speed = 0.0
+targeting = 4
+attack_mode = 1
+color = Color(0.41960785, 0.8784314, 0.5411765, 1)
+shape = 3
+base_params = {
+"slow": 0.2
+}
+branches = Array[ExtResource("1_38vpk")]([SubResource("Resource_n0cy7"), SubResource("Resource_d8jla"), SubResource("Resource_30k0p")])

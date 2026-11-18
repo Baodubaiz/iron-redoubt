@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/boss_skill_def.gd" id="1_fu46k"]
+[ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="2_cb57j"]
+
+[resource]
+script = ExtResource("2_cb57j")
+id = &"brute"
+display_name = "Brute"
+max_hp = 315.0
+speed = 47.300000000000004
+armor_by_type = {
+"plasma": 8.0
+}
+bounty = 12
+base_damage = 3
+radius = 16.0
+color = Color(1, 0.56078434, 0.56078434, 1)
+shape = 2

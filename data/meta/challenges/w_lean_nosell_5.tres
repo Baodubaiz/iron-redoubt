@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ChallengeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/levels/level_05.tres" id="1_2f31y"]
+[ext_resource type="Script" path="res://data/defs/challenge_def.gd" id="2_p2a20"]
+
+[resource]
+script = ExtResource("2_p2a20")
+id = &"w_lean_nosell_5"
+display_name = "Iron Discipline"
+description = "Clear level 12 with 85% currency and no selling."
+period = 1
+level = ExtResource("1_2f31y")
+currency_multiplier = 0.85
+no_selling = true
+cores = 30

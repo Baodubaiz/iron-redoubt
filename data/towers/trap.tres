@@ -1,0 +1,163 @@
+[gd_resource type="Resource" script_class="TowerDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/branch_def.gd" id="1_2kvpd"]
+[ext_resource type="Script" path="res://data/defs/tier_def.gd" id="2_scaed"]
+[ext_resource type="Script" path="res://data/defs/tower_def.gd" id="3_iiwi5"]
+
+[sub_resource type="Resource" id="Resource_q437i"]
+script = ExtResource("2_scaed")
+display_name = "Stasis Net"
+description = "Traps hold enemies in place (bosses only slowed)"
+cost = 235
+stats = {
+"trap_stop": true
+}
+
+[sub_resource type="Resource" id="Resource_g33ns"]
+script = ExtResource("2_scaed")
+display_name = "Snare I"
+description = "Slow 45%"
+cost = 35
+stats = {
+"trap_slow_pct": 0.45
+}
+
+[sub_resource type="Resource" id="Resource_dufcd"]
+script = ExtResource("2_scaed")
+display_name = "Snare II"
+description = "Traps last 3 s"
+cost = 66
+stats = {
+"trap_duration": 3.0
+}
+
+[sub_resource type="Resource" id="Resource_4ylvy"]
+script = ExtResource("2_scaed")
+display_name = "Snare III"
+description = "Slow 50%"
+cost = 127
+stats = {
+"trap_slow_pct": 0.5
+}
+
+[sub_resource type="Resource" id="Resource_vshmc"]
+script = ExtResource("1_2kvpd")
+id = &"snare"
+display_name = "Snare"
+description = "Stronger, longer-lasting slow."
+tiers = Array[ExtResource("2_scaed")]([SubResource("Resource_g33ns"), SubResource("Resource_dufcd"), SubResource("Resource_4ylvy")])
+evolution = SubResource("Resource_q437i")
+
+[sub_resource type="Resource" id="Resource_d4kv7"]
+script = ExtResource("2_scaed")
+display_name = "Arc Mine"
+description = "Trap damage 18/s; zapped enemies take +10% damage"
+cost = 235
+stats = {
+"trap_dps": 8.1,
+"trap_vuln": 1.1
+}
+
+[sub_resource type="Resource" id="Resource_1it8l"]
+script = ExtResource("2_scaed")
+display_name = "Live Wire I"
+description = "Trap damage 6/s"
+cost = 35
+stats = {
+"trap_dps": 2.7
+}
+
+[sub_resource type="Resource" id="Resource_pfevb"]
+script = ExtResource("2_scaed")
+display_name = "Live Wire II"
+description = "Trap damage 9/s"
+cost = 66
+stats = {
+"trap_dps": 4.05
+}
+
+[sub_resource type="Resource" id="Resource_48eeg"]
+script = ExtResource("2_scaed")
+display_name = "Live Wire III"
+description = "Trap damage 13/s, shell damage 14"
+cost = 127
+stats = {
+"damage": 6.3,
+"trap_dps": 5.8500000000000005
+}
+
+[sub_resource type="Resource" id="Resource_4qhuc"]
+script = ExtResource("1_2kvpd")
+id = &"livewire"
+display_name = "Live Wire"
+description = "Traps zap harder."
+tiers = Array[ExtResource("2_scaed")]([SubResource("Resource_1it8l"), SubResource("Resource_pfevb"), SubResource("Resource_48eeg")])
+evolution = SubResource("Resource_d4kv7")
+
+[sub_resource type="Resource" id="Resource_5bnvl"]
+script = ExtResource("2_scaed")
+display_name = "Carpet"
+description = "Fire rate 1/s"
+cost = 235
+stats = {
+"fire_rate": 1.0
+}
+
+[sub_resource type="Resource" id="Resource_8dhn0"]
+script = ExtResource("2_scaed")
+display_name = "Minefield I"
+description = "Trap radius 42"
+cost = 35
+stats = {
+"trap_radius": 42.0
+}
+
+[sub_resource type="Resource" id="Resource_sqwx3"]
+script = ExtResource("2_scaed")
+display_name = "Minefield II"
+description = "Fire rate 0.7/s"
+cost = 66
+stats = {
+"fire_rate": 0.7
+}
+
+[sub_resource type="Resource" id="Resource_gt7wl"]
+script = ExtResource("2_scaed")
+display_name = "Minefield III"
+description = "Trap radius 50"
+cost = 127
+stats = {
+"trap_radius": 50.0
+}
+
+[sub_resource type="Resource" id="Resource_72q2r"]
+script = ExtResource("1_2kvpd")
+id = &"minefield"
+display_name = "Minefield"
+description = "Bigger traps, thrown more often."
+tiers = Array[ExtResource("2_scaed")]([SubResource("Resource_8dhn0"), SubResource("Resource_sqwx3"), SubResource("Resource_gt7wl")])
+evolution = SubResource("Resource_5bnvl")
+requires_research = true
+
+[resource]
+script = ExtResource("3_iiwi5")
+id = &"trap"
+display_name = "Shock Trap"
+role = "Lobs shock traps onto the lane: enemies on them are slowed and zapped. Ground only."
+cost = 52
+damage = 2.7
+damage_type = 1
+fire_rate = 0.5
+splash_radius = 30.0
+projectile_speed = 360.0
+homing = false
+can_target_air = false
+color = Color(1, 0.84705883, 0.3019608, 1)
+shape = 1
+base_params = {
+"trap_dps": 1.35,
+"trap_duration": 2.0,
+"trap_radius": 34.0,
+"trap_slow_pct": 0.4
+}
+branches = Array[ExtResource("1_2kvpd")]([SubResource("Resource_vshmc"), SubResource("Resource_4qhuc"), SubResource("Resource_72q2r")])

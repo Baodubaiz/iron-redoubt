@@ -1,0 +1,70 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/boss_skill_def.gd" id="1_gfnl1"]
+[ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="2_27bke"]
+
+[sub_resource type="Resource" id="Resource_emr7k"]
+script = ExtResource("1_gfnl1")
+action = &"bulwark"
+max_phase = 2
+interval = 9.0
+telegraph = 1.2
+params = {
+"amount": 150.0,
+"duration": 6.0,
+"radius": 220.0
+}
+
+[sub_resource type="Resource" id="Resource_gtyie"]
+script = ExtResource("1_gfnl1")
+action = &"blink"
+min_phase = 2
+telegraph = 1.8
+params = {
+"distance": 160.0,
+"keep": 260.0
+}
+
+[sub_resource type="Resource" id="Resource_bbpcj"]
+script = ExtResource("1_gfnl1")
+action = &"capacitor"
+min_phase = 3
+telegraph = 1.2
+params = {
+"cap": 70.0,
+"duration": 5.0
+}
+
+[resource]
+script = ExtResource("2_27bke")
+id = &"colossus"
+display_name = "Colossus"
+category = 3
+max_hp = 21420.0
+speed = 15.5
+armor = 8.4
+resist_pct = {
+"kinetic": 0.15
+}
+bounty = 611
+base_damage = 58
+radius = 44.0
+color = Color(1, 0.36078432, 0.42352942, 1)
+shape = 9
+threat_mult = 1.4
+is_boss = true
+boss_kit = &"colossus"
+boss_params = {
+"first_skill": 5.0
+}
+boss_skills = Array[ExtResource("1_gfnl1")]([SubResource("Resource_emr7k"), SubResource("Resource_gtyie"), SubResource("Resource_bbpcj")])
+boss_passives = Array[Dictionary]([{
+"haste": 0.3,
+"kind": "overdrive",
+"min_phase": 3,
+"radius": 180.0,
+"regen": 0.0015
+}])
+slow_cap = 0.25
+fracture_speed_bonus = 0.0
+shard_count = 0

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/boss_skill_def.gd" id="1_glki2"]
+[ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="2_uydp6"]
+
+[resource]
+script = ExtResource("2_uydp6")
+id = &"dart"
+display_name = "Dart"
+max_hp = 36.800000000000004
+speed = 136.5
+bounty = 3
+radius = 9.0
+color = Color(1, 0.8784314, 0.56078434, 1)
+shape = 1

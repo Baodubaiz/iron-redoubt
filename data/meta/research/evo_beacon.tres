@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ResearchDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/research_def.gd" id="1_mjqi3"]
+
+[resource]
+script = ExtResource("1_mjqi3")
+id = &"evo_beacon"
+display_name = "Beacon Evolution"
+description = "Unlocks evolutions for Beacon branches."
+kind = 1
+cost = 100
+tower_id = &"beacon"
+requires_tower = &"beacon"
+category = &"tower"

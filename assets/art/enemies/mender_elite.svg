@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="-32 -32 64 64">
+<defs>
+  <linearGradient id="me_hull" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2D5442"/>
+    <stop offset="1" stop-color="#11241B"/>
+  </linearGradient>
+  <radialGradient id="me_pulse">
+    <stop offset="0" stop-color="#FFFFFF"/>
+    <stop offset="0.4" stop-color="#7EFFBE"/>
+    <stop offset="1" stop-color="#148C54"/>
+  </radialGradient>
+</defs>
+<!-- Outer Nanite Field Halo -->
+<circle cx="0" cy="0" r="25" fill="none" stroke="#4DE6A1" stroke-width="1.2" stroke-dasharray="5,4" opacity="0.65"/>
+<!-- Outer Satellite Pods (North & South) -->
+<circle cx="0" cy="-21" r="4" fill="#0C1B14" stroke="#4DE6A1" stroke-width="1.5"/><circle cx="0" cy="-21" r="1.8" fill="#FFFFFF"/>
+<circle cx="0" cy="21" r="4" fill="#0C1B14" stroke="#4DE6A1" stroke-width="1.5"/><circle cx="0" cy="21" r="1.8" fill="#FFFFFF"/>
+<!-- Heavy Armored Cross Body -->
+<path d="M-7,-21 L7,-21 L7,-7 L21,-7 L21,7 L7,7 L7,21 L-7,21 L-7,7 L-21,7 L-21,-7 L-7,-7 Z" fill="url(#me_hull)" stroke="#7EFFBE" stroke-width="2" stroke-linejoin="round"/>
+<!-- Secondary Diamond Plating -->
+<polygon points="0,-13 13,0 0,13 -13,0" fill="#0E2118" stroke="#4DE6A1" stroke-width="1.5"/>
+<!-- Central Emerald Restoration Core -->
+<circle cx="0" cy="0" r="6" fill="url(#me_pulse)"/>
+<!-- Medical Plus Emblem -->
+<path d="M-3,0 L3,0 M0,-3 L0,3" stroke="#0B301F" stroke-width="1.8" stroke-linecap="square"/>
+</svg>

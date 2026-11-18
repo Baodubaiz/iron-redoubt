@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ChallengeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/levels/level_09.tres" id="1_r6ptl"]
+[ext_resource type="Script" path="res://data/defs/challenge_def.gd" id="2_djhw8"]
+
+[resource]
+script = ExtResource("2_djhw8")
+id = &"w_glass_9"
+display_name = "Last Stand"
+description = "Clear level 30 with at most 15 Base HP."
+period = 1
+level = ExtResource("1_r6ptl")
+base_hp_cap = 15
+cores = 40

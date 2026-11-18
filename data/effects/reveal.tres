@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EffectDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_hs3ma"]
+
+[resource]
+script = ExtResource("1_hs3ma")
+id = &"reveal"
+display_name = "Revealed"
+description = "A stealthed enemy that towers can now target."
+icon = "revealed"
+builtin = true

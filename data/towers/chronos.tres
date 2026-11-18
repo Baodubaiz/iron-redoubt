@@ -1,0 +1,161 @@
+[gd_resource type="Resource" script_class="TowerDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/branch_def.gd" id="1_ps42m"]
+[ext_resource type="Script" path="res://data/defs/tier_def.gd" id="2_c3pf6"]
+[ext_resource type="Script" path="res://data/defs/tower_def.gd" id="3_g2inb"]
+
+[sub_resource type="Resource" id="Resource_yopu8"]
+script = ExtResource("2_c3pf6")
+display_name = "Eternity"
+description = "Field 300"
+cost = 690
+stats = {
+"attack_range": 300.0
+}
+
+[sub_resource type="Resource" id="Resource_pjqjv"]
+script = ExtResource("2_c3pf6")
+display_name = "Expanse I"
+description = "Field 200"
+cost = 115
+stats = {
+"attack_range": 200.0
+}
+
+[sub_resource type="Resource" id="Resource_4t2hv"]
+script = ExtResource("2_c3pf6")
+display_name = "Expanse II"
+description = "Field 230"
+cost = 229
+stats = {
+"attack_range": 230.0
+}
+
+[sub_resource type="Resource" id="Resource_pp4u2"]
+script = ExtResource("2_c3pf6")
+display_name = "Expanse III"
+description = "Field 260"
+cost = 411
+stats = {
+"attack_range": 260.0
+}
+
+[sub_resource type="Resource" id="Resource_hw4kg"]
+script = ExtResource("1_ps42m")
+id = &"expanse"
+display_name = "Expanse"
+description = "A wider time field."
+tiers = Array[ExtResource("2_c3pf6")]([SubResource("Resource_pjqjv"), SubResource("Resource_4t2hv"), SubResource("Resource_pp4u2")])
+evolution = SubResource("Resource_yopu8")
+
+[sub_resource type="Resource" id="Resource_ti22e"]
+script = ExtResource("2_c3pf6")
+display_name = "Time Lock"
+description = "Freeze 2 s"
+cost = 690
+stats = {
+"freeze_duration": 2.0
+}
+
+[sub_resource type="Resource" id="Resource_pak1u"]
+script = ExtResource("2_c3pf6")
+display_name = "Stasis I"
+description = "Freeze every 6.5 s"
+cost = 115
+stats = {
+"freeze_every": 6.5
+}
+
+[sub_resource type="Resource" id="Resource_sth2i"]
+script = ExtResource("2_c3pf6")
+display_name = "Stasis II"
+description = "Freeze 1.3 s"
+cost = 229
+stats = {
+"freeze_duration": 1.3
+}
+
+[sub_resource type="Resource" id="Resource_5riv4"]
+script = ExtResource("2_c3pf6")
+display_name = "Stasis III"
+description = "Freeze every 5 s"
+cost = 411
+stats = {
+"freeze_every": 5.0
+}
+
+[sub_resource type="Resource" id="Resource_youlb"]
+script = ExtResource("1_ps42m")
+id = &"stasis"
+display_name = "Stasis"
+description = "Freezes more often and for longer."
+tiers = Array[ExtResource("2_c3pf6")]([SubResource("Resource_pak1u"), SubResource("Resource_sth2i"), SubResource("Resource_5riv4")])
+evolution = SubResource("Resource_ti22e")
+
+[sub_resource type="Resource" id="Resource_i30ob"]
+script = ExtResource("2_c3pf6")
+display_name = "Overclock Field"
+description = "Towers +18%"
+cost = 690
+stats = {
+"amp_rate": 0.18
+}
+
+[sub_resource type="Resource" id="Resource_6vahd"]
+script = ExtResource("2_c3pf6")
+display_name = "Acceleration I"
+description = "Towers +10% fire rate"
+cost = 115
+stats = {
+"amp_rate": 0.1
+}
+
+[sub_resource type="Resource" id="Resource_lv07e"]
+script = ExtResource("2_c3pf6")
+display_name = "Acceleration II"
+description = "Towers +12%"
+cost = 229
+stats = {
+"amp_rate": 0.12
+}
+
+[sub_resource type="Resource" id="Resource_u5knu"]
+script = ExtResource("2_c3pf6")
+display_name = "Acceleration III"
+description = "Towers +14%"
+cost = 411
+stats = {
+"amp_rate": 0.14
+}
+
+[sub_resource type="Resource" id="Resource_gnrsp"]
+script = ExtResource("1_ps42m")
+id = &"haste"
+display_name = "Acceleration"
+description = "Towers in the field fire faster."
+tiers = Array[ExtResource("2_c3pf6")]([SubResource("Resource_6vahd"), SubResource("Resource_lv07e"), SubResource("Resource_u5knu")])
+evolution = SubResource("Resource_i30ob")
+
+[resource]
+script = ExtResource("3_g2inb")
+id = &"chronos"
+display_name = "Chronos"
+rarity = &"S"
+role = "Time field: enemies inside are slowed 30% and take +6% damage; towers inside are immune to EMP and debuffs and fire 7% faster. Every 8 s it freezes regular enemies for 1 s."
+cost = 218
+damage = 0.0
+attack_range = 170.0
+projectile_speed = 0.0
+targeting = 4
+attack_mode = 1
+color = Color(0.36078432, 1, 0.84705883, 1)
+shape = 3
+base_params = {
+"amp_rate": 0.07,
+"field": true,
+"field_slow_pct": 0.3,
+"field_vuln": 1.06,
+"freeze_duration": 1.0,
+"freeze_every": 8.0
+}
+branches = Array[ExtResource("1_ps42m")]([SubResource("Resource_hw4kg"), SubResource("Resource_youlb"), SubResource("Resource_gnrsp")])

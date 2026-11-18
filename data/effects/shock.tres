@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EffectDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_6fh28"]
+
+[resource]
+script = ExtResource("1_6fh28")
+id = &"shock"
+display_name = "Shock"
+description = "Slowed and zapped while standing on a trap."
+color = Color(1, 0.84705883, 0.3019608, 1)
+builtin = true

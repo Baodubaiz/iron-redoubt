@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ResearchDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/research_def.gd" id="1_l5cxa"]
+
+[resource]
+script = ExtResource("1_l5cxa")
+id = &"evo_pulse"
+display_name = "Pulse Evolution"
+description = "Unlocks evolutions for Pulse branches."
+kind = 1
+cost = 90
+tower_id = &"pulse"
+category = &"tower"

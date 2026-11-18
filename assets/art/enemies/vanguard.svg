@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="-32 -32 64 64">
+<defs>
+  <linearGradient id="vg_plate" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#345070"/>
+    <stop offset="1" stop-color="#142232"/>
+  </linearGradient>
+  <radialGradient id="vg_shield">
+    <stop offset="0" stop-color="#FFFFFF"/>
+    <stop offset="0.5" stop-color="#8FD3FF"/>
+    <stop offset="1" stop-color="#1A68A8"/>
+  </radialGradient>
+</defs>
+<!-- Rear Heavy Stabilizers -->
+<path d="M-18,-18 L-28,-14 L-28,14 L-18,18 Z" fill="#0C141E" stroke="#2B4664" stroke-width="2"/>
+<!-- Outer Bulwark Wings -->
+<polygon points="12,-25 24,-12 4,-10" fill="#1C3048" stroke="#5C92C4" stroke-width="1.5"/>
+<polygon points="12,25 24,12 4,10" fill="#1C3048" stroke="#5C92C4" stroke-width="1.5"/>
+<!-- Heavy Pentagonal Bastion Hull -->
+<polygon points="26,0 10,-24 -18,-18 -18,18 10,24" fill="url(#vg_plate)" stroke="#8FD3FF" stroke-width="2.5" stroke-linejoin="round"/>
+<!-- Front Armor Chevrons -->
+<path d="M22,0 L8,-16 M22,0 L8,16" fill="none" stroke="#BFE7FF" stroke-width="2" stroke-linecap="round"/>
+<!-- Shield Generator Hub -->
+<polygon points="4,0 -6,-10 -14,-7 -14,7 -6,10" fill="#0E1A27" stroke="#5AAFFF" stroke-width="1.5"/>
+<circle cx="-4" cy="0" r="6" fill="url(#vg_shield)"/>
+<circle cx="-4" cy="0" r="9" fill="none" stroke="#8FD3FF" stroke-width="1.5" stroke-dasharray="4,2"/>
+</svg>

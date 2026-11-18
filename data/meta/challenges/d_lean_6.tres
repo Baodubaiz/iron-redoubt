@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ChallengeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/levels/level_06.tres" id="1_k5fo6"]
+[ext_resource type="Script" path="res://data/defs/challenge_def.gd" id="2_gpv5w"]
+
+[resource]
+script = ExtResource("2_gpv5w")
+id = &"d_lean_6"
+display_name = "Austerity"
+description = "Clear level 15 with 85% starting currency."
+level = ExtResource("1_k5fo6")
+currency_multiplier = 0.85
+cores = 14

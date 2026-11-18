@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EffectDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_56mde"]
+
+[resource]
+script = ExtResource("1_56mde")
+id = &"poison"
+display_name = "Poison"
+description = "Damage over time; stacks up to 5 times."
+icon = "burn"
+color = Color(0.49411765, 0.8784314, 0.41960785, 1)
+duration = 4.0
+stacking = 2
+max_stacks = 5
+components = {
+"dot_dps": 4.0,
+"dot_type": "true"
+}

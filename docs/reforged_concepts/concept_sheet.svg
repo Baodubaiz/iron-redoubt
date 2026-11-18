@@ -1,0 +1,320 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#101833"/>
+      <stop offset="1" stop-color="#0B1020"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3A4E73"/>
+      <stop offset="0.5" stop-color="#22314F"/>
+      <stop offset="1" stop-color="#141D31"/>
+    </linearGradient>
+    <linearGradient id="metalLight" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5A6F96"/>
+      <stop offset="1" stop-color="#26365A"/>
+    </linearGradient>
+    <linearGradient id="enemyMetal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4A4F5E"/>
+      <stop offset="1" stop-color="#1E2230"/>
+    </linearGradient>
+    <radialGradient id="glowCyan"><stop offset="0" stop-color="#38D9F5" stop-opacity="0.9"/><stop offset="1" stop-color="#38D9F5" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowOrange"><stop offset="0" stop-color="#FFAA45" stop-opacity="0.9"/><stop offset="1" stop-color="#FFAA45" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowViolet"><stop offset="0" stop-color="#A66BFF" stop-opacity="0.9"/><stop offset="1" stop-color="#A66BFF" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowGreen"><stop offset="0" stop-color="#4DE6A1" stop-opacity="0.9"/><stop offset="1" stop-color="#4DE6A1" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowRed"><stop offset="0" stop-color="#FF5368" stop-opacity="0.95"/><stop offset="1" stop-color="#FF5368" stop-opacity="0"/></radialGradient>
+    <radialGradient id="coreCyan"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.35" stop-color="#9FF0FF"/><stop offset="1" stop-color="#38D9F5"/></radialGradient>
+    <radialGradient id="coreOrange"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.35" stop-color="#FFD9A6"/><stop offset="1" stop-color="#FF8A1F"/></radialGradient>
+    <radialGradient id="coreViolet"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.35" stop-color="#D9C2FF"/><stop offset="1" stop-color="#8A4DFF"/></radialGradient>
+    <radialGradient id="coreGreen"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.35" stop-color="#B8FFE0"/><stop offset="1" stop-color="#2FCB84"/></radialGradient>
+    <radialGradient id="coreRed"><stop offset="0" stop-color="#FFF2F2"/><stop offset="0.35" stop-color="#FF9AA6"/><stop offset="1" stop-color="#E02A45"/></radialGradient>
+    <linearGradient id="pathGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1A2540"/><stop offset="0.5" stop-color="#121A2E"/><stop offset="1" stop-color="#1A2540"/>
+    </linearGradient>
+    <linearGradient id="btnPrimary" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6BE6FA"/><stop offset="1" stop-color="#22B6D6"/>
+    </linearGradient>
+    <!-- hex tower base, radius 46 -->
+    <g id="towerBase">
+      <polygon points="50,6 25,49 -25,49 -50,6 -25,-37 25,-37" fill="#000" opacity="0.35" transform="translate(4,8)"/>
+      <polygon points="48,0 24,41.6 -24,41.6 -48,0 -24,-41.6 24,-41.6" fill="url(#metal)" stroke="#5A6F96" stroke-width="2.5"/>
+      <polygon points="38,0 19,32.9 -19,32.9 -38,0 -19,-32.9 19,-32.9" fill="#141D31" stroke="#2C3D60" stroke-width="2"/>
+      <circle cx="-36" cy="0" r="2.5" fill="#5A6F96"/><circle cx="36" cy="0" r="2.5" fill="#5A6F96"/>
+      <circle cx="-18" cy="-31" r="2.5" fill="#5A6F96"/><circle cx="18" cy="31" r="2.5" fill="#5A6F96"/>
+      <circle cx="18" cy="-31" r="2.5" fill="#5A6F96"/><circle cx="-18" cy="31" r="2.5" fill="#5A6F96"/>
+    </g>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bgGrad)"/>
+  <!-- floor tile hint -->
+  <g opacity="0.07" stroke="#4D8CFF" stroke-width="1.5" fill="none">
+    <path d="M0 180 H1600 M0 520 H1600"/>
+  </g>
+
+  <!-- ===== Header ===== -->
+  <g transform="translate(48,70)">
+    <polygon points="0,-26 22.5,-13 22.5,13 0,26 -22.5,13 -22.5,-13" transform="translate(22,0)" fill="none" stroke="#38D9F5" stroke-width="5"/>
+    <polygon points="0,-11 9.5,5.5 -9.5,5.5" transform="translate(22,2)" fill="#FFAA45"/>
+    <text x="62" y="14" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="44" letter-spacing="6" fill="#E8F6FF">HEXA<tspan fill="#38D9F5">VANGUARD</tspan></text>
+    <text x="64" y="44" font-family="Arial, Helvetica, sans-serif" font-size="16" letter-spacing="5" fill="#7F93B8">REFORGED · CONCEPT SHEET · STAGE A</text>
+  </g>
+  <!-- palette -->
+  <g transform="translate(900,40)" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#9FB0CF">
+    <rect x="0" y="0" width="70" height="36" rx="4" fill="#0B1020" stroke="#2C3D60"/><text x="0" y="54">#0B1020</text>
+    <rect x="86" y="0" width="70" height="36" rx="4" fill="#172238"/><text x="86" y="54">#172238</text>
+    <rect x="172" y="0" width="70" height="36" rx="4" fill="#38D9F5"/><text x="172" y="54">#38D9F5</text>
+    <rect x="258" y="0" width="70" height="36" rx="4" fill="#4D8CFF"/><text x="258" y="54">#4D8CFF</text>
+    <rect x="344" y="0" width="70" height="36" rx="4" fill="#A66BFF"/><text x="344" y="54">#A66BFF</text>
+    <rect x="430" y="0" width="70" height="36" rx="4" fill="#FFAA45"/><text x="430" y="54">#FFAA45</text>
+    <rect x="516" y="0" width="70" height="36" rx="4" fill="#FF5368"/><text x="516" y="54">#FF5368</text>
+    <rect x="602" y="0" width="70" height="36" rx="4" fill="#4DE6A1"/><text x="602" y="54">#4DE6A1</text>
+  </g>
+
+  <text x="48" y="168" font-family="Arial, Helvetica, sans-serif" font-size="18" letter-spacing="4" fill="#7F93B8">TOWERS · BASE FORM</text>
+
+  <!-- ===== PULSE ===== -->
+  <g transform="translate(150,320)">
+    <circle r="78" fill="url(#glowCyan)" opacity="0.25"/>
+    <use xlink:href="#towerBase"/>
+    <g transform="rotate(-20)">
+      <rect x="10" y="-17" width="52" height="10" rx="3" fill="url(#metalLight)" stroke="#8FA6CF" stroke-width="1.5"/>
+      <rect x="10" y="7" width="52" height="10" rx="3" fill="url(#metalLight)" stroke="#8FA6CF" stroke-width="1.5"/>
+      <rect x="56" y="-16" width="8" height="8" rx="2" fill="#38D9F5"/>
+      <rect x="56" y="8" width="8" height="8" rx="2" fill="#38D9F5"/>
+      <path d="M-26,-22 L14,-24 L26,-10 L26,10 L14,24 L-26,22 L-32,0 Z" fill="url(#metal)" stroke="#6E86B3" stroke-width="2.5"/>
+      <path d="M-18,-14 L6,-15 L6,15 L-18,14 Z" fill="#0E1528"/>
+      <circle cx="-4" cy="0" r="16" fill="url(#glowCyan)"/>
+      <circle cx="-4" cy="0" r="9" fill="url(#coreCyan)"/>
+      <!-- muzzle flash -->
+      <circle cx="74" cy="-12" r="9" fill="url(#glowCyan)"/>
+      <path d="M70,-12 L90,-12" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <!-- bolt -->
+    <g transform="rotate(-20) translate(120,-12)">
+      <path d="M-26,0 L0,0" stroke="#38D9F5" stroke-width="7" stroke-linecap="round" opacity="0.35"/>
+      <path d="M-20,0 L0,0" stroke="#E9FCFF" stroke-width="3" stroke-linecap="round"/>
+    </g>
+  </g>
+  <text x="150" y="440" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="22" letter-spacing="3" fill="#38D9F5">PULSE</text>
+  <text x="150" y="462" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#9FB0CF">twin energy turret · rapid bolts</text>
+
+  <!-- ===== NOVA ===== -->
+  <g transform="translate(470,320)">
+    <circle r="80" fill="url(#glowOrange)" opacity="0.22"/>
+    <use xlink:href="#towerBase"/>
+    <g transform="rotate(-35)">
+      <circle cx="-14" cy="0" r="27" fill="url(#metal)" stroke="#6E86B3" stroke-width="2.5"/>
+      <circle cx="-14" cy="0" r="18" fill="#2A1A0E"/>
+      <circle cx="-14" cy="0" r="22" fill="url(#glowOrange)" opacity="0.8"/>
+      <circle cx="-14" cy="0" r="11" fill="url(#coreOrange)"/>
+      <path d="M-14,-18 V18 M-32,0 H4" stroke="#3A2510" stroke-width="3" opacity="0.6"/>
+      <rect x="6" y="-15" width="44" height="30" rx="5" fill="url(#metalLight)" stroke="#8FA6CF" stroke-width="2"/>
+      <rect x="46" y="-19" width="14" height="38" rx="4" fill="url(#metal)" stroke="#8FA6CF" stroke-width="2"/>
+      <circle cx="58" cy="0" r="9" fill="#120B05" stroke="#FFAA45" stroke-width="2"/>
+      <rect x="14" y="-15" width="4" height="30" fill="#141D31"/><rect x="26" y="-15" width="4" height="30" fill="#141D31"/>
+    </g>
+    <!-- plasma orb + impact ring -->
+    <g transform="translate(118,-92)">
+      <circle r="20" fill="url(#glowOrange)"/>
+      <circle r="8" fill="url(#coreOrange)"/>
+    </g>
+  </g>
+  <text x="470" y="440" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="22" letter-spacing="3" fill="#FFAA45">NOVA</text>
+  <text x="470" y="462" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#9FB0CF">plasma mortar · AoE shockwave</text>
+
+  <!-- ===== LANCE ===== -->
+  <g transform="translate(790,320)">
+    <circle r="78" fill="url(#glowViolet)" opacity="0.22"/>
+    <use xlink:href="#towerBase"/>
+    <g transform="rotate(15)">
+      <!-- beam -->
+      <path d="M78,0 L300,0" stroke="#A66BFF" stroke-width="12" stroke-linecap="round" opacity="0.30"/>
+      <path d="M78,0 L300,0" stroke="#D9C2FF" stroke-width="5" stroke-linecap="round" opacity="0.9"/>
+      <path d="M78,0 L300,0" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
+      <rect x="4" y="-6" width="76" height="12" rx="3" fill="url(#metalLight)" stroke="#8FA6CF" stroke-width="1.5"/>
+      <rect x="30" y="-11" width="6" height="22" rx="2" fill="#A66BFF"/>
+      <rect x="48" y="-10" width="6" height="20" rx="2" fill="#A66BFF" opacity="0.8"/>
+      <rect x="64" y="-9" width="6" height="18" rx="2" fill="#A66BFF" opacity="0.6"/>
+      <path d="M-34,-14 L10,-18 L18,0 L10,18 L-34,14 L-40,0 Z" fill="url(#metal)" stroke="#6E86B3" stroke-width="2.5"/>
+      <path d="M-30,-6 L-4,-8 L-4,8 L-30,6 Z" fill="#0E1528"/>
+      <circle cx="-12" cy="0" r="16" fill="url(#glowViolet)"/>
+      <polygon points="-12,-9 -3,0 -12,9 -21,0" fill="url(#coreViolet)"/>
+      <circle cx="82" cy="0" r="10" fill="url(#glowViolet)"/>
+    </g>
+  </g>
+  <!-- beam impact -->
+  <g transform="translate(1078,397)">
+    <circle r="16" fill="url(#glowViolet)"/>
+    <path d="M-10,-6 L10,6 M-10,6 L10,-6 M0,-12 L0,12" stroke="#F1E8FF" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <text x="790" y="440" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="22" letter-spacing="3" fill="#A66BFF">LANCE</text>
+  <text x="790" y="462" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#9FB0CF">focusing rail · ramping beam</text>
+
+  <!-- ===== BEACON ===== -->
+  <g transform="translate(1310,320)">
+    <circle r="120" fill="url(#glowGreen)" opacity="0.10"/>
+    <circle r="118" fill="none" stroke="#4DE6A1" stroke-width="1.5" stroke-dasharray="6 10" opacity="0.5"/>
+    <use xlink:href="#towerBase"/>
+    <ellipse rx="34" ry="13" fill="none" stroke="#4DE6A1" stroke-width="3" transform="rotate(25)" opacity="0.85"/>
+    <ellipse rx="34" ry="13" fill="none" stroke="#4DE6A1" stroke-width="3" transform="rotate(-35)" opacity="0.55"/>
+    <circle r="24" fill="url(#glowGreen)"/>
+    <circle r="12" fill="url(#coreGreen)"/>
+    <path d="M0,-12 V-56 M-10,-46 H10 M-6,-54 H6" stroke="#9FB8D8" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="0" cy="-58" r="4" fill="#4DE6A1"/>
+    <!-- link to buffed tower -->
+    <path d="M30,24 L100,70" stroke="#4DE6A1" stroke-width="2.5" stroke-dasharray="4 6" opacity="0.8"/>
+    <polygon points="104,62 112,74 96,74" fill="#4DE6A1"/>
+  </g>
+  <text x="1310" y="440" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="22" letter-spacing="3" fill="#4DE6A1">BEACON</text>
+  <text x="1310" y="462" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#9FB0CF">support pylon · light / buff field</text>
+
+  <!-- ===== Enemies row on a path ===== -->
+  <text x="48" y="512" font-family="Arial, Helvetica, sans-serif" font-size="18" letter-spacing="4" fill="#7F93B8">ENEMIES · ON PATH</text>
+  <g>
+    <rect x="0" y="560" width="1600" height="150" fill="url(#pathGrad)"/>
+    <path d="M0,560 H1600 M0,710 H1600" stroke="#38D9F5" stroke-width="3" opacity="0.55"/>
+    <path d="M0,566 H1600 M0,704 H1600" stroke="#38D9F5" stroke-width="1" opacity="0.25"/>
+    <g fill="none" stroke="#38D9F5" stroke-width="3" opacity="0.18">
+      <path d="M180,622 l12,13 l-12,13"/><path d="M480,622 l12,13 l-12,13"/><path d="M780,622 l12,13 l-12,13"/><path d="M1080,622 l12,13 l-12,13"/>
+    </g>
+  </g>
+
+  <!-- Swarmling x3 -->
+  <g transform="translate(70,635)">
+    <g transform="translate(0,-14)"><path d="M-8,-6 L-12,-10 M-8,6 L-12,10 M0,-7 L0,-12 M0,7 L0,12" stroke="#5A5F6E" stroke-width="2"/><ellipse rx="9" ry="7" fill="url(#enemyMetal)" stroke="#6A7082" stroke-width="1.5"/><circle cx="5" cy="0" r="2.6" fill="#FF5368"/></g>
+    <g transform="translate(22,10)"><path d="M-8,-6 L-12,-10 M-8,6 L-12,10 M0,-7 L0,-12 M0,7 L0,12" stroke="#5A5F6E" stroke-width="2"/><ellipse rx="9" ry="7" fill="url(#enemyMetal)" stroke="#6A7082" stroke-width="1.5"/><circle cx="5" cy="0" r="2.6" fill="#FF5368"/></g>
+    <g transform="translate(-20,12)"><path d="M-8,-6 L-12,-10 M-8,6 L-12,10 M0,-7 L0,-12 M0,7 L0,12" stroke="#5A5F6E" stroke-width="2"/><ellipse rx="9" ry="7" fill="url(#enemyMetal)" stroke="#6A7082" stroke-width="1.5"/><circle cx="5" cy="0" r="2.6" fill="#FF5368"/></g>
+  </g>
+
+  <!-- Drone -->
+  <g transform="translate(200,635)">
+    <path d="M-10,-10 L-22,-22 M10,-10 L18,-24 M-10,10 L-22,22 M10,10 L18,24" stroke="#5A5F6E" stroke-width="4" stroke-linecap="round"/>
+    <ellipse rx="19" ry="15" fill="url(#enemyMetal)" stroke="#7A8094" stroke-width="2"/>
+    <path d="M-12,-8 H4 M-12,8 H4" stroke="#2A2E3A" stroke-width="2"/>
+    <circle cx="10" cy="0" r="10" fill="url(#glowRed)"/>
+    <circle cx="10" cy="0" r="4.5" fill="url(#coreRed)"/>
+  </g>
+
+  <!-- Dart -->
+  <g transform="translate(340,635)">
+    <path d="M-48,0 L-20,0" stroke="#FF5368" stroke-width="8" opacity="0.18" stroke-linecap="round"/>
+    <polygon points="26,0 -16,-16 -8,0 -16,16" fill="url(#enemyMetal)" stroke="#8A90A4" stroke-width="2"/>
+    <polygon points="14,0 -4,-6 -4,6" fill="#FF7A5A"/>
+    <circle cx="16" cy="0" r="8" fill="url(#glowRed)" opacity="0.8"/>
+  </g>
+
+  <!-- Brute -->
+  <g transform="translate(490,635)">
+    <rect x="-20" y="-34" width="22" height="14" rx="4" fill="#2A2E3A"/><rect x="-20" y="20" width="22" height="14" rx="4" fill="#2A2E3A"/>
+    <rect x="-24" y="-26" width="44" height="52" rx="10" fill="url(#enemyMetal)" stroke="#8A90A4" stroke-width="2.5"/>
+    <rect x="-6" y="-34" width="20" height="16" rx="5" fill="#3E4352" stroke="#8A90A4" stroke-width="2"/>
+    <rect x="-6" y="18" width="20" height="16" rx="5" fill="#3E4352" stroke="#8A90A4" stroke-width="2"/>
+    <rect x="8" y="-10" width="14" height="20" rx="4" fill="#151820"/>
+    <circle cx="16" cy="0" r="12" fill="url(#glowRed)"/>
+    <rect x="12" y="-4" width="8" height="8" rx="2" fill="url(#coreRed)"/>
+  </g>
+
+  <!-- Plated -->
+  <g transform="translate(640,635)">
+    <rect x="-24" y="-20" width="48" height="40" rx="6" fill="#262A36"/>
+    <path d="M-26,-22 L-8,-22 L-8,22 L-26,22 Z" fill="#9AA1B2" stroke="#D0D5E0" stroke-width="1.5"/>
+    <path d="M-10,-24 L8,-24 L8,24 L-10,24 Z" fill="#B6BCCA" stroke="#E2E6EE" stroke-width="1.5"/>
+    <path d="M6,-22 L22,-18 L22,18 L6,22 Z" fill="#C9CEDA" stroke="#F0F2F6" stroke-width="1.5"/>
+    <rect x="14" y="-5" width="10" height="10" rx="2" fill="url(#coreRed)"/>
+    <!-- spark on armor -->
+    <path d="M-30,-30 l-8,-6 M-28,-34 l-2,-10 M-34,-26 l-10,0" stroke="#FFE6B0" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Aegis with shield dome -->
+  <g transform="translate(800,635)">
+    <polygon points="44,0 22,38 -22,38 -44,0 -22,-38 22,-38" fill="#4D8CFF" fill-opacity="0.10" stroke="#8FD3FF" stroke-width="2.5" stroke-opacity="0.8"/>
+    <path d="M30,-20 A36,36 0 0 1 30,20" stroke="#E8F6FF" stroke-width="3" fill="none" opacity="0.9"/>
+    <ellipse rx="20" ry="17" fill="url(#enemyMetal)" stroke="#8A90A4" stroke-width="2"/>
+    <circle cx="-6" cy="0" r="7" fill="#8FD3FF"/>
+    <circle cx="-6" cy="0" r="12" fill="#8FD3FF" opacity="0.25"/>
+    <circle cx="11" cy="0" r="4" fill="url(#coreRed)"/>
+  </g>
+
+  <!-- Mender -->
+  <g transform="translate(960,635)">
+    <circle r="48" fill="none" stroke="#4DE6A1" stroke-width="2" opacity="0.45"/>
+    <circle r="19" fill="url(#enemyMetal)" stroke="#8A90A4" stroke-width="2"/>
+    <g transform="rotate(20)"><rect x="-4" y="-14" width="8" height="28" rx="2" fill="#4DE6A1"/><rect x="-14" y="-4" width="28" height="8" rx="2" fill="#4DE6A1"/></g>
+    <circle cx="0" cy="0" r="5" fill="#E8FFF4"/>
+    <text x="30" y="-28" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="18" fill="#4DE6A1">+</text>
+  </g>
+
+  <!-- Phantom (stealthed) -->
+  <g transform="translate(1110,635)" opacity="0.45">
+    <polygon points="26,0 0,-18 -22,0 0,18" fill="url(#enemyMetal)" stroke="#A66BFF" stroke-width="2" stroke-dasharray="5 4"/>
+    <polygon points="12,0 0,-8 -10,0 0,8" fill="#C9A6FF" opacity="0.6"/>
+  </g>
+  <g transform="translate(1110,635)"><path d="M-30,-24 l6,0 M28,22 l6,0 M-34,10 l4,0" stroke="#A66BFF" stroke-width="2" opacity="0.6"/></g>
+
+  <!-- Glider (flying, with offset shadow) -->
+  <g transform="translate(1250,635)">
+    <polygon points="30,14 -18,-6 -6,14 -18,34" fill="#000" opacity="0.35"/>
+    <g transform="translate(0,-14)">
+      <polygon points="30,0 -18,-26 -8,0 -18,26" fill="url(#enemyMetal)" stroke="#9AA1B2" stroke-width="2"/>
+      <path d="M-14,-18 L4,0 L-14,18" stroke="#2A2E3A" stroke-width="2" fill="none"/>
+      <circle cx="-14" cy="0" r="9" fill="url(#glowRed)" opacity="0.7"/>
+      <circle cx="16" cy="0" r="3.5" fill="url(#coreRed)"/>
+    </g>
+  </g>
+
+  <!-- Monolith boss -->
+  <g transform="translate(1440,635)">
+    <circle r="74" fill="url(#glowRed)" opacity="0.18"/>
+    <rect x="-46" y="-56" width="70" height="14" rx="4" fill="#20232D"/><rect x="-46" y="42" width="70" height="14" rx="4" fill="#20232D"/>
+    <polygon points="52,0 26,45 -26,45 -52,0 -26,-45 26,-45" fill="url(#enemyMetal)" stroke="#9AA1B2" stroke-width="3"/>
+    <polygon points="40,0 20,-34 34,-34 52,0" fill="#5A606F" stroke="#B0B6C4" stroke-width="1.5"/>
+    <polygon points="-20,-34 -40,0 -52,0 -26,-45" fill="#5A606F" stroke="#B0B6C4" stroke-width="1.5"/>
+    <polygon points="-20,34 -40,0 -52,0 -26,45" fill="#4A505F" stroke="#B0B6C4" stroke-width="1.5"/>
+    <polygon points="26,0 13,22 -13,22 -26,0 -13,-22 13,-22" fill="#140A0D" stroke="#FF5368" stroke-width="2.5"/>
+    <circle r="22" fill="url(#glowRed)"/>
+    <circle r="12" fill="url(#coreRed)"/>
+  </g>
+
+  <!-- labels under enemies -->
+  <g font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#9FB0CF" text-anchor="middle">
+    <text x="70" y="736">Swarmling</text><text x="200" y="736">Drone</text><text x="340" y="736">Dart</text><text x="490" y="736">Brute</text>
+    <text x="640" y="736">Plated</text><text x="800" y="736">Aegis · shield</text><text x="960" y="736">Mender · heal</text>
+    <text x="1110" y="736">Phantom · stealth</text><text x="1250" y="736">Glider · air</text><text x="1440" y="736">MONOLITH · boss</text>
+  </g>
+
+  <!-- ===== UI components ===== -->
+  <text x="48" y="790" font-family="Arial, Helvetica, sans-serif" font-size="18" letter-spacing="4" fill="#7F93B8">UI</text>
+  <g transform="translate(48,806)" font-family="Arial, Helvetica, sans-serif">
+    <polygon points="14,0 300,0 300,50 286,64 0,64 0,14" fill="url(#btnPrimary)"/>
+    <polygon points="38,18 38,46 60,32" fill="#0B1020"/>
+    <text x="80" y="42" font-weight="bold" font-size="26" letter-spacing="4" fill="#0B1020">PLAY</text>
+    <g transform="translate(330,0)">
+      <polygon points="12,0 240,0 240,52 228,64 0,64 0,12" fill="#172238" stroke="#38D9F5" stroke-width="2"/>
+      <polygon points="40,18 52,25 52,39 40,46 28,39 28,25" fill="none" stroke="#38D9F5" stroke-width="3"/>
+      <text x="70" y="40" font-size="20" letter-spacing="2" fill="#E8F6FF">CAMPAIGN</text>
+    </g>
+    <g transform="translate(600,8)">
+      <polygon points="10,0 210,0 210,38 200,48 0,48 0,10" fill="#172238" stroke="#22314F" stroke-width="2"/>
+      <path d="M20,16 c0,-6 9,-6 9,0 c0,-6 9,-6 9,0 c0,8 -9,13 -9,16 c0,-3 -9,-8 -9,-16 z" fill="#4DE6A1"/>
+      <rect x="50" y="18" width="100" height="12" rx="3" fill="#0B1020"/><rect x="50" y="18" width="88" height="12" rx="3" fill="#4DE6A1"/>
+      <text x="160" y="31" font-size="16" fill="#E8F6FF">18/20</text>
+    </g>
+    <g transform="translate(830,8)">
+      <polygon points="10,0 150,0 150,38 140,48 0,48 0,10" fill="#172238" stroke="#22314F" stroke-width="2"/>
+      <polygon points="30,10 41,16 41,30 30,36 19,30 19,16" fill="#FFAA45"/><polygon points="30,17 35,20 35,26 30,29 25,26 25,20" fill="#7A4A10"/>
+      <text x="56" y="31" font-weight="bold" font-size="18" fill="#FFAA45">130</text>
+    </g>
+    <g transform="translate(1000,0)">
+      <polygon points="10,0 200,0 200,54 190,64 0,64 0,10" fill="#172238" stroke="#38D9F5" stroke-width="2"/>
+      <circle cx="40" cy="32" r="18" fill="url(#glowCyan)" opacity="0.5"/>
+      <circle cx="40" cy="32" r="7" fill="url(#coreCyan)"/>
+      <text x="74" y="29" font-weight="bold" font-size="16" letter-spacing="2" fill="#E8F6FF">PULSE</text>
+      <text x="74" y="50" font-size="15" fill="#FFAA45">◆ 100</text>
+    </g>
+    <g transform="translate(1230,0)" opacity="0.55">
+      <polygon points="10,0 200,0 200,54 190,64 0,64 0,10" fill="#121A2C" stroke="#2C3D60" stroke-width="2"/>
+      <circle cx="40" cy="32" r="7" fill="url(#coreOrange)"/>
+      <text x="74" y="29" font-weight="bold" font-size="16" letter-spacing="2" fill="#9FB0CF">NOVA</text>
+      <text x="74" y="50" font-size="15" fill="#FF5368">◆ 175</text>
+    </g>
+  </g>
+</svg>

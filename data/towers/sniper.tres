@@ -1,0 +1,164 @@
+[gd_resource type="Resource" script_class="TowerDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/branch_def.gd" id="1_l18ci"]
+[ext_resource type="Script" path="res://data/defs/tier_def.gd" id="2_adjjk"]
+[ext_resource type="Script" path="res://data/defs/tower_def.gd" id="3_22mr3"]
+
+[sub_resource type="Resource" id="Resource_mh2id"]
+script = ExtResource("2_adjjk")
+display_name = "Executioner"
+description = "Every 2nd shot is a crit"
+cost = 621
+stats = {
+"crit_every": 2
+}
+
+[sub_resource type="Resource" id="Resource_oe6kl"]
+script = ExtResource("2_adjjk")
+display_name = "Deadeye I"
+description = "Every 4th shot x2"
+cost = 98
+stats = {
+"crit_every": 4,
+"crit_mult": 2.0
+}
+
+[sub_resource type="Resource" id="Resource_5b1ln"]
+script = ExtResource("2_adjjk")
+display_name = "Deadeye II"
+description = "Every 3rd shot x2"
+cost = 193
+stats = {
+"crit_every": 3
+}
+
+[sub_resource type="Resource" id="Resource_teci7"]
+script = ExtResource("2_adjjk")
+display_name = "Deadeye III"
+description = "Crits x2.5"
+cost = 354
+stats = {
+"crit_mult": 2.5
+}
+
+[sub_resource type="Resource" id="Resource_h5ovm"]
+script = ExtResource("1_l18ci")
+id = &"deadeye"
+display_name = "Deadeye"
+description = "Critical hits."
+tiers = Array[ExtResource("2_adjjk")]([SubResource("Resource_oe6kl"), SubResource("Resource_5b1ln"), SubResource("Resource_teci7")])
+evolution = SubResource("Resource_mh2id")
+
+[sub_resource type="Resource" id="Resource_nq6ej"]
+script = ExtResource("2_adjjk")
+display_name = "Railgun"
+description = "Pierces 5, pen 10"
+cost = 621
+stats = {
+"armor_pen": 10.0,
+"pierce": 5
+}
+
+[sub_resource type="Resource" id="Resource_l36p0"]
+script = ExtResource("2_adjjk")
+display_name = "Penetrator I"
+description = "Pierces 2 enemies, pen 6"
+cost = 98
+stats = {
+"armor_pen": 6.0,
+"pierce": 2
+}
+
+[sub_resource type="Resource" id="Resource_211fw"]
+script = ExtResource("2_adjjk")
+display_name = "Penetrator II"
+description = "Pierces 3"
+cost = 193
+stats = {
+"pierce": 3
+}
+
+[sub_resource type="Resource" id="Resource_b0cfp"]
+script = ExtResource("2_adjjk")
+display_name = "Penetrator III"
+description = "Damage 150"
+cost = 354
+stats = {
+"damage": 67.5
+}
+
+[sub_resource type="Resource" id="Resource_rei4o"]
+script = ExtResource("1_l18ci")
+id = &"penetrator"
+display_name = "Penetrator"
+description = "Rounds pass through enemies."
+tiers = Array[ExtResource("2_adjjk")]([SubResource("Resource_l36p0"), SubResource("Resource_211fw"), SubResource("Resource_b0cfp")])
+evolution = SubResource("Resource_nq6ej")
+
+[sub_resource type="Resource" id="Resource_nnvt5"]
+script = ExtResource("2_adjjk")
+display_name = "Overwatch"
+description = "Range 420"
+cost = 621
+stats = {
+"attack_range": 420.0
+}
+
+[sub_resource type="Resource" id="Resource_od3d6"]
+script = ExtResource("2_adjjk")
+display_name = "Spotter I"
+description = "Hits Mark: +10% damage taken (4 s)"
+cost = 98
+stats = {
+"mark": 0.1,
+"mark_duration": 4.0
+}
+
+[sub_resource type="Resource" id="Resource_77vgg"]
+script = ExtResource("2_adjjk")
+display_name = "Spotter II"
+description = "Reveals stealth within 120"
+cost = 193
+stats = {
+"reveal_radius": 120.0
+}
+
+[sub_resource type="Resource" id="Resource_a3lvr"]
+script = ExtResource("2_adjjk")
+display_name = "Spotter III"
+description = "Mark +15%"
+cost = 354
+stats = {
+"mark": 0.15
+}
+
+[sub_resource type="Resource" id="Resource_4t6r3"]
+script = ExtResource("1_l18ci")
+id = &"spotter"
+display_name = "Spotter"
+description = "Marks targets for the team."
+tiers = Array[ExtResource("2_adjjk")]([SubResource("Resource_od3d6"), SubResource("Resource_77vgg"), SubResource("Resource_a3lvr")])
+evolution = SubResource("Resource_nnvt5")
+requires_research = true
+
+[resource]
+script = ExtResource("3_22mr3")
+id = &"sniper"
+display_name = "Marksman"
+rarity = &"A"
+role = "Very long range, slow and heavy shots. Bonus damage against bosses."
+cost = 150
+damage = 54.0
+armor_pen = 4.0
+fire_rate = 0.25
+attack_range = 330.0
+projectile_speed = 1600.0
+targeting = 2
+color = Color(1, 0.41960785, 0.5411765, 1)
+shape = 2
+base_params = {
+"tag_mult": {
+"boss": 1.2
+}
+}
+branches = Array[ExtResource("1_l18ci")]([SubResource("Resource_h5ovm"), SubResource("Resource_rei4o"), SubResource("Resource_4t6r3")])

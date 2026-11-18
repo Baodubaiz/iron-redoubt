@@ -1,0 +1,162 @@
+[gd_resource type="Resource" script_class="TowerDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/branch_def.gd" id="1_f6b7k"]
+[ext_resource type="Script" path="res://data/defs/tier_def.gd" id="2_7bxb6"]
+[ext_resource type="Script" path="res://data/defs/tower_def.gd" id="3_r7hjh"]
+
+[sub_resource type="Resource" id="Resource_1c34w"]
+script = ExtResource("2_7bxb6")
+display_name = "Thunderhead"
+description = "Chains to 6"
+cost = 759
+stats = {
+"chain": 6
+}
+
+[sub_resource type="Resource" id="Resource_x5md1"]
+script = ExtResource("2_7bxb6")
+display_name = "Tempest I"
+description = "Chains to 4"
+cost = 126
+stats = {
+"chain": 4
+}
+
+[sub_resource type="Resource" id="Resource_li48l"]
+script = ExtResource("2_7bxb6")
+display_name = "Tempest II"
+description = "Chain damage 75% per jump"
+cost = 241
+stats = {
+"chain_falloff": 0.75
+}
+
+[sub_resource type="Resource" id="Resource_2fo2v"]
+script = ExtResource("2_7bxb6")
+display_name = "Tempest III"
+description = "Chains to 5"
+cost = 443
+stats = {
+"chain": 5
+}
+
+[sub_resource type="Resource" id="Resource_h2rc3"]
+script = ExtResource("1_f6b7k")
+id = &"tempest"
+display_name = "Tempest"
+description = "Lightning jumps further."
+tiers = Array[ExtResource("2_7bxb6")]([SubResource("Resource_x5md1"), SubResource("Resource_li48l"), SubResource("Resource_2fo2v")])
+evolution = SubResource("Resource_1c34w")
+
+[sub_resource type="Resource" id="Resource_1spn0"]
+script = ExtResource("2_7bxb6")
+display_name = "Superconductor"
+description = "Every 2nd shot is a crit"
+cost = 759
+stats = {
+"crit_every": 2
+}
+
+[sub_resource type="Resource" id="Resource_ti7kw"]
+script = ExtResource("2_7bxb6")
+display_name = "Overload I"
+description = "Damage 75"
+cost = 126
+stats = {
+"damage": 33.75
+}
+
+[sub_resource type="Resource" id="Resource_x7wfx"]
+script = ExtResource("2_7bxb6")
+display_name = "Overload II"
+description = "Every 3rd shot is a crit"
+cost = 241
+stats = {
+"crit_every": 3
+}
+
+[sub_resource type="Resource" id="Resource_uk5ha"]
+script = ExtResource("2_7bxb6")
+display_name = "Overload III"
+description = "Crits x3"
+cost = 443
+stats = {
+"crit_mult": 3.0
+}
+
+[sub_resource type="Resource" id="Resource_74jmc"]
+script = ExtResource("1_f6b7k")
+id = &"overload"
+display_name = "Overload"
+description = "Heavier critical strikes."
+tiers = Array[ExtResource("2_7bxb6")]([SubResource("Resource_ti7kw"), SubResource("Resource_x7wfx"), SubResource("Resource_uk5ha")])
+evolution = SubResource("Resource_1spn0")
+
+[sub_resource type="Resource" id="Resource_7quu0"]
+script = ExtResource("2_7bxb6")
+display_name = "Ion Storm"
+description = "Conductive +2 jumps, Mark +15%"
+cost = 759
+stats = {
+"conductive_bonus": 2,
+"mark": 0.15
+}
+
+[sub_resource type="Resource" id="Resource_vj2lj"]
+script = ExtResource("2_7bxb6")
+display_name = "Ion I"
+description = "Chains x2 vs shields"
+cost = 126
+stats = {
+"chain_shield_mult": 2.0
+}
+
+[sub_resource type="Resource" id="Resource_755gd"]
+script = ExtResource("2_7bxb6")
+display_name = "Ion II"
+description = "Hits Mark: +10% damage taken (3 s)"
+cost = 241
+stats = {
+"mark": 0.1,
+"mark_duration": 3.0
+}
+
+[sub_resource type="Resource" id="Resource_g868w"]
+script = ExtResource("2_7bxb6")
+display_name = "Ion III"
+description = "Conductive: +1 jump between chilled enemies"
+cost = 443
+stats = {
+"conductive": true,
+"conductive_bonus": 1
+}
+
+[sub_resource type="Resource" id="Resource_q2nkp"]
+script = ExtResource("1_f6b7k")
+id = &"ion"
+display_name = "Ion"
+description = "Breaks shields and exposes enemies."
+tiers = Array[ExtResource("2_7bxb6")]([SubResource("Resource_vj2lj"), SubResource("Resource_755gd"), SubResource("Resource_g868w")])
+evolution = SubResource("Resource_7quu0")
+
+[resource]
+script = ExtResource("3_r7hjh")
+id = &"storm"
+display_name = "Stormcaller"
+rarity = &"S"
+role = "Chain lightning: every shot jumps to 3 more enemies. Every 5th shot is a x2.3 critical. Chained enemies stagger briefly."
+cost = 241
+damage = 26.1
+damage_type = 2
+attack_range = 220.0
+projectile_speed = 1400.0
+color = Color(1, 0.36078432, 0.88235295, 1)
+shape = 2
+base_params = {
+"chain": 3,
+"chain_falloff": 0.65,
+"chain_stagger": 0.15,
+"crit_every": 5,
+"crit_mult": 2.3
+}
+branches = Array[ExtResource("1_f6b7k")]([SubResource("Resource_h2rc3"), SubResource("Resource_74jmc"), SubResource("Resource_q2nkp")])

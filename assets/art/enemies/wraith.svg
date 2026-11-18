@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="-32 -32 64 64">
+<defs>
+  <linearGradient id="wr_hull" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#4B3369"/>
+    <stop offset="1" stop-color="#1A1126"/>
+  </linearGradient>
+  <radialGradient id="wr_orb">
+    <stop offset="0" stop-color="#FFFFFF"/>
+    <stop offset="0.4" stop-color="#E2B3FF"/>
+    <stop offset="1" stop-color="#7B32B8"/>
+  </radialGradient>
+</defs>
+<!-- Phase Trail Fin / Rear Exhaust -->
+<polygon points="-16,-6 -28,0 -16,6 -10,0" fill="#140C1F" stroke="#8753B8" stroke-width="1.5"/>
+<line x1="-28" y1="0" x2="-20" y2="0" stroke="#DF9FFF" stroke-width="2"/>
+<!-- Swept Stealth Delta Wing -->
+<path d="M28,0 L-14,-22 L-8,-8 L-14,0 L-8,8 L-14,22 Z" fill="url(#wr_hull)" stroke="#C784FF" stroke-width="2" stroke-linejoin="round"/>
+<!-- Phase Cutout Slits -->
+<polygon points="6,-4 -6,-14 -2,-6" fill="#110B1A" stroke="#DF9FFF" stroke-width="1"/>
+<polygon points="6,4 -6,14 -2,6" fill="#110B1A" stroke="#DF9FFF" stroke-width="1"/>
+<!-- Forward Penetrator Needle & EMP Orb -->
+<line x1="8" y1="0" x2="28" y2="0" stroke="#DF9FFF" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="2" cy="0" r="5.5" fill="url(#wr_orb)"/>
+<circle cx="2" cy="0" r="8" fill="none" stroke="#DF9FFF" stroke-width="1.5" stroke-dasharray="3,3"/>
+</svg>

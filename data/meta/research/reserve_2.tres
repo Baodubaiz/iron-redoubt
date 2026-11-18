@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ResearchDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/research_def.gd" id="1_fp7wy"]
+
+[resource]
+script = ExtResource("1_fp7wy")
+id = &"reserve_2"
+display_name = "Reserve Funds II"
+description = "+25 more starting currency (+50 total)."
+cost = 90
+value = 25.0
+requires = Array[StringName]([&"reserve_1"])

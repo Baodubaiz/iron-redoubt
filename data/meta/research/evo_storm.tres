@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ResearchDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/research_def.gd" id="1_4n7rn"]
+
+[resource]
+script = ExtResource("1_4n7rn")
+id = &"evo_storm"
+display_name = "Stormcaller Evolution"
+description = "Unlocks evolutions for Stormcaller branches."
+kind = 1
+cost = 220
+tower_id = &"storm"
+requires_tower = &"storm"
+category = &"tower"

@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/boss_skill_def.gd" id="1_vuvsn"]
+[ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="2_j72vm"]
+
+[resource]
+script = ExtResource("2_j72vm")
+id = &"shade"
+display_name = "Shade"
+category = 2
+max_hp = 84.0
+speed = 89.30000000000001
+resist_pct = {
+"explosive": 0.2
+}
+bounty = 10
+base_damage = 2
+flying = true
+stealth = true
+radius = 11.0
+color = Color(0.7019608, 0.54901963, 1, 1)
+shape = 6
+threat_mult = 1.5

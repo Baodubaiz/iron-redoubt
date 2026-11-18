@@ -1,0 +1,65 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/boss_skill_def.gd" id="1_w2emj"]
+[ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="2_8pw7r"]
+
+[sub_resource type="Resource" id="Resource_w57vh"]
+script = ExtResource("1_w2emj")
+action = &"submerge"
+interval = 9.0
+phase_interval_mult = {
+3: 0.5
+}
+params = {
+"duration": 2.5
+}
+
+[sub_resource type="Resource" id="Resource_qen2k"]
+script = ExtResource("1_w2emj")
+action = &"revive"
+min_phase = 2
+interval = 7.0
+telegraph = 1.5
+params = {
+"count": 3.0,
+"radius": 260.0,
+"window": 12.0
+}
+
+[sub_resource type="Resource" id="Resource_12tne"]
+script = ExtResource("1_w2emj")
+action = &"bulwark"
+min_phase = 3
+telegraph = 1.2
+params = {
+"amount": 120.0,
+"duration": 6.0,
+"radius": 220.0
+}
+
+[resource]
+script = ExtResource("2_8pw7r")
+id = &"leviathan"
+display_name = "Leviathan"
+category = 3
+max_hp = 6048.0
+speed = 16.5
+armor = 4.2
+resist_pct = {
+"poison": 0.25
+}
+bounty = 306
+base_damage = 29
+radius = 34.0
+color = Color(0.3019608, 0.54901963, 1, 1)
+shape = 9
+threat_mult = 1.35
+is_boss = true
+boss_kit = &"leviathan"
+boss_params = {
+"first_skill": 4.0
+}
+boss_skills = Array[ExtResource("1_w2emj")]([SubResource("Resource_w57vh"), SubResource("Resource_qen2k"), SubResource("Resource_12tne")])
+slow_cap = 0.25
+fracture_speed_bonus = 0.0
+shard_count = 0

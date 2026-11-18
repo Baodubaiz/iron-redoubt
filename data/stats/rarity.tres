@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="RarityCatalog" format=3]
+
+[ext_resource type="Script" path="res://data/defs/rarity_def.gd" id="1_c71p2"]
+[ext_resource type="Script" path="res://data/defs/rarity_catalog.gd" id="2_055r6"]
+
+[sub_resource type="Resource" id="Resource_uxlgc"]
+script = ExtResource("1_c71p2")
+id = &"C"
+display_name = "Common"
+description = "Standard issue: cheap and simple."
+color = Color(0.62352943, 0.6901961, 0.8117647, 1)
+accent = Color(0.38431373, 0.4509804, 0.56078434, 1)
+
+[sub_resource type="Resource" id="Resource_2esh7"]
+script = ExtResource("1_c71p2")
+id = &"B"
+display_name = "Uncommon"
+description = "Specialised: strong at one job."
+color = Color(0.3019608, 0.9019608, 0.6313726, 1)
+accent = Color(0.16470589, 0.6156863, 0.42352942, 1)
+order = 1
+
+[sub_resource type="Resource" id="Resource_ewp8e"]
+script = ExtResource("1_c71p2")
+id = &"A"
+display_name = "Rare"
+description = "Powerful specialists."
+color = Color(0.3019608, 0.54901963, 1, 1)
+accent = Color(0.1764706, 0.35686275, 0.7490196, 1)
+order = 2
+
+[sub_resource type="Resource" id="Resource_0bunq"]
+script = ExtResource("1_c71p2")
+id = &"S"
+display_name = "Epic"
+description = "Elite towers: collect blueprint shards from bosses or ads, then buy them in the Armory."
+color = Color(0.6509804, 0.41960785, 1, 1)
+accent = Color(1, 0.36078432, 0.88235295, 1)
+order = 3
+shard_cost = 100
+core_price = 150
+
+[sub_resource type="Resource" id="Resource_o6ni4"]
+script = ExtResource("1_c71p2")
+id = &"SS"
+display_name = "Legendary"
+description = "The rarest towers. Reserved for the hardest challenges."
+color = Color(1, 0.6666667, 0.27058825, 1)
+accent = Color(1, 0.3254902, 0.40784314, 1)
+order = 4
+shard_cost = 250
+core_price = 400
+
+[resource]
+script = ExtResource("2_055r6")
+ranks = Array[ExtResource("1_c71p2")]([SubResource("Resource_uxlgc"), SubResource("Resource_2esh7"), SubResource("Resource_ewp8e"), SubResource("Resource_0bunq"), SubResource("Resource_o6ni4")])

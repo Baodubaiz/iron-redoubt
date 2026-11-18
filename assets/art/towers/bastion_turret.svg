@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="-64 -64 128 128">
+<defs><linearGradient id="m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A4E73"/><stop offset="0.5" stop-color="#22314F"/><stop offset="1" stop-color="#141D31"/></linearGradient>
+<linearGradient id="ml" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5A6F96"/><stop offset="1" stop-color="#26365A"/></linearGradient>
+<radialGradient id="g"><stop offset="0" stop-color="#7FB2FF" stop-opacity="0.9"/><stop offset="1" stop-color="#7FB2FF" stop-opacity="0"/></radialGradient>
+<radialGradient id="c"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.35" stop-color="#DCE9FF"/><stop offset="1" stop-color="#7FB2FF"/></radialGradient></defs>
+<circle cx="0" cy="0" r="30" fill="url(#m)" stroke="#6E86B3" stroke-width="2.5"/>
+<g fill="url(#ml)" stroke="#8FA6CF" stroke-width="1.5"><rect x="22" y="-6" width="16" height="12" rx="3"/><rect x="-38" y="-6" width="16" height="12" rx="3" transform="rotate(60)"/><rect x="-38" y="-6" width="16" height="12" rx="3" transform="rotate(-60)"/></g>
+<g fill="#7FB2FF"><circle cx="38" cy="0" r="4"/><circle cx="-19" cy="33" r="4"/><circle cx="-19" cy="-33" r="4"/></g>
+<circle cx="0" cy="0" r="19" fill="#0E1528" stroke="#7FB2FF" stroke-width="2"/>
+<path d="M0,-12 L10,-6 L10,6 L0,12 L-10,6 L-10,-6 Z" fill="none" stroke="#DCE9FF" stroke-width="2"/>
+<circle cx="0" cy="0" r="16" fill="url(#g)"/><circle cx="0" cy="0" r="7" fill="url(#c)"/>
+</svg>

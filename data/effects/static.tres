@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EffectDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_gl8en"]
+
+[resource]
+script = ExtResource("1_gl8en")
+id = &"static"
+display_name = "Static"
+description = "Tower range reduced."
+target = 1
+icon = "range"
+color = Color(0.21960784, 0.8509804, 0.9607843, 1)
+builtin = true

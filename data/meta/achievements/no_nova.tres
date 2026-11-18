@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="AchievementDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/achievement_def.gd" id="1_ingh6"]
+
+[resource]
+script = ExtResource("1_ingh6")
+id = &"no_nova"
+display_name = "No Fireworks"
+description = "Win level 5 or later without building Nova."
+kind = 4
+params = {
+"min_level": 5,
+"tower": "nova"
+}
+cores = 10

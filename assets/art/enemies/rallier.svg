@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="-32 -32 64 64">
+<defs>
+  <linearGradient id="rl_hull" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#5E4E26"/>
+    <stop offset="1" stop-color="#241E0F"/>
+  </linearGradient>
+  <radialGradient id="rl_flare">
+    <stop offset="0" stop-color="#FFFFFF"/>
+    <stop offset="0.4" stop-color="#FFE08F"/>
+    <stop offset="1" stop-color="#D99B00"/>
+  </radialGradient>
+</defs>
+<!-- Twin Rear Haste Jets -->
+<polygon points="-16,-10 -27,-16 -24,-8" fill="#FFC83B"/>
+<polygon points="-16,10 -27,16 -24,8" fill="#FFC83B"/>
+<!-- Twin Signal Banners / Antennae -->
+<path d="M-6,-18 L-14,-26 L-2,-24" fill="none" stroke="#FFE08F" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M-6,18 L-14,26 L-2,24" fill="none" stroke="#FFE08F" stroke-width="2.5" stroke-linecap="round"/>
+<!-- Main Swept Command Arrow -->
+<polygon points="27,0 0,-16 -18,-12 -12,0 -18,12 0,16" fill="url(#rl_hull)" stroke="#FFD76B" stroke-width="2" stroke-linejoin="round"/>
+<!-- Speed Arrow Inlays -->
+<polygon points="18,0 4,-8 8,0 4,8" fill="#FFE08F"/>
+<!-- Command Core Beacon -->
+<circle cx="-2" cy="0" r="5" fill="#171206" stroke="#FFE08F" stroke-width="1.5"/>
+<circle cx="-2" cy="0" r="3" fill="url(#rl_flare)"/>
+</svg>

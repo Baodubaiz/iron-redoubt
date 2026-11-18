@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ResearchDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/research_def.gd" id="1_yne7x"]
+
+[resource]
+script = ExtResource("1_yne7x")
+id = &"evo_spotter"
+display_name = "Marker Evolution"
+description = "Unlocks evolutions for Marker branches."
+kind = 1
+cost = 65
+tower_id = &"spotter"
+requires_tower = &"spotter"
+category = &"tower"

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="-32 -32 64 64">
+<defs>
+  <linearGradient id="sc_hull" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2D4354"/>
+    <stop offset="1" stop-color="#14202B"/>
+  </linearGradient>
+  <radialGradient id="sc_core">
+    <stop offset="0" stop-color="#E8FFFF"/>
+    <stop offset="0.45" stop-color="#38D9F5"/>
+    <stop offset="1" stop-color="#0E5E75"/>
+  </radialGradient>
+</defs>
+<!-- Heavy Corner Armor Pads -->
+<rect x="-24" y="-24" width="48" height="48" rx="10" fill="#0C141C" stroke="#253846" stroke-width="2"/>
+<!-- Heavy Circular Chassis -->
+<circle cx="0" cy="0" r="22" fill="url(#sc_hull)" stroke="#7AE8FF" stroke-width="2"/>
+<!-- Side Static Induction Coils -->
+<rect x="-6" y="-27" width="12" height="6" rx="2" fill="#1C2D3B" stroke="#38D9F5" stroke-width="1.5"/>
+<line x1="-3" y1="-27" x2="-3" y2="-21" stroke="#E8FFFF" stroke-width="1"/>
+<line x1="3" y1="-27" x2="3" y2="-21" stroke="#E8FFFF" stroke-width="1"/>
+<rect x="-6" y="21" width="12" height="6" rx="2" fill="#1C2D3B" stroke="#38D9F5" stroke-width="1.5"/>
+<line x1="-3" y1="21" x2="-3" y2="27" stroke="#E8FFFF" stroke-width="1"/>
+<line x1="3" y1="21" x2="3" y2="27" stroke="#E8FFFF" stroke-width="1"/>
+<!-- Front Shock Emitters -->
+<path d="M16,-12 L26,-6 L26,6 L16,12" fill="none" stroke="#38D9F5" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="26" cy="-6" r="2.5" fill="#E8FFFF"/>
+<circle cx="26" cy="6" r="2.5" fill="#E8FFFF"/>
+<!-- Static Discharge Ring & Core -->
+<circle cx="0" cy="0" r="14" fill="#0A1118" stroke="#38D9F5" stroke-width="1.5" stroke-dasharray="4,3"/>
+<circle cx="0" cy="0" r="8" fill="url(#sc_core)"/>
+<path d="M-4,-2 L0,-7 L4,-1 L-1,1 L3,6 L-3,2 Z" fill="#FFFFFF"/>
+</svg>

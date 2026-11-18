@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ResearchDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/research_def.gd" id="1_7lwd0"]
+
+[resource]
+script = ExtResource("1_7lwd0")
+id = &"branch_bastion_exposure"
+display_name = "Exposure Protocol"
+description = "Unlocks Bastion branch: Exposure."
+kind = 0
+cost = 65
+tower_id = &"bastion"
+requires_tower = &"bastion"
+category = &"tower"

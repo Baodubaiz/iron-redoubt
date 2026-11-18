@@ -1,0 +1,49 @@
+[gd_resource type="Resource" script_class="DamageCatalog" format=3]
+
+[ext_resource type="Script" path="res://data/defs/damage_catalog.gd" id="1_l6vni"]
+[ext_resource type="Script" path="res://data/defs/damage_type_def.gd" id="2_63fw3"]
+
+[sub_resource type="Resource" id="Resource_xgkxg"]
+script = ExtResource("2_63fw3")
+id = &"kinetic"
+display_name = "Kinetic"
+color = Color(0.9019608, 0.92156863, 0.9607843, 1)
+
+[sub_resource type="Resource" id="Resource_uew10"]
+script = ExtResource("2_63fw3")
+id = &"explosive"
+display_name = "Explosive"
+color = Color(1, 0.6666667, 0.27058825, 1)
+flat_pierce = 3.0
+
+[sub_resource type="Resource" id="Resource_iw4gp"]
+script = ExtResource("2_63fw3")
+id = &"energy"
+display_name = "Energy"
+color = Color(0.6509804, 0.41960785, 1, 1)
+vs_shield = 2.0
+
+[sub_resource type="Resource" id="Resource_vp766"]
+script = ExtResource("2_63fw3")
+id = &"poison"
+display_name = "Poison"
+color = Color(0.54509807, 0.8901961, 0.41568628, 1)
+ignores_armor = true
+
+[sub_resource type="Resource" id="Resource_rymgd"]
+script = ExtResource("2_63fw3")
+id = &"plasma"
+display_name = "Plasma"
+color = Color(0.35686275, 0.8901961, 1, 1)
+ignores_shield = true
+
+[sub_resource type="Resource" id="Resource_4vs6q"]
+script = ExtResource("2_63fw3")
+id = &"true"
+display_name = "True"
+color = Color(1, 0.3254902, 0.40784314, 1)
+ignores_armor = true
+
+[resource]
+script = ExtResource("1_l6vni")
+types = Array[ExtResource("2_63fw3")]([SubResource("Resource_xgkxg"), SubResource("Resource_uew10"), SubResource("Resource_iw4gp"), SubResource("Resource_vp766"), SubResource("Resource_rymgd"), SubResource("Resource_4vs6q")])

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EffectDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/effect_def.gd" id="1_pwnbc"]
+
+[resource]
+script = ExtResource("1_pwnbc")
+id = &"jam"
+display_name = "Jammed"
+description = "Tower recharges at half speed."
+target = 1
+icon = "clock"
+color = Color(1, 0.6666667, 0.27058825, 1)
+builtin = true

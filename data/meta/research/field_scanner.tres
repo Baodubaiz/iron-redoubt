@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ResearchDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/research_def.gd" id="1_63t8s"]
+
+[resource]
+script = ExtResource("1_63t8s")
+id = &"field_scanner"
+display_name = "Field Scanner"
+description = "Shows the next wave's composition during preparation."
+kind = 5
+cost = 25

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="AchievementDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/achievement_def.gd" id="1_xojrd"]
+
+[resource]
+script = ExtResource("1_xojrd")
+id = &"duo"
+display_name = "Minimalist"
+description = "Win a level building only 2 tower types."
+kind = 3
+params = {
+"count": 2
+}
+cores = 10

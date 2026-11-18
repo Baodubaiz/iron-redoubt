@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ResearchDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/research_def.gd" id="1_8mcdh"]
+
+[resource]
+script = ExtResource("1_8mcdh")
+id = &"branch_sniper_spotter"
+display_name = "Spotter Protocol"
+description = "Unlocks Marksman branch: Spotter."
+kind = 0
+cost = 75
+tower_id = &"sniper"
+requires_tower = &"sniper"
+category = &"tower"

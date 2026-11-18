@@ -1,0 +1,37 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/boss_skill_def.gd" id="1_jyy8u"]
+[ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="2_l7ajb"]
+
+[sub_resource type="Resource" id="Resource_jyjqv"]
+script = ExtResource("1_jyy8u")
+action = &"effect_area"
+interval = 3.0
+telegraph = 0.2
+params = {
+"duration": 3.2,
+"effect": "sludge_regen",
+"on": "self",
+"radius": 1.0
+}
+
+[resource]
+script = ExtResource("2_l7ajb")
+id = &"sludge"
+display_name = "Sludge"
+category = 1
+max_hp = 378.0
+speed = 44.1
+armor_by_type = {
+"energy": 8.0
+}
+bounty = 14
+base_damage = 2
+radius = 14.0
+color = Color(0.60784316, 0.8784314, 0.47843137, 1)
+shape = 2
+threat_mult = 1.3
+boss_params = {
+"first_skill": 1.0
+}
+boss_skills = Array[ExtResource("1_jyy8u")]([SubResource("Resource_jyjqv")])

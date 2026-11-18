@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ChallengeDef" format=3]
+
+[ext_resource type="Resource" path="res://data/levels/level_06.tres" id="1_ulm5c"]
+[ext_resource type="Script" path="res://data/defs/challenge_def.gd" id="2_53krx"]
+
+[resource]
+script = ExtResource("2_53krx")
+id = &"w_glass_6"
+display_name = "Monolith on a Thread"
+description = "Clear level 15 with at most 10 Base HP."
+period = 1
+level = ExtResource("1_ulm5c")
+base_hp_cap = 10
+cores = 30
