@@ -72,7 +72,7 @@ func _reveal() -> void:
 	if _fx_tween != null:
 		_fx_tween.kill()
 	_fx_tween = create_tween().set_parallel(true).set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	_fx_tween.tween_property(_cover, "modulate:a", 0.0, 0.32).set_delay(0.05).set_trans(Tween.TRANS_CUBIC)
+	_fx_tween.tween_property(_cover, "modulate:a", 0.0, 0.34).set_delay(0.03).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
 	_fx_tween.tween_property(_scan, "position:y", h, 0.36).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	_fx_tween.tween_property(_scan, "modulate:a", 0.0, 0.36)
 
@@ -203,7 +203,24 @@ func handle_back() -> void:
 		to_menu()
 
 
+## Fade the cover in (0.16 s), swap the scene under it, then reveal (2026-11-19: no more hard cut to black).
+var _changing := false
+
+
 func _change(path: String) -> void:
+	if _changing:
+		return
+	_changing = true
 	get_tree().paused = false
+	if _cover != null:
+		if _fx_tween != null:
+			_fx_tween.kill()
+		_cover.mouse_filter = Control.MOUSE_FILTER_STOP # no double taps while fading
+		_fx_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		_fx_tween.tween_property(_cover, "modulate:a", 1.0, 0.16)
+		await _fx_tween.finished
 	get_tree().change_scene_to_file.call_deferred(path)
+	_changing = false
+	if _cover != null:
+		_cover.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_reveal()

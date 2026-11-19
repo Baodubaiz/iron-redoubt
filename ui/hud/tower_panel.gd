@@ -360,16 +360,25 @@ func _process(delta: float) -> void:
 	_update_hold_tip(delta)
 
 
+var _fade_tw: Tween
+
+
 func show_tower(t: Tower) -> void:
+	if _fade_tw != null and _fade_tw.is_valid():
+		_fade_tw.kill() # a new pick while the panel was fading out: keep it
+		_fade_tw = null
+		modulate.a = 1.0
 	var was_visible := visible
 	tower = t
 	_sell_armed = 0.0
 	_hold_timer = -1.0
 	_hold_tip.visible = false
-	visible = t != null
-	_portrait.tower = t
 	if t == null:
+		if was_visible:
+			_fade_tw = UiKit.fade_out(self) # smooth close instead of vanishing
 		return
+	visible = true
+	_portrait.tower = t
 	# dock away from the selected tower so it stays visible
 	var dock_top := t.position.y > 420.0
 	anchor_left = 0.0
@@ -387,10 +396,13 @@ func show_tower(t: Tower) -> void:
 		offset_top = -HEIGHT - 4
 		offset_bottom = -4
 	refresh()
-	if not was_visible: # slide in from the docked edge
+	if not was_visible: # slide in from the docked edge, fading in
 		modulate.a = 0.0
-		var tw := create_tween().set_parallel(true)
-		tw.tween_property(self, "modulate:a", 1.0, 0.15)
+		var shift := -18.0 if dock_top else 18.0
+		position.y += shift
+		var tw := UiKit.ease_tween(self)
+		tw.tween_property(self, "modulate:a", 1.0, 0.18)
+		tw.tween_property(self, "position:y", position.y - shift, 0.24)
 
 
 func refresh() -> void:

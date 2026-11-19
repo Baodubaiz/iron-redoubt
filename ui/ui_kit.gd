@@ -284,7 +284,43 @@ static func icon_button(icon_name: String, cb: Callable, size: Vector2 = Vector2
 	return b
 
 
-## Press feedback: quick scale-down on press, spring back on release.
+## Motion style (2026-11-19, user: "everything smooth"): ease-out quart, no bounce / overshoot.
+const MOTION_TRANS := Tween.TRANS_QUART
+const MOTION_IN := 0.22 ## appear
+const MOTION_OUT := 0.14 ## disappear
+
+
+static func ease_tween(n: Node, parallel: bool = true) -> Tween:
+	var tw := n.create_tween().set_trans(MOTION_TRANS).set_ease(Tween.EASE_OUT)
+	if parallel:
+		tw.set_parallel(true)
+	return tw
+
+
+## Fade + gentle grow in (alpha 0 -> 1, scale from `from` -> 1) around the centre.
+static func pop_in(c: Control, from: float = 0.96, dur: float = MOTION_IN) -> void:
+	c.pivot_offset = c.size * 0.5
+	c.modulate.a = 0.0
+	c.scale = Vector2(from, from)
+	var tw := ease_tween(c)
+	tw.tween_property(c, "modulate:a", 1.0, dur * 0.8)
+	tw.tween_property(c, "scale", Vector2.ONE, dur)
+
+
+## Fade out, then hide (or run `done`). Kill the returned tween to cancel (e.g. shown again meanwhile).
+static func fade_out(c: CanvasItem, dur: float = MOTION_OUT, done: Callable = Callable()) -> Tween:
+	var tw := c.create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	tw.tween_property(c, "modulate:a", 0.0, dur)
+	tw.tween_callback(func() -> void:
+		if done.is_valid():
+			done.call()
+		else:
+			c.visible = false
+		c.modulate.a = 1.0)
+	return tw
+
+
+## Press feedback: soft scale-down on press, smooth settle on release, light up on hover (mouse / web).
 static func juice(c: Control) -> void:
 	var fit := func() -> void: c.pivot_offset = c.size * 0.5
 	c.resized.connect(fit)
@@ -292,9 +328,14 @@ static func juice(c: Control) -> void:
 		var b := c as BaseButton
 		b.button_down.connect(func() -> void:
 			if b.disabled: return
-			c.create_tween().tween_property(c, "scale", Vector2(0.96, 0.96), 0.07))
+			ease_tween(c).tween_property(c, "scale", Vector2(0.96, 0.96), 0.08))
 		b.button_up.connect(func() -> void:
-			c.create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).tween_property(c, "scale", Vector2.ONE, 0.18))
+			ease_tween(c).tween_property(c, "scale", Vector2.ONE, 0.2))
+		b.mouse_entered.connect(func() -> void:
+			if b.disabled: return
+			ease_tween(c).tween_property(c, "self_modulate", Color(1.12, 1.12, 1.12), 0.12))
+		b.mouse_exited.connect(func() -> void:
+			ease_tween(c).tween_property(c, "self_modulate", Color.WHITE, 0.18))
 
 
 static func tex(t: Texture2D, size: float, color: Color = Color.WHITE) -> TextureRect:
@@ -406,7 +447,7 @@ static func slide_in(nodes: Array, from: Vector2 = Vector2(-48, 0), step: float 
 		var origin := Vector2(0.0, 0.5) if from.x < 0.0 else (Vector2(1.0, 0.5) if from.x > 0.0 else Vector2(0.5, 0.0 if from.y < 0.0 else 1.0))
 		var set_pivot := func() -> void: c.pivot_offset = c.size * origin
 		set_pivot.call()
-		var tw := c.create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		var tw := ease_tween(c)
 		tw.tween_callback(set_pivot).set_delay(i * step)
 		tw.tween_property(c, "scale", Vector2.ONE, dur).set_delay(i * step)
 		tw.tween_property(c, "modulate:a", 1.0, dur * 0.8).set_delay(i * step)

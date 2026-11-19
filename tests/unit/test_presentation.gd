@@ -91,3 +91,25 @@ func test_wide_screen_world_leaves_room_for_the_palette() -> void:
 	near(off.x, 100.0, 0.001, "spare 320 - palette 120 = 200, split evenly")
 	check(ScreenLayout.world_offset(Vector2(1280, 720), z, 120.0).is_equal_approx(Vector2.ZERO), "16:9 unchanged")
 	near(ScreenLayout.world_offset(Vector2(1340, 720), z, 120.0).x, 0.0, 0.001, "never pushed off-screen")
+
+
+## 2026-11-19 smooth camera: the wheel zoom glides to its target; a released drag keeps sliding, then stops.
+func test_camera_zoom_glides_and_pan_coasts() -> void:
+	var cam := MatchCamera.new()
+	cam.world = Node2D.new()
+	cam.reset(Vector2.ZERO, Rect2(0, 0, 1280, 720))
+	cam._glide_zoom(Vector2(640, 360), 1.5)
+	cam._process(1.0 / 60.0)
+	check(cam.zoom > 1.0 and cam.zoom < 1.5, "first frame is part of the way (%.3f)" % cam.zoom)
+	for i in range(60):
+		cam._process(1.0 / 60.0)
+	near(cam.zoom, 1.5, 0.01, "arrives within a second")
+	cam._vel = Vector2(-600, 0)
+	var x0 := cam.world.position.x
+	cam._process(1.0 / 60.0)
+	check(cam.world.position.x < x0, "keeps sliding after release")
+	for i in range(240):
+		cam._process(1.0 / 60.0)
+	eq(cam._vel, Vector2.ZERO, "and comes to rest")
+	cam.world.free()
+	cam.free()

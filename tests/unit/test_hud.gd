@@ -103,4 +103,7 @@ func test_match_hud_has_tower_cards_and_controls() -> void:
 	scene.on_back()
 	check(hud.get("_pause_overlay").visible, "pause menu shown")
 	scene.on_back()
+	var fade: Tween = hud.get("_pause_fade")
+	check(fade != null and fade.is_valid(), "pause menu fades out (2026-11-19 smooth UI)")
+	fade.custom_step(1.0) # finish the fade now
 	check(not hud.get("_pause_overlay").visible, "pause menu hidden")

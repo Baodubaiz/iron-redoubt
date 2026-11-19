@@ -26,6 +26,35 @@ var _look: Dictionary
 var _boss_ui: Node2D
 var _boss: Enemy
 var _boss_lag := 0.0
+## Baked floor: covers the painted tile area (tiles -6..21 x -3..11 of 80 px).
+const FLOOR_ORIGIN := Vector2(-480, -240)
+const FLOOR_SIZE := Vector2i(2240, 1200)
+var _floor_vp: SubViewport
+var _enemy_under: Node2D
+var _enemy_over: Node2D
+
+
+class _FloorPainter extends Node2D:
+	var m: MapDef
+	var look: Dictionary
+
+	func _draw() -> void:
+		MapView.paint_floor(self, m, look)
+
+
+func _bake_floor() -> void:
+	_floor_vp = SubViewport.new()
+	_floor_vp.name = "FloorBake"
+	_floor_vp.size = FLOOR_SIZE
+	_floor_vp.disable_3d = true
+	_floor_vp.transparent_bg = true
+	_floor_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	var painter := _FloorPainter.new()
+	painter.m = map
+	painter.look = _look
+	painter.position = -FLOOR_ORIGIN
+	_floor_vp.add_child(painter)
+	add_child(_floor_vp)
 
 
 func set_state(is_night: bool, route: int) -> void:
@@ -38,6 +67,8 @@ func set_state(is_night: bool, route: int) -> void:
 func _ready() -> void:
 	z_index = -10
 	_look = P.map_look(map.region_id() if map != null else &"circuit")
+	if map != null and not DisplayServer.get_name() == "headless":
+		_bake_floor()
 	_fx = Node2D.new()
 	_fx.name = "MapFx"
 	_fx.draw.connect(_draw_fx)
@@ -54,12 +85,47 @@ func _ready() -> void:
 				v.on_upgraded())
 		_ctrl.enemy_escaped.connect(func(_e: Enemy) -> void: _base_hit = 1.0)
 		_wire_enemies.call_deferred() # enemies_root is created after this node
+		# Shared enemy layers (perf): every shadow in one node under the enemies, every HP bar / status
+		# icon in one node above them.
+		EnemyVisual.shared_layers = true
+		_enemy_under = Node2D.new()
+		_enemy_under.name = "EnemyShadows"
+		_enemy_under.z_as_relative = false
+		_enemy_under.z_index = 0
+		_enemy_under.draw.connect(_draw_enemy_under)
+		add_child(_enemy_under)
+		_enemy_over = Node2D.new()
+		_enemy_over.name = "EnemyBars"
+		_enemy_over.z_as_relative = false
+		_enemy_over.z_index = 4
+		_enemy_over.draw.connect(_draw_enemy_over)
+		add_child(_enemy_over)
 		_boss_ui = Node2D.new()
 		_boss_ui.name = "BossBar"
 		_boss_ui.z_as_relative = false
 		_boss_ui.z_index = 50
 		_boss_ui.draw.connect(_draw_boss_bar)
 		add_child(_boss_ui)
+
+
+func _draw_enemy_under() -> void:
+	for e in _ctrl.enemies:
+		if e.is_alive():
+			var v := e.get_node_or_null("Visual") as EnemyVisual
+			if v != null:
+				v.draw_shadow(_enemy_under, e.position, v.fade())
+
+
+func _draw_enemy_over() -> void:
+	for e in _ctrl.enemies:
+		if e.is_alive():
+			var v := e.get_node_or_null("Visual") as EnemyVisual
+			if v != null:
+				v.draw_overlay(_enemy_over, e.position)
+
+
+func _exit_tree() -> void:
+	EnemyVisual.shared_layers = false
 
 
 func _wire_enemies() -> void:
@@ -83,6 +149,11 @@ func _process(delta: float) -> void:
 		var want := 1.0 if g["route"] == active_route else 0.0
 		g["open"] = move_toward(g["open"], want, delta * 1.6)
 	_fx.queue_redraw()
+	if _ctrl != null:
+		EnemyVisual.crowd = _ctrl.enemies.size()
+	if _enemy_under != null:
+		_enemy_under.queue_redraw()
+		_enemy_over.queue_redraw()
 	if _boss_ui != null:
 		_track_boss(delta)
 
@@ -162,22 +233,12 @@ func _draw() -> void:
 	var accent2: Color = _look["accent2"]
 	var floor_col: Color = _look["floor"]
 	draw_rect(Rect2(-2000, -2000, 5280, 4720), floor_col.darkened(0.25))
-	# metal floor tiles -- past the 1280x720 world too, so wide / tall screens see floor, not an empty band
-	for ty in range(-3, 12):
-		for tx in range(-6, 22):
-			var r := Rect2(tx * 80, ty * 80, 80, 80)
-			var v := _hash(tx, ty)
-			draw_rect(r, floor_col.lightened(0.02 + v * 0.05))
-			draw_line(r.position, Vector2(r.end.x, r.position.y), Color(1, 1, 1, 0.045), 1.0)
-			draw_line(r.position, Vector2(r.position.x, r.end.y), Color(1, 1, 1, 0.03), 1.0)
-			draw_line(Vector2(r.position.x, r.end.y - 1), r.end - Vector2(0, 1), Color(0, 0, 0, 0.25), 1.5)
-			if v > 0.72: # bolted service panel
-				var inner := r.grow(-18)
-				draw_rect(inner, Color(0, 0, 0, 0.12))
-				draw_rect(inner, Color(accent, 0.06), false, 1.0)
-				for c in [inner.position, Vector2(inner.end.x, inner.position.y), inner.end, Vector2(inner.position.x, inner.end.y)]:
-					draw_circle(c, 1.6, Color(1, 1, 1, 0.08))
-	_floor_detail(accent, accent2)
+	# Floor tiles + region detail are baked once into a texture (2026-11-19 perf: ~2000 draw commands per
+	# frame before); only the gameplay-relevant shapes below are drawn live.
+	if _floor_vp != null:
+		draw_texture(_floor_vp.get_texture(), FLOOR_ORIGIN)
+	else:
+		paint_floor(self, map, _look)
 	for z in map.range_bonus_zones:
 		_overload_pad(Vector2(z.x, z.y), z.z)
 	for ar in map.air_routes:
@@ -192,7 +253,30 @@ func _draw() -> void:
 		draw_rect(Rect2(-2000, -2000, 5280, 4720), Color(0.0, 0.01, 0.08, 0.52))
 
 
-func _floor_detail(accent: Color, accent2: Color) -> void:
+## Metal floor tiles (past the 1280x720 world too, so wide / tall screens see floor) + region detail.
+## Static: painted once into the baked floor texture.
+static func paint_floor(ci: CanvasItem, m: MapDef, look: Dictionary) -> void:
+	var accent: Color = look["accent"]
+	var accent2: Color = look["accent2"]
+	var floor_col: Color = look["floor"]
+	for ty in range(-3, 12):
+		for tx in range(-6, 22):
+			var r := Rect2(tx * 80, ty * 80, 80, 80)
+			var v := _hash(tx, ty)
+			ci.draw_rect(r, floor_col.lightened(0.02 + v * 0.05))
+			ci.draw_line(r.position, Vector2(r.end.x, r.position.y), Color(1, 1, 1, 0.045), 1.0)
+			ci.draw_line(r.position, Vector2(r.position.x, r.end.y), Color(1, 1, 1, 0.03), 1.0)
+			ci.draw_line(Vector2(r.position.x, r.end.y - 1), r.end - Vector2(0, 1), Color(0, 0, 0, 0.25), 1.5)
+			if v > 0.72: # bolted service panel
+				var inner := r.grow(-18)
+				ci.draw_rect(inner, Color(0, 0, 0, 0.12))
+				ci.draw_rect(inner, Color(accent, 0.06), false, 1.0)
+				for k in [inner.position, Vector2(inner.end.x, inner.position.y), inner.end, Vector2(inner.position.x, inner.end.y)]:
+					ci.draw_circle(k, 1.6, Color(1, 1, 1, 0.08))
+	_floor_detail(ci, m, accent, accent2)
+
+
+static func _floor_detail(ci: CanvasItem, map: MapDef, accent: Color, accent2: Color) -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(String(map.id))
 	match map.region_id():
@@ -202,8 +286,8 @@ func _floor_detail(accent: Color, accent2: Color) -> void:
 				var pts := PackedVector2Array()
 				for x in range(-20, 1320, 40):
 					pts.append(Vector2(x, y + sin(x * 0.012 + k) * 22.0))
-				draw_polyline(pts, Color(accent, 0.05), 30.0)
-				draw_polyline(pts, Color(accent2, 0.12), 2.0)
+				ci.draw_polyline(pts, Color(accent, 0.05), 30.0)
+				ci.draw_polyline(pts, Color(accent2, 0.12), 2.0)
 		&"prism": # crystalline facets
 			for k in range(26):
 				var c := Vector2(rng.randf() * 1280.0, rng.randf() * 720.0)
@@ -211,9 +295,9 @@ func _floor_detail(accent: Color, accent2: Color) -> void:
 				var a := rng.randf() * TAU
 				var tri := PackedVector2Array([c + Vector2.from_angle(a) * r, c + Vector2.from_angle(a + 2.2) * r * 0.7,
 					c + Vector2.from_angle(a + 4.1) * r * 0.8])
-				draw_colored_polygon(tri, Color(accent if k % 4 else accent2, 0.05))
+				ci.draw_colored_polygon(tri, Color(accent if k % 4 else accent2, 0.05))
 				tri.append(tri[0])
-				draw_polyline(tri, Color(accent, 0.10), 1.0)
+				ci.draw_polyline(tri, Color(accent, 0.10), 1.0)
 		&"rift": # glowing fissures in cracked plating
 			for k in range(9):
 				var p := Vector2(rng.randf() * 1280.0, rng.randf() * 720.0)
@@ -223,9 +307,9 @@ func _floor_detail(accent: Color, accent2: Color) -> void:
 					ang += rng.randf_range(-0.7, 0.7)
 					p += Vector2.from_angle(ang) * rng.randf_range(24.0, 60.0)
 					crack.append(p)
-				draw_polyline(crack, Color(accent2, 0.06), 9.0)
-				draw_polyline(crack, Color(accent, 0.22), 1.5)
-				draw_circle(crack[crack.size() - 1], 2.5, Color(accent, 0.4))
+				ci.draw_polyline(crack, Color(accent2, 0.06), 9.0)
+				ci.draw_polyline(crack, Color(accent, 0.22), 1.5)
+				ci.draw_circle(crack[crack.size() - 1], 2.5, Color(accent, 0.4))
 		_: # circuit traces
 			for k in range(20):
 				var p := Vector2(snappedf(rng.randf() * 1280.0, 40.0), snappedf(rng.randf() * 720.0, 40.0))
@@ -236,9 +320,9 @@ func _floor_detail(accent: Color, accent2: Color) -> void:
 					p += Vector2(d, 0.0) if horiz else Vector2(0.0, d)
 					line.append(p)
 					horiz = not horiz
-				draw_polyline(line, Color(accent, 0.05), 5.0)
-				draw_polyline(line, Color(accent, 0.13), 1.5)
-				draw_circle(line[0], 3.5, Color(accent, 0.25))
+				ci.draw_polyline(line, Color(accent, 0.05), 5.0)
+				ci.draw_polyline(line, Color(accent, 0.13), 1.5)
+				ci.draw_circle(line[0], 3.5, Color(accent, 0.25))
 
 
 ## Blocked terrain = raised machinery (clearly not buildable, distinct per map).

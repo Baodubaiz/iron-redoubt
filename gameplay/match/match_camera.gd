@@ -27,12 +27,22 @@ var _last := Vector2.ZERO
 var _touches := {} ## index -> screen pos
 var _pinch_dist := 0.0
 var _pinch_mid := Vector2.ZERO
+## Smoothing (2026-11-19, user: everything smooth): wheel zoom glides to its target around the cursor, and a
+## released drag keeps sliding and slows down (inertia). Pinch and the drag itself stay 1:1 with the finger.
+const ZOOM_SMOOTH := 14.0 ## higher = snappier
+const PAN_FRICTION := 6.0 ## inertia decay per second
+var _zoom_target := 1.0
+var _zoom_anchor := Vector2.ZERO
+var _vel := Vector2.ZERO
+var _last_move_ms := 0
 
 
 ## Default view: zoom 1 at `origin` (the old fixed layout), clamped into the play area.
 func reset(origin: Vector2, area: Rect2) -> void:
 	play_rect = area
 	zoom = 1.0
+	_zoom_target = 1.0
+	_vel = Vector2.ZERO
 	_pos = origin
 	_apply()
 
@@ -73,6 +83,23 @@ func refresh() -> void:
 	_apply()
 
 
+func _glide_zoom(at: Vector2, factor: float) -> void:
+	_zoom_target = clampf(_zoom_target * factor, min_zoom(), MAX_ZOOM)
+	_zoom_anchor = at
+	_vel = Vector2.ZERO
+
+
+func _process(delta: float) -> void:
+	if absf(_zoom_target - zoom) > 0.0005:
+		var k := 1.0 - exp(-ZOOM_SMOOTH * delta)
+		zoom_at(_zoom_anchor, lerpf(zoom, _zoom_target, k))
+	if not _press and _vel.length_squared() > 1.0:
+		pan_by(_vel * delta)
+		_vel *= exp(-PAN_FRICTION * delta)
+		if _vel.length_squared() < 400.0:
+			_vel = Vector2.ZERO
+
+
 func _placing_by_drag() -> bool:
 	return placement != null and (placement.mode == PlacementController.Mode.PRESS or placement.mode == PlacementController.Mode.DRAG)
 
@@ -82,19 +109,22 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 		if mb.pressed and mb.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_MIDDLE, MOUSE_BUTTON_RIGHT] and not _placing_by_drag():
+			_vel = Vector2.ZERO # touching the map stops a glide
+			_last_move_ms = Time.get_ticks_msec()
 			_press = true
 			_panning = false
 			_press_at = mb.position
 			_last = mb.position
 		elif mb.pressed and mb.button_index == MOUSE_BUTTON_WHEEL_UP:
-			zoom_at(mb.position, zoom * WHEEL_STEP)
+			_glide_zoom(mb.position, WHEEL_STEP)
 			get_viewport().set_input_as_handled()
 		elif mb.pressed and mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			zoom_at(mb.position, zoom / WHEEL_STEP)
+			_glide_zoom(mb.position, 1.0 / WHEEL_STEP)
 			get_viewport().set_input_as_handled()
 	elif event is InputEventMagnifyGesture: # trackpads
 		var g := event as InputEventMagnifyGesture
 		zoom_at(g.position, zoom * g.factor)
+		_zoom_target = zoom
 	elif event is InputEventPanGesture:
 		pan_by(-(event as InputEventPanGesture).delta * 8.0)
 
@@ -127,13 +157,21 @@ func _input(event: InputEvent) -> void:
 			_panning = true
 			_swallow_release = true
 		if _panning:
-			pan_by(mm.position - _last)
+			var d := mm.position - _last
+			pan_by(d)
+			var now := Time.get_ticks_msec()
+			var dt := maxf((now - _last_move_ms) / 1000.0, 0.008)
+			_vel = _vel.lerp(d / dt, 0.4) # smoothed finger speed, used for the glide after release
+			_last_move_ms = now
 			get_viewport().set_input_as_handled()
 		_last = mm.position
 	elif event is InputEventMouseButton and not (event as InputEventMouseButton).pressed:
 		var mb := event as InputEventMouseButton
 		if mb.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
 			return
+		if not _panning or Time.get_ticks_msec() - _last_move_ms > 80:
+			_vel = Vector2.ZERO # finger stopped before lifting: no glide
+		_vel = _vel.limit_length(2400.0)
 		_press = false
 		_panning = false
 		if _swallow_release:
@@ -142,6 +180,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _start_pinch() -> void:
+	_vel = Vector2.ZERO
 	var pts: Array = _touches.values()
 	_pinch_dist = maxf((pts[0] as Vector2).distance_to(pts[1]), 1.0)
 	_pinch_mid = ((pts[0] as Vector2) + (pts[1] as Vector2)) * 0.5
@@ -155,5 +194,6 @@ func _update_pinch() -> void:
 	var mid := ((pts[0] as Vector2) + (pts[1] as Vector2)) * 0.5
 	pan_by(mid - _pinch_mid)
 	zoom_at(mid, zoom * d / _pinch_dist)
+	_zoom_target = zoom # pinch is direct; a later wheel glide starts from here
 	_pinch_dist = d
 	_pinch_mid = mid

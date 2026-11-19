@@ -819,16 +819,19 @@ func _on_ghost_changed(world_pos: Vector2, visible_now: bool, valid: bool) -> vo
 		_confirm_box.global_position = pos
 
 
+var _pause_fade: Tween
+
+
 func _on_paused(p: bool) -> void:
-	_pause_overlay.visible = p
+	if _pause_fade != null and _pause_fade.is_valid():
+		_pause_fade.kill()
 	if p:
-		var panel := _pause_overlay.get_child(0).get_child(0) as Control
-		panel.pivot_offset = panel.size * 0.5
-		panel.scale = Vector2(0.92, 0.92)
-		panel.modulate.a = 0.0
-		var tw := panel.create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-		tw.tween_property(panel, "scale", Vector2.ONE, 0.22)
-		tw.tween_property(panel, "modulate:a", 1.0, 0.15)
+		_pause_overlay.visible = true
+		_pause_overlay.modulate.a = 0.0
+		UiKit.ease_tween(_pause_overlay).tween_property(_pause_overlay, "modulate:a", 1.0, 0.18)
+		UiKit.pop_in(_pause_overlay.get_child(0).get_child(0) as Control)
+	elif _pause_overlay.visible:
+		_pause_fade = UiKit.fade_out(_pause_overlay)
 
 
 func _on_match_ended(won: bool) -> void:
@@ -860,16 +863,13 @@ func _on_match_ended(won: bool) -> void:
 	_results_overlay.visible = true
 	_rays.set_meta("won", won)
 	var panel := _results_panel
-	panel.pivot_offset = panel.size * 0.5
-	panel.scale = Vector2(0.85, 0.85)
-	panel.modulate.a = 0.0
-	var tw := panel.create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tw.tween_property(panel, "scale", Vector2.ONE, 0.4)
-	tw.tween_property(panel, "modulate:a", 1.0, 0.25)
+	_results_overlay.modulate.a = 0.0
+	UiKit.ease_tween(_results_overlay).tween_property(_results_overlay, "modulate:a", 1.0, 0.3)
+	UiKit.pop_in(panel, 0.92, 0.4)
 	var tt := _results_title
 	tt.pivot_offset = tt.size * 0.5
-	tt.scale = Vector2(1.6, 1.6)
-	tt.create_tween().set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT).tween_property(tt, "scale", Vector2.ONE, 0.8).set_delay(0.1)
+	tt.scale = Vector2(1.18, 1.18)
+	UiKit.ease_tween(tt).tween_property(tt, "scale", Vector2.ONE, 0.55).set_delay(0.08)
 	_rays.create_tween().set_loops().tween_method(func(_x: float) -> void: _rays.queue_redraw(), 0.0, 1.0, 1.0)
 
 
@@ -925,10 +925,13 @@ func _toast(text: String, icon_name: String, col: Color) -> void:
 	h.add_child(l)
 	_toasts.add_child(chip)
 	chip.modulate.a = 0.0
-	var tw := chip.create_tween()
-	tw.tween_property(chip, "modulate:a", 1.0, 0.15)
+	chip.scale = Vector2(0.94, 0.94)
+	chip.resized.connect(func() -> void: chip.pivot_offset = chip.size * Vector2(0.5, 0.0))
+	var tw := UiKit.ease_tween(chip, false)
+	tw.tween_property(chip, "modulate:a", 1.0, 0.2)
+	tw.parallel().tween_property(chip, "scale", Vector2.ONE, 0.26)
 	tw.tween_interval(2.0)
-	tw.tween_property(chip, "modulate:a", 0.0, 0.35)
+	tw.tween_property(chip, "modulate:a", 0.0, 0.4).set_ease(Tween.EASE_IN_OUT)
 	tw.tween_callback(chip.queue_free)
 
 

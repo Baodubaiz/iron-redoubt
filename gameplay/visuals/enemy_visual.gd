@@ -31,6 +31,18 @@ const PRISM_COLOR := {0: Color("E6EBF5"), 1: Color("FFAA45"), 2: Color("A66BFF")
 const LEG := Color("5A5F6E")
 
 static var _tex := {}
+## 2026-11-19 perf: shadows (under) and HP bars + status icons (over) of ALL enemies are drawn by two shared
+## layers (MapView), so they batch into a few draw calls instead of 2-3 per enemy. Off = each enemy draws its
+## own (tests / tools without a MapView).
+static var shared_layers := false
+## Unit circle (16 points), scaled per ellipse instead of 16 sin/cos per shadow per frame.
+## Alive enemies on the map (set by MapView each frame). In a big crowd (80+) the procedural animation (legs,
+## facing, shimmer) is re-drawn at 30 Hz, staggered per enemy; movement stays smooth (the node itself moves every
+## frame). Bosses, hits and telegraphs always redraw. 2026-11-19 perf: re-building ~180 enemy drawings every
+## frame cost ~9 ms on desktop, the GPU part ~1 ms.
+static var crowd := 0
+static var _unit16 := PackedVector2Array()
+static var _unit12 := PackedVector2Array()
 
 var e: Enemy
 var _t := 0.0
@@ -118,14 +130,24 @@ func _process(delta: float) -> void:
 		_phase = e.boss_phase
 		_phase_fx = 1.0
 	_phase_fx = maxf(0.0, _phase_fx - delta * 1.5)
-	var keep: Array[Dictionary] = []
-	for s in _sparks:
-		s["life"] -= delta
-		s["p"] += s["v"] * delta
-		if s["life"] > 0.0:
-			keep.append(s)
-	_sparks = keep
-	queue_redraw()
+	if not _sparks.is_empty():
+		for i in range(_sparks.size() - 1, -1, -1):
+			var sp: Dictionary = _sparks[i]
+			sp["life"] -= delta
+			sp["p"] += sp["v"] * delta
+			if sp["life"] <= 0.0:
+				_sparks.remove_at(i)
+	if _needs_redraw():
+		queue_redraw()
+
+
+func _needs_redraw() -> bool:
+	var every := 1 if crowd < 80 else 2 # smoothness first: 60 Hz up to 80 enemies, then 30 Hz
+	# hit flashes / sparks last ~0.1-0.2 s: still visible at 20 Hz, so only bosses and skill telegraphs
+	# (timing the player reads) always redraw
+	if every == 1 or e.def.is_boss or e.telegraph_kind != 0 or _phase_fx > 0.0:
+		return true
+	return (Engine.get_process_frames() + e.uid) % every == 0
 
 
 func _sfx(id: StringName) -> void:
@@ -150,11 +172,8 @@ func _draw() -> void:
 	modulate.a = 0.28 if hidden else (0.35 if e.submerge_timer > 0.0 else 1.0)
 	var flying := e.is_flying()
 	var bob := (-6.0 - 2.5 * sin(_t * 3.2)) if flying else 0.0
-	# shadow
-	if flying:
-		_ellipse(Vector2(8, 10), r * 1.1, r * 0.55, Color(0, 0, 0, 0.32))
-	else:
-		_ellipse(Vector2(2, 4), r * 1.05, r * 0.8, Color(0, 0, 0, 0.28))
+	if not shared_layers:
+		draw_shadow(self, Vector2.ZERO, 1.0)
 	if boss:
 		_boss_under(r)
 	elif e.telegraph_kind != 0: # regular enemies with data skills
@@ -223,9 +242,8 @@ func _draw() -> void:
 	for sp in _sparks:
 		var v: Vector2 = sp["v"]
 		draw_line(sp["p"], sp["p"] - v * 0.05, Color(sp["c"], sp["life"] / 0.18), 2.0)
-	if not hidden and not boss:
-		_hp_bar(r)
-	_status_icons(r, hidden)
+	if not shared_layers:
+		draw_overlay(self, Vector2.ZERO)
 
 
 # ------------------------------------------------------------------ per-type parts (body space)
@@ -590,21 +608,21 @@ func _overshield(r: float) -> void:
 
 # ------------------------------------------------------------------ HUD-ish bits
 
-func _hp_bar(r: float) -> void:
+func _hp_bar(ci: CanvasItem, o: Vector2, r: float) -> void:
 	if e.hp >= e.max_hp and e.shield >= e.shield_max:
 		return
 	var w := maxf(r * 2.4, 20.0)
-	var y := -r - 10.0
+	var y := o.y - r - 10.0
 	var ratio := e.hp / maxf(e.max_hp, 1.0)
 	var col := P.GREEN if ratio > 0.6 else (P.ORANGE if ratio > 0.3 else P.RED)
-	draw_rect(Rect2(-w * 0.5 - 1, y - 1, w + 2, 6), Color(0, 0, 0, 0.75))
-	draw_rect(Rect2(-w * 0.5, y, w * (_hp_lag / maxf(e.max_hp, 1.0)), 4), Color(1, 1, 1, 0.7))
-	draw_rect(Rect2(-w * 0.5, y, w * ratio, 4), col)
+	ci.draw_rect(Rect2(o.x - w * 0.5 - 1, y - 1, w + 2, 6), Color(0, 0, 0, 0.75))
+	ci.draw_rect(Rect2(o.x - w * 0.5, y, w * (_hp_lag / maxf(e.max_hp, 1.0)), 4), Color(1, 1, 1, 0.7))
+	ci.draw_rect(Rect2(o.x - w * 0.5, y, w * ratio, 4), col)
 	if e.shield_max > 0.0 and e.shield > 0.0:
-		draw_rect(Rect2(-w * 0.5, y - 3, w * (e.shield / e.shield_max), 2), ICE)
+		ci.draw_rect(Rect2(o.x - w * 0.5, y - 3, w * (e.shield / e.shield_max), 2), ICE)
 
 
-func _status_icons(r: float, hidden: bool) -> void:
+func _status_icons(ci: CanvasItem, o: Vector2, r: float, hidden: bool) -> void:
 	var icons: Array = []
 	if e.is_chilled() and not e.is_frozen(): icons.append("slow")
 	if e.is_burning(): icons.append("burn")
@@ -615,42 +633,84 @@ func _status_icons(r: float, hidden: bool) -> void:
 	var x := -(icons.size() - 1) * 5.5
 	var y := -r - 18.0 if e.hp < e.max_hp else -r - 10.0
 	for ic in icons:
-		var c := Vector2(x, y)
+		var c := o + Vector2(x, y)
 		match ic:
 			"slow":
-				draw_colored_polygon(PackedVector2Array([c + Vector2(0, -4), c + Vector2(3, 0), c + Vector2(0, 4), c + Vector2(-3, 0)]), ICE)
+				ci.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -4), c + Vector2(3, 0), c + Vector2(0, 4), c + Vector2(-3, 0)]), ICE)
 			"burn":
-				draw_colored_polygon(PackedVector2Array([c + Vector2(0, -5), c + Vector2(3, 1), c + Vector2(0, 4), c + Vector2(-3, 1)]), P.ORANGE)
-				draw_circle(c + Vector2(0, 1.5), 1.5, Color("FFE07A"))
+				ci.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -5), c + Vector2(3, 1), c + Vector2(0, 4), c + Vector2(-3, 1)]), P.ORANGE)
+				ci.draw_circle(c + Vector2(0, 1.5), 1.5, Color("FFE07A"))
 			"mark":
-				draw_arc(c, 3.5, 0, TAU, 10, P.RED, 1.5)
-				draw_line(c - Vector2(5, 0), c + Vector2(5, 0), P.RED, 1.0)
-				draw_line(c - Vector2(0, 5), c + Vector2(0, 5), P.RED, 1.0)
+				ci.draw_arc(c, 3.5, 0, TAU, 10, P.RED, 1.5)
+				ci.draw_line(c - Vector2(5, 0), c + Vector2(5, 0), P.RED, 1.0)
+				ci.draw_line(c - Vector2(0, 5), c + Vector2(0, 5), P.RED, 1.0)
 			"shred":
-				draw_polyline(PackedVector2Array([c + Vector2(-3, -4), c + Vector2(1, -1), c + Vector2(-1, 1), c + Vector2(3, 4)]), Color("FFE07A"), 1.5)
+				ci.draw_polyline(PackedVector2Array([c + Vector2(-3, -4), c + Vector2(1, -1), c + Vector2(-1, 1), c + Vector2(3, 4)]), Color("FFE07A"), 1.5)
 			"grounded":
-				draw_line(c + Vector2(0, -4), c + Vector2(0, 3), P.GREEN, 1.5)
-				draw_polyline(PackedVector2Array([c + Vector2(-3, 0), c + Vector2(0, 4), c + Vector2(3, 0)]), P.GREEN, 1.5)
+				ci.draw_line(c + Vector2(0, -4), c + Vector2(0, 3), P.GREEN, 1.5)
+				ci.draw_polyline(PackedVector2Array([c + Vector2(-3, 0), c + Vector2(0, 4), c + Vector2(3, 0)]), P.GREEN, 1.5)
 			"revealed":
-				_ellipse_line(c, 4.5, 2.5, Color.WHITE)
-				draw_circle(c, 1.3, Color.WHITE)
+				_ellipse_line_on(ci, c, 4.5, 2.5, Color.WHITE)
+				ci.draw_circle(c, 1.3, Color.WHITE)
 		x += 11.0
 
 
+## Shadow under the enemy, at `o` (its position when drawn by the shared layer). `alpha` = stealth fade.
+func draw_shadow(ci: CanvasItem, o: Vector2, alpha: float) -> void:
+	var r := e.def.radius
+	if e.is_flying():
+		_ellipse_on(ci, o + Vector2(8, 10), r * 1.1, r * 0.55, Color(0, 0, 0, 0.32 * alpha))
+	else:
+		_ellipse_on(ci, o + Vector2(2, 4), r * 1.05, r * 0.8, Color(0, 0, 0, 0.28 * alpha))
+
+
+## HP bar + status icons above the enemy, at `o`.
+func draw_overlay(ci: CanvasItem, o: Vector2) -> void:
+	var hidden := e.is_stealthy() and not e.is_revealed()
+	if not hidden and not e.def.is_boss:
+		_hp_bar(ci, o, e.def.radius)
+	_status_icons(ci, o, e.def.radius, hidden)
+
+
+## Same fade the enemy's own drawing uses (stealth / submerged), for the shared shadow layer.
+func fade() -> float:
+	if e.is_stealthy() and not e.is_revealed():
+		return 0.28
+	return 0.35 if e.submerge_timer > 0.0 else 1.0
+
+
+static func _units() -> void:
+	if _unit16.is_empty():
+		for i in range(16):
+			_unit16.append(Vector2.from_angle(TAU * i / 16.0))
+		for i in range(13):
+			_unit12.append(Vector2.from_angle(TAU * i / 12.0))
+
+
 func _ellipse(c: Vector2, rx: float, ry: float, col: Color) -> void:
+	_ellipse_on(self, c, rx, ry, col)
+
+
+static func _ellipse_on(ci: CanvasItem, c: Vector2, rx: float, ry: float, col: Color) -> void:
+	_units()
 	var pts := PackedVector2Array()
+	pts.resize(16)
 	for i in range(16):
-		var a := TAU * i / 16.0
-		pts.append(c + Vector2(cos(a) * rx, sin(a) * ry))
-	draw_colored_polygon(pts, col)
+		pts[i] = c + _unit16[i] * Vector2(rx, ry)
+	ci.draw_colored_polygon(pts, col)
 
 
 func _ellipse_line(c: Vector2, rx: float, ry: float, col: Color) -> void:
+	_ellipse_line_on(self, c, rx, ry, col)
+
+
+static func _ellipse_line_on(ci: CanvasItem, c: Vector2, rx: float, ry: float, col: Color) -> void:
+	_units()
 	var pts := PackedVector2Array()
+	pts.resize(13)
 	for i in range(13):
-		var a := TAU * i / 12.0
-		pts.append(c + Vector2(cos(a) * rx, sin(a) * ry))
-	draw_polyline(pts, col, 1.2)
+		pts[i] = c + _unit12[i] * Vector2(rx, ry)
+	ci.draw_polyline(pts, col, 1.2)
 
 
 func _star(c: Vector2, rr: float, col: Color) -> void:
