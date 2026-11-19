@@ -15,11 +15,12 @@ static func f(fmt: String, args: Variant) -> String:
 	return t(fmt) % args
 
 
-## "auto" follows the device language (Vietnamese if the OS locale is vi*, else English).
+## English is the default language (2026-11-19, user: Vietnamese is the optional second language).
+## "auto" (the setting nobody has changed yet) = English, whatever the device language.
 static func resolve(setting: String) -> String:
 	if setting == "en" or setting == "vi":
 		return setting
-	return "vi" if OS.get_locale_language() == "vi" else "en"
+	return "en"
 
 
 static func apply(setting: String) -> void:

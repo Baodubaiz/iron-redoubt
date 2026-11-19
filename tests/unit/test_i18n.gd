@@ -122,3 +122,11 @@ func test_translation_csv_rows_have_exactly_two_columns() -> void:
 		if row.size() != 2:
 			bad.append("%d: %s" % [line_no, row[0].substr(0, 50)])
 	eq(bad.size(), 0, "malformed rows (quote texts that contain commas): %s" % str(bad))
+
+
+## 2026-11-19: English is the default whatever the device language; Vietnamese only when picked.
+func test_default_language_is_english() -> void:
+	eq(I18n.resolve("auto"), "en")
+	eq(I18n.resolve(""), "en")
+	eq(I18n.resolve("vi"), "vi")
+	eq(GameSettings.new().language, "auto", "a fresh settings file starts on the default")

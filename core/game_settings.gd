@@ -6,7 +6,7 @@ var music_on: bool = true
 var sfx_on: bool = true
 var music_volume: float = 0.6 ## 0..1 linear
 var sfx_volume: float = 0.8 ## 0..1 linear
-var language: String = "auto" ## "auto" (device language), "en" or "vi"
+var language: String = "auto" ## "auto" (= English, the default), "en" or "vi"
 var reduce_effects: bool = false ## fewer particles, no screen shake / flashes
 
 

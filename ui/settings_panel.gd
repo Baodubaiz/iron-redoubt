@@ -57,11 +57,10 @@ func _language_row(v: VBoxContainer) -> void:
 	var opt := OptionButton.new()
 	opt.custom_minimum_size = Vector2(300, 56)
 	opt.add_theme_font_size_override("font_size", 20)
-	var codes := ["auto", "en", "vi"]
-	opt.add_item(I18n.t("Device language"))
+	var codes := ["en", "vi"] # English first: the default (2026-11-19); "auto" (untouched) shows as English
 	opt.add_item("English")
 	opt.add_item("Tiếng Việt")
-	opt.selected = maxi(codes.find(Settings.data.language), 0)
+	opt.selected = maxi(codes.find(I18n.resolve(Settings.data.language)), 0)
 	opt.item_selected.connect(func(i: int) -> void:
 		Settings.data.language = codes[i]
 		Settings.save()
