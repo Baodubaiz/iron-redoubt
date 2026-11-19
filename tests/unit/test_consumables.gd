@@ -117,3 +117,22 @@ func test_overclock_hastes_every_tower() -> void:
 func test_overclock_is_a_no_op_with_no_towers() -> void:
 	var m := make_lab()
 	check(not m.apply_consumable(_item("overclock")), "no towers to haste")
+
+
+## 2026-11-19: Airstrike / Stasis Charge land where the player taps; they go off even on an empty spot.
+func test_targeted_items_hit_only_the_chosen_area() -> void:
+	var m := make_lab()
+	var near_e := put(m, make_enemy_def(500.0, 0), 300.0)
+	var far_e := put(m, make_enemy_def(500.0, 0), 900.0)
+	m.step(DT)
+	var air := _item("airstrike")
+	check(air.targeted, "airstrike is aimed")
+	check(m.apply_consumable(air, near_e.position), "hit the picked area")
+	check(near_e.hp < 500.0, "enemy in the area hurt")
+	eq(far_e.hp, 500.0, "enemy elsewhere untouched")
+	var frost := _item("stasis_charge")
+	check(frost.targeted, "stasis is aimed")
+	m.apply_consumable(frost, far_e.position)
+	check(far_e.stun_timer > 0.0, "enemy in the area frozen")
+	eq(near_e.stun_timer, 0.0, "enemy elsewhere not frozen")
+	check(not m.apply_consumable(air, Vector2(5, 5)), "an empty spot is allowed (nothing hit, no error)")

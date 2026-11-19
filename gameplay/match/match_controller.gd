@@ -283,7 +283,7 @@ func _kill(e: Enemy, secondary: bool) -> void:
 		var relay_bonus := 0
 		for t in towers:
 			if t.is_beacon() and not t.is_disrupted() and t.pf("bounty_bonus") > 0.0 \
-					and t.position.distance_to(e.position) <= t.attack_range:
+					and t.position.distance_to(e.position) <= t.eff_range(): # range as drawn (map bonus, buffs)
 				relay_bonus = maxi(relay_bonus, int(t.pf("bounty_bonus")))
 		if relay_bonus > 0:
 			economy.credit(relay_bonus, "relaykill:%d" % e.uid)
@@ -314,6 +314,7 @@ func _on_enemy_reached_base(e: Enemy) -> void:
 ## Called by Tower when its cooldown allows a shot.
 func fire(t: Tower, target: Enemy) -> void:
 	var s := projectiles.spawn(t, target)
+	s.damage *= t.shot_ramp() # secondary Focus: shots ramp up on the same target
 	shot_fired.emit(t)
 	var n := t.shots_fired
 	if _every(t, "crit_every", n):
@@ -517,7 +518,7 @@ var _beam_chain_fx := {} ## tower uid -> match_time of the next drawn arc
 
 
 func beam_tick(t: Tower, target: Enemy, dt: float) -> void:
-	var dps := t.pf("beam_dps") * (1.0 + t.amp_damage)
+	var dps := t.beam_dps() # Overcharge as a secondary branch raises the beam too (2026-11-19)
 	damage_enemy(target, dps * t.beam_ramp() * dt * _hit_mult(t, target), Damage.Type.ENERGY, t.armor_pen, false, 1.0, true)
 	if t.pf("chain") > 0.0 and is_instance_valid(target):
 		# Arc on a beam tower: the beam arcs on to nearby enemies continuously (same falloff per jump).
@@ -579,7 +580,7 @@ func _apply_auras(dt: float) -> void:
 		if b.is_disrupted():
 			continue
 		if b.is_beacon():
-			var r := b.attack_range
+			var r := b.eff_range() # range as drawn: slow, reveal, freeze and buffs reach the visible ring
 			registry.query_circle(b.position, r, true, _buf) # all enemies, incl. stealth
 			var slow := b.pf("slow")
 			for e in _buf:
@@ -624,7 +625,7 @@ func _apply_auras(dt: float) -> void:
 			if is_night and not t.is_beacon():
 				dim = true
 				for b in towers:
-					if b.is_beacon() and not b.is_disrupted() and b.position.distance_to(t.position) <= b.attack_range:
+					if b.is_beacon() and not b.is_disrupted() and b.position.distance_to(t.position) <= b.eff_range():
 						dim = false
 						break
 			if dim != t.night_dimmed:
@@ -741,17 +742,20 @@ static func param_effect(t: Tower, prefix: String) -> EffectDef:
 ## Data effect on every tower within the radius (boss skills, map events...).
 ## Applies a bought consumable's effect (ProgressionModel.use_item already consumed the stock).
 ## True if the item actually had an effect (false = no valid target, e.g. Airstrike with no enemies alive).
-func apply_consumable(item: ConsumableDef) -> bool:
+## Always goes off (2026-11-19, user: an item works even with nothing in range). Targeted items land at
+## `at` (world position); without one they fall back to the toughest enemy (tests / tools). Returns true
+## when it actually affected something.
+func apply_consumable(item: ConsumableDef, at: Vector2 = Vector2.INF) -> bool:
 	match item.kind:
 		ConsumableDef.Kind.AIRSTRIKE:
-			var target: Enemy = null
-			for e in enemies:
-				if e.is_alive() and (target == null or e.hp > target.hp):
-					target = e
-			if target == null:
+			var pos := at if at != Vector2.INF else _toughest_enemy_pos()
+			if pos == Vector2.INF:
 				return false
-			_explode(null, target.position, item.radius, item.damage, Damage.Type.EXPLOSIVE, 0.0, true, false, false)
-			return true
+			registry.query_circle(pos, item.radius, true, _buf)
+			var hit := not _buf.is_empty()
+			projectiles.ring(pos, item.radius, Color("ff9f43"), 0.4)
+			_explode(null, pos, item.radius, item.damage, Damage.Type.EXPLOSIVE, 0.0, true, false, false)
+			return hit
 		ConsumableDef.Kind.HEAL:
 			if base.hp >= base.max_hp:
 				return false
@@ -759,8 +763,11 @@ func apply_consumable(item: ConsumableDef) -> bool:
 			return true
 		ConsumableDef.Kind.FREEZE:
 			var hit := false
+			var whole_map := at == Vector2.INF or item.radius <= 0.0
+			if not whole_map:
+				projectiles.ring(at, item.radius, Color("bfe9ff"), 0.4)
 			for e in enemies:
-				if e.is_alive():
+				if e.is_alive() and (whole_map or e.position.distance_to(at) <= item.radius + e.def.radius):
 					e.apply_stun(item.freeze_duration)
 					hit = true
 			return hit
@@ -772,6 +779,14 @@ func apply_consumable(item: ConsumableDef) -> bool:
 			effect_towers(Vector2(640, 360), 5000.0, fx, item.haste_duration)
 			return true
 	return false
+
+
+func _toughest_enemy_pos() -> Vector2:
+	var target: Enemy = null
+	for e in enemies:
+		if e.is_alive() and (target == null or e.hp > target.hp):
+			target = e
+	return target.position if target != null else Vector2.INF
 
 
 func effect_towers(pos: Vector2, radius: float, e: EffectDef, duration: float = -1.0) -> void:
@@ -994,6 +1009,7 @@ func try_sell(t: Tower) -> int:
 			delayed.remove_at(i)
 	for other in towers:
 		other.buff_sources.erase(t)
+	_beam_chain_fx.erase(t.uid)
 	var refund := sell_refund(t)
 	economy.credit(refund, "sell:%d" % t.uid)
 	tower_sold.emit(t, refund)

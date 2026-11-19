@@ -51,6 +51,8 @@ func _ready() -> void:
 	if _saves:
 		if resume.is_empty() or not MatchSnapshot.apply(controller, resume):
 			MatchSnapshot.clear() # a fresh start (or an unusable save) replaces any old checkpoint
+		else:
+			MatchSnapshot.refund_items_after(resume) # items spent in the wave being replayed come back
 		controller.waves.prep_started.connect(func(_i: int, _s: float) -> void: _checkpoint())
 	placement = PlacementController.new()
 	placement.name = "Placement"

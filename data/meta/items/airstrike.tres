@@ -6,7 +6,8 @@
 script = ExtResource("1_tydpd")
 id = &"airstrike"
 display_name = "Airstrike"
-description = "Instant 150 explosive damage in a radius around the toughest enemy on screen."
+description = "Tap the map: instant 150 explosive damage in the area you pick."
 icon = "blast"
 damage = 150.0
 radius = 90.0
+targeted = true

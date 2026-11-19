@@ -21,3 +21,5 @@ enum Kind { AIRSTRIKE, HEAL, FREEZE, HASTE }
 @export var freeze_duration: float = 0.0
 @export var haste_mult: float = 1.0
 @export var haste_duration: float = 0.0
+## The player picks where it lands (2026-11-19): tap the item, then tap the map. `radius` is the area.
+@export var targeted: bool = false

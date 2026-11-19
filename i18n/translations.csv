@@ -1062,12 +1062,10 @@ Already used this match,Đã dùng trong trận này
 Owned: %d,Đang có: %d
 Buy  +1  (%d Cores),Mua  +1  (%d Lõi)
 Airstrike,Không Kích
-Instant 150 explosive damage in a radius around the toughest enemy on screen.,Gây ngay 150 sát thương nổ quanh con quái trâu máu nhất trên màn hình.
 Every tower fires 25% faster for 8 s.,Mọi tháp bắn nhanh hơn 25% trong 8 giây.
 Repair Kit,Bộ Sửa Chữa
 Instantly restores 3 Base HP.,Hồi ngay 3 máu căn cứ.
 Stasis Charge,Kíp Đóng Băng
-Freezes every regular enemy on screen for 2 s (bosses only stagger).,Đóng băng mọi quái thường trên màn hình trong 2 giây (trùm chỉ khựng lại).
 Loadout,Đội Hình
 %s — pick up to %d towers to bring,%s — chọn tối đa %d tháp mang theo
 Enter level,Vào Màn
@@ -1163,3 +1161,7 @@ Level %d · Wave %d/%d,Level %d · Wave %d/%d
 Reset research  (+%d Cores),Đặt lại nghiên cứu  (+%d Cores)
 Tap again to reset all research,Chạm lần nữa để đặt lại toàn bộ nghiên cứu
 %d waves survived,Trụ được %d wave
+Tap the map: instant 150 explosive damage in the area you pick.,Chạm bản đồ: gây ngay 150 sát thương nổ ở vùng bạn chọn.
+Tap the map: freezes regular enemies in the area for 2 s (bosses only stagger).,Chạm bản đồ: đóng băng quái thường trong vùng 2 giây (trùm chỉ khựng lại).
+Tap the map to use %s,Chạm bản đồ để dùng %s
+Replace saved match (level %d)? Tap again,Thay trận đang lưu (màn %d)? Chạm lần nữa

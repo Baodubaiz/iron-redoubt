@@ -25,9 +25,12 @@ func test_main_plus_secondary_branch_rules() -> void:
 	eq(m.upgrade_block_reason(t, 1), "Secondary max (tier 2)")
 	check(not m.try_upgrade(t, 0), "no tier 4")
 	eq(m.upgrade_block_reason(t, 0), "Max tier")
-	# combined stats: the stronger value of each key wins
-	near(t.fire_rate, 4.5, 0.001, "Rapid III rate kept (Penetrator II sets 1.6)")
-	near(t.damage, 13.5, 0.001, "Penetrator II damage beats Rapid III (-10% nerf, then halved by the remake)")
+	# combined stats ADD UP: base + (Rapid III - base) + (Penetrator II - base)
+	var base_rate := t.def.fire_rate
+	var base_dmg := t.def.damage
+	near(t.fire_rate, base_rate + (A[2].stats["fire_rate"] - base_rate) + (B[1].stats["fire_rate"] - base_rate), 0.001,
+		"rate: Rapid's + and Penetrator's - both count")
+	near(t.damage, base_dmg + (A[2].stats["damage"] - base_dmg) + (B[1].stats["damage"] - base_dmg), 0.001, "damage adds up")
 	near(t.armor_pen, 4.0, 0.001, "Penetrator II pen")
 	eq(t.total_invested, t.def.cost + A[0].cost + A[1].cost + A[2].cost + B[0].cost + B[1].cost)
 
@@ -51,7 +54,9 @@ func test_beacon_secondary_combines_slow_and_buff() -> void:
 	check(m.try_upgrade(b, 0), "Amplifier I (slow 0)")
 	near(b.pf("slow"), 0.0, 0.0001, "Amplifier alone removes slow")
 	check(m.try_upgrade(b, 1), "Cryo I as secondary")
-	near(b.pf("slow"), 0.3, 0.0001, "Cryo slow restored by the stronger value")
+	var base_slow := float(b.def.base_params["slow"])
+	near(b.pf("slow"), base_slow + (0.0 - base_slow) + (float(b.def.branches[1].tiers[0].stats["slow"]) - base_slow), 0.0001,
+		"Amplifier's -slow and Cryo's +slow add up")
 	near(b.pf("amp_damage"), 0.10, 0.0001, "buff kept")
 
 
@@ -173,3 +178,28 @@ func test_storm_array_burst_fires_extra_shots() -> void:
 	m.step(DT) # 20th shot -> 1 + 6 burst projectiles
 	check(m.projectiles.active_count() >= 7 or m.interaction_counts.get("storm_array", 0) == 1, "burst fired")
 	eq(int(m.interaction_counts.get("storm_array", 0)), 1)
+
+
+## 2026-11-19: Focus is a firing mode only as the MAIN branch; as a secondary it ramps normal shots, and a
+## secondary Overcharge raises the beam.
+func test_lance_branches_work_together() -> void:
+	var m := make_lab(100000)
+	var oc := m.try_build(real_tower("lance"), Vector2(300, 420))
+	m.try_upgrade(oc, 0)
+	m.try_upgrade(oc, 0) # Overcharge II (main)
+	m.try_upgrade(oc, 2) # Focus I (secondary)
+	eq(oc.branch, 0)
+	near(oc.pf("beam_dps"), 0.0, 0.0001, "secondary Focus does not turn the tower into a beam")
+	check(oc.pf("ramp_max") > 1.0, "but lends its ramp")
+	var e := put(m, make_enemy_def(1.0e6, 0), 300)
+	run(m, 4.0)
+	check(oc.shots_fired > 0, "still fires shots")
+	check(oc.shot_ramp() > 1.5, "shots ramp on the same target")
+	check(e.hp < e.max_hp, "and hit")
+	var fo := m.try_build(real_tower("lance"), Vector2(600, 420))
+	m.try_upgrade(fo, 2)
+	m.try_upgrade(fo, 2) # Focus II (main)
+	var plain := fo.beam_dps()
+	m.try_upgrade(fo, 0) # Overcharge I (secondary)
+	check(fo.pf("beam_dps") > 0.0, "main Focus keeps the beam")
+	check(fo.beam_dps() > plain * 1.2, "secondary Overcharge raises the beam (%.1f -> %.1f)" % [plain, fo.beam_dps()])

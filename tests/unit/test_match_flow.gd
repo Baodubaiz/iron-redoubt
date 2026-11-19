@@ -188,6 +188,10 @@ func test_mid_match_snapshot_round_trip() -> void:
 	near(bt.damage, t.damage, 0.0001, "same stats after rebuild")
 	check(bt.get_node_or_null("Visual") != null, "restored tower is drawn (has its TowerVisual)")
 	check(b.economy.was_paid("wave:0"), "wave 1 reward is not paid twice")
+	eq(b.rng.state, a.rng.state, "random state restored (same spawn variance)")
+	eq(bt.shots_fired, t.shots_fired, "shot counter restored (crit rhythm)")
+	for k in d["paid"]:
+		check(not String(k).begins_with("kill:"), "per-kill keys are not stored")
 	check(b.request_next_wave(), "can start the next wave")
 	eq(b.waves.index, a.waves.index + 1)
 

@@ -18,11 +18,20 @@ static func capture(c: MatchController, match_id: String, loadout: Array) -> Dic
 			"id": String(t.def.id), "uid": t.uid, "x": t.position.x, "y": t.position.y,
 			"order": t.branch_order.duplicate(), "tiers": t.tiers.duplicate(), "evolved": t.evolved,
 			"waves_t3": t.waves_since_t3, "target": t.targeting_override, "invested": t.total_invested,
-			"mint": t.mint_count,
+			"mint": t.mint_count, "shots": t.shots_fired, "aura_t": t.aura_timer, "mint_t": t.mint_timer,
 		})
 	var ids: Array = []
 	for id in loadout:
 		ids.append(String(id))
+	# Per-enemy / per-tick keys (kill:uid, relaykill:uid, passive:n) can never repeat after a restore (uids and
+	# the passive counter are restored too), so they are not stored: the file stays small (2026-11-19).
+	var paid: Array = []
+	for k in c.economy._paid_keys:
+		var ks := String(k)
+		if not (ks.begins_with("kill:") or ks.begins_with("relaykill:") or ks.begins_with("passive:")):
+			paid.append(ks)
+	# Items used in this match so far: a restore refunds any used after this checkpoint (that wave replays).
+	var used := used_items(match_id)
 	return {
 		"version": VERSION,
 		"game_version": str(ProjectSettings.get_setting("application/config/version", "")),
@@ -34,7 +43,9 @@ static func capture(c: MatchController, match_id: String, loadout: Array) -> Dic
 		"wave_index": c.waves.index,
 		"early_starts": c.waves.early_starts,
 		"currency": c.economy.currency,
-		"paid": c.economy._paid_keys.keys(),
+		"paid": paid,
+		"rng_state": str(c.rng.state),
+		"used_items": used,
 		"passive_count": c.economy._passive_count,
 		"base_hp": c.base.hp,
 		"damage_taken": c.base.damage_taken,
@@ -85,11 +96,16 @@ static func apply(c: MatchController, d: Dictionary) -> bool:
 		t.targeting_override = int(td["target"])
 		t.total_invested = int(td["invested"])
 		t.mint_count = int(td.get("mint", 0))
+		t.shots_fired = int(td.get("shots", 0)) # crit / stun / echo counters keep their rhythm
+		t.aura_timer = float(td.get("aura_t", 0.0))
+		t.mint_timer = float(td.get("mint_t", 0.0))
 		t.recompute()
 		c.towers.append(t)
 		c.towers_root.add_child(t)
 		c.tower_built.emit(t) # MapView attaches the TowerVisual on this signal (otherwise invisible)
 	c._next_uid = int(d["next_uid"])
+	if d.has("rng_state"):
+		c.rng.state = int(String(d["rng_state"])) # same spawn variance as before the app was closed
 	var w := c.waves
 	w.index = int(d["wave_index"])
 	w.early_starts = int(d["early_starts"])
@@ -98,6 +114,42 @@ static func apply(c: MatchController, d: Dictionary) -> bool:
 	w.prep_remaining = next_def.prep_time_override if next_def.prep_time_override >= 0.0 else c.level.prep_time
 	c._set_state(MatchController.State.PREP)
 	return true
+
+
+## Item-use event keys of this match in the profile ("use:<item>:<match_id>").
+static func used_items(match_id: String) -> Array:
+	var out: Array = []
+	var pm: Variant = _progression()
+	if pm == null or match_id == "":
+		return out
+	for k in pm.profile.data["items"]:
+		if String(k).begins_with("use:") and String(k).ends_with(":" + match_id):
+			out.append(String(k))
+	return out
+
+
+## Items used after the checkpoint `d` (the wave being replayed): give them back.
+static func refund_items_after(d: Dictionary) -> int:
+	var pm: Variant = _progression()
+	if pm == null:
+		return 0
+	var keep: Array = d.get("used_items", [])
+	var n := 0
+	for k in used_items(String(d.get("match_id", ""))):
+		if not keep.has(k):
+			pm.profile.data["items"].erase(k)
+			n += 1
+	if n > 0:
+		pm.save()
+	return n
+
+
+static func _progression() -> Variant:
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null or tree.root == null or not tree.root.has_node("Progression"):
+		return null
+	var p: Node = tree.root.get_node("Progression")
+	return p.get("model")
 
 
 static func _tower_def(c: MatchController, id: String) -> TowerDef:

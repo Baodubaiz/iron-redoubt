@@ -82,7 +82,15 @@ func _build() -> void:
 	_count_label = UiKit.label("", 16, VisualPalette.CYAN)
 	_count_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	footer.add_child(_count_label)
+	# A new campaign match replaces the saved mid-match checkpoint: ask first (2026-11-19).
+	var saved := {} if SceneRouter.pending_challenge != null else MatchSnapshot.pending(Progression.model.campaign)
+	var armed := [saved.is_empty()]
 	_confirm = UiKit.button(I18n.t("Enter level"), func() -> void:
+		if not armed[0]:
+			armed[0] = true
+			var lvl := MatchSnapshot.level_of(Progression.model.campaign, saved)
+			_confirm.text = I18n.f("Replace saved match (level %d)? Tap again", lvl.level_number if lvl != null else 0)
+			return
 		SceneRouter.start_match_with_loadout(_selected.duplicate()), Vector2(220, 56), "PrimaryButton", "play")
 	footer.add_child(_confirm)
 	_refresh()

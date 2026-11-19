@@ -138,3 +138,30 @@ func test_tap_selects_tower() -> void:
 	check(p.selected == t and t.selected, "tap on tower selects it")
 	_release(Vector2(700, 600), true)
 	check(p.selected == null and not t.selected, "tap elsewhere deselects")
+
+
+## 2026-11-19: a targeted item waits for one tap on the map, then reports where; tapping the item again
+## cancels; starting a tower placement cancels it too.
+func test_item_aim_reports_the_tapped_spot() -> void:
+	_setup()
+	var item := ConsumableDef.new()
+	item.targeted = true
+	item.radius = 90.0
+	var got := []
+	p.item_target_chosen.connect(func(it: ConsumableDef, wp: Vector2) -> void: got.append([it, wp]))
+	p.begin_aim(item)
+	eq(p.aim_item, item, "aiming")
+	_motion(Vector2(500, 300))
+	_release(Vector2(500, 300), true)
+	eq(got.size(), 1, "one tap = one use")
+	eq(got[0][0], item)
+	check((got[0][1] as Vector2).distance_to(p._to_world(Vector2(500, 300))) < 0.01, "at the tapped spot")
+	eq(p.aim_item, null, "aim ends after use")
+	_release(Vector2(600, 300), true)
+	eq(got.size(), 1, "a later tap does not fire again")
+	p.begin_aim(item)
+	p.begin_aim(item)
+	eq(p.aim_item, null, "tapping the item again cancels")
+	p.begin_aim(item)
+	p.begin_from_palette(tdef, Vector2(1220, 100))
+	eq(p.aim_item, null, "picking a tower cancels the aim")

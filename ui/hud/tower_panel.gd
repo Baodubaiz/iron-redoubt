@@ -518,7 +518,7 @@ func _fill_stats(t: Tower) -> void:
 		if t.pf("wave_income") > 0.0:
 			extra.append(I18n.f("Income +%d / wave (diminishing per extra Relay)", int(t.pf("wave_income"))))
 	else:
-		_stat_dmg.text = (I18n.f("Beam %d dps x%.1f", [int(t.pf("beam_dps") * (1.0 + t.amp_damage)), t.beam_ramp()])
+		_stat_dmg.text = (I18n.f("Beam %d dps x%.1f", [int(t.beam_dps()), t.beam_ramp()])
 			if t.pf("beam_dps") > 0.0 else str(int(round(t.eff_damage()))))
 		_stat_rate.text = "%.1f/s" % t.eff_rate()
 		_stat_range.text = str(int(t.eff_range()))

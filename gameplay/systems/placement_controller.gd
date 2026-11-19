@@ -14,6 +14,8 @@ signal session_changed(def: TowerDef) ## null when the session ends
 signal ghost_changed(world_pos: Vector2, visible: bool, valid: bool)
 signal message(text: String)
 signal selection_changed(tower: Tower)
+signal item_target_chosen(item: ConsumableDef, world_pos: Vector2)
+signal aim_changed(item: ConsumableDef) ## null when aiming ends
 
 var controller: MatchController
 ## Returns the palette's screen Rect2; releasing a drag there cancels it.
@@ -28,14 +30,18 @@ var can_afford: bool = true
 var selected: Tower = null
 
 var _press_pos: Vector2 = Vector2.ZERO
+var aim_item: ConsumableDef = null ## a targeted item waiting for a tap on the map
+var _aim_pos := Vector2.INF ## world position under the pointer (preview circle)
 
 
 func _ready() -> void:
 	controller.paused_changed.connect(func(p: bool) -> void:
 		if p:
-			cancel())
+			cancel()
+			cancel_aim())
 	controller.match_ended.connect(func(_w: bool) -> void:
 		cancel()
+		cancel_aim()
 		select(null))
 	controller.economy.changed.connect(func(_c: int, _d: int, _r: String) -> void:
 		if ghost_visible:
@@ -54,12 +60,36 @@ func begin_from_palette(tower_def: TowerDef, screen_pos: Vector2) -> void:
 		cancel() # tapping the same palette button again cancels
 		return
 	select(null)
+	cancel_aim()
 	def = tower_def
 	mode = Mode.PRESS
 	_press_pos = screen_pos
 	ghost_visible = false
 	session_changed.emit(def)
 	_emit_ghost()
+
+
+## Targeted item: the next tap on the map drops it there. Same item again = cancel.
+func begin_aim(item: ConsumableDef) -> void:
+	if aim_item == item:
+		cancel_aim()
+		return
+	cancel()
+	select(null)
+	aim_item = item
+	_aim_pos = Vector2.INF
+	aim_changed.emit(item)
+	message.emit(I18n.f("Tap the map to use %s", I18n.t(item.display_name)))
+	queue_redraw()
+
+
+func cancel_aim() -> void:
+	if aim_item == null:
+		return
+	aim_item = null
+	_aim_pos = Vector2.INF
+	aim_changed.emit(null)
+	queue_redraw()
 
 
 func cancel() -> void:
@@ -92,6 +122,9 @@ func select(t: Tower) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if aim_item != null and event is InputEventMouseMotion:
+		_aim_pos = _to_world((event as InputEventMouseMotion).position)
+		queue_redraw()
 	if mode != Mode.PRESS and mode != Mode.DRAG:
 		return
 	if event is InputEventMouseMotion:
@@ -122,6 +155,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	if mb.button_index != MOUSE_BUTTON_LEFT or mb.pressed:
 		return
 	var wp := _to_world(mb.position)
+	if aim_item != null:
+		var it := aim_item
+		cancel_aim()
+		if is_inside_tree():
+			get_viewport().set_input_as_handled()
+		item_target_chosen.emit(it, wp)
+		return
 	if mode == Mode.TAP:
 		_move_ghost(wp)
 		if is_inside_tree():
@@ -210,6 +250,10 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	_draw_synergy_links()
+	if aim_item != null and _aim_pos != Vector2.INF:
+		var col := Color("ff9f43") if aim_item.kind == ConsumableDef.Kind.AIRSTRIKE else Color("bfe9ff")
+		draw_circle(_aim_pos, aim_item.radius, Color(col, 0.16))
+		draw_arc(_aim_pos, aim_item.radius, 0.0, TAU, 64, Color(col, 0.9), 2.0)
 	if not ghost_visible or def == null:
 		return
 	var ok := is_valid()

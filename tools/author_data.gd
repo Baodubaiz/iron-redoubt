@@ -1787,12 +1787,12 @@ func _meta() -> void:
 func _consumables() -> Array[ConsumableDef]:
 	var defs := [
 		# id, name, desc, icon, cost, kind, damage, radius, heal, freeze_dur, haste_mult, haste_dur
-		[&"airstrike", "Airstrike", "Instant 150 explosive damage in a radius around the toughest enemy on screen.",
+		[&"airstrike", "Airstrike", "Tap the map: instant 150 explosive damage in the area you pick.",
 			"blast", 40, ConsumableDef.Kind.AIRSTRIKE, 150.0, 90.0, 0, 0.0, 1.0, 0.0],
 		[&"repair_kit", "Repair Kit", "Instantly restores 3 Base HP.",
 			"heart", 60, ConsumableDef.Kind.HEAL, 0.0, 0.0, 3, 0.0, 1.0, 0.0],
-		[&"stasis_charge", "Stasis Charge", "Freezes every regular enemy on screen for 2 s (bosses only stagger).",
-			"frost", 50, ConsumableDef.Kind.FREEZE, 0.0, 0.0, 0, 2.0, 1.0, 0.0],
+		[&"stasis_charge", "Stasis Charge", "Tap the map: freezes regular enemies in the area for 2 s (bosses only stagger).",
+			"frost", 50, ConsumableDef.Kind.FREEZE, 0.0, 130.0, 0, 2.0, 1.0, 0.0],
 		[&"overclock", "Overclock", "Every tower fires 25% faster for 8 s.",
 			"fast", 35, ConsumableDef.Kind.HASTE, 0.0, 0.0, 0, 0.0, 1.25, 8.0],
 	]
@@ -1811,6 +1811,7 @@ func _consumables() -> Array[ConsumableDef]:
 		c.freeze_duration = r[9]
 		c.haste_mult = r[10]
 		c.haste_duration = r[11]
+		c.targeted = c.kind == ConsumableDef.Kind.AIRSTRIKE or c.kind == ConsumableDef.Kind.FREEZE
 		_save(c, "res://data/meta/items/%s.tres" % c.id)
 		out.append(c)
 	return out

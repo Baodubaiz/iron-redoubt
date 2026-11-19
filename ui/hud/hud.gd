@@ -124,6 +124,10 @@ func _ready() -> void:
 	controller.towers_disrupted.connect(func(_p: Vector2) -> void: _screen_flash(P.RED))
 	placement.palette_rect_provider = func() -> Rect2: return _palette.get_global_rect()
 	placement.message.connect(_on_placement_message)
+	placement.item_target_chosen.connect(func(it: ConsumableDef, wp: Vector2) -> void: _consume_item(it, wp))
+	placement.aim_changed.connect(func(it: ConsumableDef) -> void:
+		for k in _item_buttons:
+			(_item_buttons[k] as Button).modulate = Color(1.4, 1.25, 0.8) if k == it else Color.WHITE)
 	placement.ghost_changed.connect(_on_ghost_changed)
 	placement.session_changed.connect(func(_d: TowerDef) -> void: _refresh())
 	controller.boss_spawned.connect(func(e: Enemy) -> void:
@@ -377,11 +381,22 @@ func _toggle_items() -> void:
 
 
 func _use_item(item: ConsumableDef) -> void:
-	if Progression.model.use_item_block_reason(item, match_id) != "":
+	if Progression.model.use_item_block_reason(item, match_id) != "" or not controller.can_issue_commands():
+		return
+	if item.targeted and placement != null:
+		placement.begin_aim(item) # tap the map next; tapping the item again cancels (nothing consumed)
+		UiKit.click()
+		return
+	_consume_item(item, Vector2.INF)
+
+
+## Spends one item and fires it. It always goes off, even if nothing is in range (2026-11-19, user).
+func _consume_item(item: ConsumableDef, at: Vector2) -> void:
+	if Progression.model.use_item_block_reason(item, match_id) != "" or not controller.can_issue_commands():
 		return
 	if not Progression.model.use_item(item, match_id):
 		return
-	controller.apply_consumable(item)
+	controller.apply_consumable(item, at)
 	UiKit.click()
 	_refresh_items()
 
