@@ -122,3 +122,25 @@ func test_shards_survive_save_and_merge() -> void:
 	old.erase("shards")
 	old.erase("shard_pity")
 	eq(Profile.new(Profile.sanitize(old, campaign.starting_towers)["data"]).shards(&"storm"), 0, "old saves load")
+
+
+## 2026-11-19: ad provider by build. Outside the CrazyGames web build the SDK bridge is a silent no-op.
+func test_ad_providers() -> void:
+	check(not CrazyGamesSdk.is_target(), "desktop test run is not the CrazyGames build")
+	CrazyGamesSdk.gameplay_start() # no-ops, must not error
+	CrazyGamesSdk.gameplay_stop()
+	CrazyGamesSdk.happytime()
+	AdService.force_provider = "test"
+	var got := []
+	AdService.show_rewarded(func(ok: bool) -> void: got.append(ok))
+	eq(got, [true], "test provider rewards at once")
+	check(AdService.is_available(), "test ads available")
+	AdService.force_provider = "none"
+	got.clear()
+	AdService.show_rewarded(func(ok: bool) -> void: got.append(ok))
+	eq(got, [false], "no ad SDK: no reward")
+	check(not AdService.is_available(), "no ads offered")
+	var done := []
+	AdService.show_midgame(func() -> void: done.append(1))
+	eq(done, [1], "a break ad never blocks leaving the results")
+	AdService.force_provider = ""

@@ -1,0 +1,130 @@
+class_name CrazyGamesSdk
+extends RefCounted
+## Thin bridge to the CrazyGames HTML5 SDK v3 (2026-11-19). The ONE web build loads
+## https://sdk.crazygames.com/crazygames-sdk-v3.js in its HTML head; the SDK itself reports where it runs:
+##   "crazygames" (their site: real ads) / "local" (localhost: fake ads) / "disabled" (anywhere else, e.g. the
+##   GitHub Pages playtest: every SDK call is skipped and the game falls back to its own test ads).
+## Desktop and Android builds have no page and no SDK: every call is a no-op.
+## Docs: https://docs.crazygames.com/sdk/intro/ , /sdk/game/ , /sdk/video-ads/
+
+static var _ready := false
+static var _environment := "none"
+static var _init_cb: JavaScriptObject
+static var _ad_cbs: Array = [] ## JS callbacks must stay referenced until the SDK calls them
+static var _ad_running := false
+static var _playing := false ## last gameplay state asked for (replayed once the SDK is ready)
+static var _sent_playing := false
+
+
+## True when the page carries the SDK script (web builds). Says nothing about where it runs: see is_active().
+static func is_target() -> bool:
+	return OS.has_feature("web") and JavaScriptBridge.get_interface("CrazyGames") != null
+
+
+## True once init() finished, whatever the environment (until then ads wait / are reported unavailable).
+static func is_ready() -> bool:
+	return _ready
+
+
+## Running on the CrazyGames site itself (not localhost, not another host).
+static func on_crazygames() -> bool:
+	return _ready and _environment == "crazygames"
+
+
+## True once init() resolved on a CrazyGames page (or the local test page): calls are live.
+static func is_active() -> bool:
+	return _ready and (_environment == "crazygames" or _environment == "local")
+
+
+static func environment() -> String:
+	return _environment
+
+
+static func _sdk() -> JavaScriptObject:
+	var cg: JavaScriptObject = JavaScriptBridge.get_interface("CrazyGames")
+	if cg == null:
+		return null
+	return cg.SDK
+
+
+## Starts the SDK (async). Reports loadingStart now and loadingStop once it is ready.
+static func init() -> void:
+	if not is_target() or _init_cb != null:
+		return
+	var sdk := _sdk()
+	if sdk == null:
+		push_warning("CrazyGames SDK script not found on the page")
+		return
+	_init_cb = JavaScriptBridge.create_callback(func(_args: Array) -> void:
+		var s := _sdk()
+		_environment = str(s.environment) if s != null else "none"
+		_ready = true
+		if is_active():
+			_game_call("loadingStop")
+			if _playing: # a match started before the SDK finished starting
+				_send_gameplay(true))
+	sdk.init().then(_init_cb)
+
+
+static func _game_call(fn: String) -> void:
+	if not is_active():
+		return
+	var game: JavaScriptObject = _sdk().game
+	match fn:
+		"gameplayStart": game.gameplayStart()
+		"gameplayStop": game.gameplayStop()
+		"loadingStop": game.loadingStop()
+		"happytime": game.happytime()
+
+
+## The player starts / resumes playing (match start, unpause).
+static func gameplay_start() -> void:
+	_playing = true
+	_send_gameplay(true)
+
+
+## Any break in play (pause, match end, back to a menu).
+static func gameplay_stop() -> void:
+	_playing = false
+	_send_gameplay(false)
+
+
+## Only real changes reach the SDK (a stop without a start, or two starts in a row, are dropped).
+static func _send_gameplay(on: bool) -> void:
+	if not is_active() or on == _sent_playing:
+		return
+	_sent_playing = on
+	_game_call("gameplayStart" if on else "gameplayStop")
+
+
+## A rare celebration moment (boss beaten).
+static func happytime() -> void:
+	_game_call("happytime")
+
+
+## Shows a "rewarded" or "midgame" ad. `on_done(true)` only after a rewarded ad finished; errors
+## (adblock, no fill, cooldown) give false. Audio is muted while the ad plays.
+static func request_ad(kind: String, on_done: Callable) -> void:
+	if not is_active() or _ad_running:
+		on_done.call(false)
+		return
+	_ad_running = true
+	var cbs: JavaScriptObject = JavaScriptBridge.create_object("Object")
+	var started := JavaScriptBridge.create_callback(func(_a: Array) -> void:
+		AudioServer.set_bus_mute(0, true))
+	var finished := JavaScriptBridge.create_callback(func(_a: Array) -> void:
+		_end_ad()
+		on_done.call(true))
+	var failed := JavaScriptBridge.create_callback(func(_a: Array) -> void:
+		_end_ad()
+		on_done.call(false))
+	cbs.adStarted = started
+	cbs.adFinished = finished
+	cbs.adError = failed
+	_ad_cbs = [cbs, started, finished, failed]
+	_sdk().ad.requestAd(kind, cbs)
+
+
+static func _end_ad() -> void:
+	_ad_running = false
+	AudioServer.set_bus_mute(0, false)

@@ -10,6 +10,12 @@ var _press_id := 0
 
 
 func _ready() -> void:
+	if CrazyGamesSdk.is_target() and not SceneRouter.first_run_done:
+		SceneRouter.first_run_done = true
+		var pm: ProgressionModel = Progression.model
+		var fresh := not pm.profile.is_cleared(pm.campaign.levels[0].id) 				and MatchSnapshot.pending(pm.campaign).is_empty()
+		if fresh:
+			SceneRouter.quick_start.call_deferred(pm.campaign.levels[0])
 	theme = UiKit.theme()
 	var bg := MenuBackdrop.new()
 	bg.mode = MenuBackdrop.Mode.FULL
@@ -110,8 +116,12 @@ func _ready() -> void:
 		nav_buttons.append(b)
 
 	root.add_child(_spacer())
-	var ver := UiKit.label("v%s%s · %s" % [ProjectSettings.get_setting("application/config/version", "?"),
-		"-playtest" if OS.has_feature("playtest") else "", I18n.t("offline build")], 14, VisualPalette.TEXT_FAINT)
+	var on_cg := CrazyGamesSdk.on_crazygames()
+	var ver_text := "v%s%s" % [ProjectSettings.get_setting("application/config/version", "?"),
+		"-playtest" if OS.has_feature("playtest") and not on_cg else ""]
+	if not OS.has_feature("web"): # web builds (CrazyGames, playtest page) are played online
+		ver_text += " · " + I18n.t("offline build")
+	var ver := UiKit.label(ver_text, 14, VisualPalette.TEXT_FAINT)
 	ver.name = "Version"
 	ver.autowrap_mode = TextServer.AUTOWRAP_OFF
 	ver.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN

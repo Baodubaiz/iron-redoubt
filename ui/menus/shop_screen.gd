@@ -20,6 +20,7 @@ func _build() -> void:
 	for c in get_children():
 		c.queue_free()
 	var v := UiKit.screen(self)
+	_v = v
 	UiKit.header(v, I18n.t("Armory"), func() -> void: SceneRouter.to_menu())
 	var model: ProgressionModel = Progression.model
 	v.add_child(UiKit.label(I18n.t("Bosses (levels 5 and 10 of every region) can drop blueprint shards for a random tower. Each ad gives 1 shard for the tower you pick."), 16, UiKit.MUTED))
@@ -115,6 +116,8 @@ func _card(model: ProgressionModel, t: TowerDef) -> Control:
 		btns.add_child(ob)
 		return card
 	var ad_reason := model.ad_block_reason(t, _now())
+	if ad_reason == "" and not AdService.is_available():
+		ad_reason = I18n.t("Ads unavailable")
 	var ad := UiKit.button(I18n.f("Watch ad  +%d", model.campaign.ad_shards) if ad_reason == "" else ad_reason,
 		func() -> void: _watch_ad(t), Vector2(0, 48), "", "play")
 	ad.name = "Ad"
@@ -177,7 +180,23 @@ func _item_card(model: ProgressionModel, it: ConsumableDef) -> Control:
 func _watch_ad(t: TowerDef) -> void:
 	AdService.show_rewarded(func(ok: bool) -> void:
 		if ok and Progression.model.grant_ad_reward(t, _now()):
-			_build.call_deferred())
+			_build.call_deferred()
+		elif not ok:
+			_flash(I18n.t("No ad available right now. Try again later.")))
+
+
+var _flash_label: Label
+var _v: VBoxContainer
+
+
+## Short notice under the header (an ad that failed, was blocked or is on cooldown).
+func _flash(text: String) -> void:
+	if not is_instance_valid(_flash_label):
+		_flash_label = UiKit.label("", 15, VisualPalette.ORANGE)
+		_flash_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_v.add_child(_flash_label)
+		_v.move_child(_flash_label, mini(3, _v.get_child_count() - 1))
+	_flash_label.text = text
 
 
 func on_back() -> void:

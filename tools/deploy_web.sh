@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Build the Web export and publish it to the `host-test` branch (GitHub Pages source).
+# Build the (single) Web export and publish it to the `host-test` branch (GitHub Pages source).
+# Same build as the CrazyGames upload; there the SDK is "disabled", so the game uses its own test ads.
 # The branch holds ONLY the built files and is replaced on every run (force push).
 # Usage (Git Bash, from the project root):  bash tools/deploy_web.sh
 #   GODOT=<path to Godot console exe> to override the default below.

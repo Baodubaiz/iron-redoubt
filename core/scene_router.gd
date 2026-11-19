@@ -34,6 +34,7 @@ var _fx_tween: Tween
 
 
 func _ready() -> void:
+	CrazyGamesSdk.init() # no-op outside the CrazyGames web build
 	_fx_layer = CanvasLayer.new()
 	_fx_layer.layer = 100
 	_fx_layer.process_mode = Node.PROCESS_MODE_ALWAYS
@@ -107,6 +108,26 @@ func play_level(level: LevelDef) -> void:
 	pending_is_lab = false
 	pending_new_tower = Progression.model.grant_level_start(level) # so the loadout screen can show it
 	_change(LOADOUT)
+
+
+## CrazyGames full launch asks that a new player lands straight in gameplay (2026-11-19): the very first
+## start of a fresh profile skips the menu and the loadout screen and opens level 1 with the owned towers.
+var first_run_done := false
+
+
+func quick_start(level: LevelDef) -> void:
+	first_run_done = true
+	pending_level = level
+	pending_challenge = null
+	pending_period = ""
+	pending_is_lab = false
+	pending_new_tower = Progression.model.grant_level_start(level)
+	var ids: Array[StringName] = []
+	for d in level.available_towers:
+		if Progression.model.profile.owns_tower(d.id) and ids.size() < 6:
+			ids.append(d.id)
+	pending_loadout = ids
+	_change(MATCH_SCENE)
 
 
 ## Called by the loadout screen's confirm button.

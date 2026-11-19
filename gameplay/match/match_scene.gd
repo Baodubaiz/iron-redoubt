@@ -54,6 +54,17 @@ func _ready() -> void:
 		else:
 			MatchSnapshot.refund_items_after(resume) # items spent in the wave being replayed come back
 		controller.waves.prep_started.connect(func(_i: int, _s: float) -> void: _checkpoint())
+	# CrazyGames SDK (no-op elsewhere): play / break signals and a celebration when a boss falls.
+	controller.paused_changed.connect(func(p: bool) -> void:
+		if p:
+			CrazyGamesSdk.gameplay_stop()
+		elif not controller.is_over():
+			CrazyGamesSdk.gameplay_start())
+	controller.enemy_killed.connect(func(e: Enemy) -> void:
+		if e.is_boss():
+			CrazyGamesSdk.happytime())
+	tree_exiting.connect(func() -> void: CrazyGamesSdk.gameplay_stop())
+	CrazyGamesSdk.gameplay_start()
 	placement = PlacementController.new()
 	placement.name = "Placement"
 	placement.controller = controller
@@ -116,6 +127,7 @@ func _process(delta: float) -> void:
 
 
 func _on_match_ended(_won: bool) -> void:
+	CrazyGamesSdk.gameplay_stop()
 	if _submitted:
 		return
 	_submitted = true

@@ -530,13 +530,15 @@ func _build_results(root: Control) -> Control:
 	v.add_child(_results_rewards)
 	_next_button = UiKit.button(I18n.t("Next level"), func() -> void:
 		if _next_level != null:
-			SceneRouter.play_level(_next_level), Vector2(0, 58), "PrimaryButton", "play")
+			var nl := _next_level
+			_after_break_ad(func() -> void: SceneRouter.play_level(nl)), Vector2(0, 58), "PrimaryButton", "play")
 	_next_button.visible = false
 	v.add_child(_next_button)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
 	v.add_child(row)
-	for it in [["Restart level", "restart", func() -> void: SceneRouter.restart_level()], ["Back", "exit", func() -> void: _exit()]]:
+	for it in [["Restart level", "restart", func() -> void: _after_break_ad(func() -> void: SceneRouter.restart_level())],
+			["Back", "exit", func() -> void: _after_break_ad(func() -> void: _exit())]]:
 		var b := UiKit.button(I18n.t(it[0]), it[2], Vector2(0, 52), "", it[1])
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.add_theme_font_size_override("font_size", 17)
@@ -547,6 +549,17 @@ func _build_results(root: Control) -> Control:
 func apply_insets(ins: Dictionary) -> void:
 	if _root != null:
 		ScreenLayout.apply_to_control(_root, ins)
+
+
+## Between matches only: a CrazyGames break ad (skipped by them while on cooldown), then go on.
+var _leaving := false
+
+
+func _after_break_ad(next: Callable) -> void:
+	if _leaving:
+		return
+	_leaving = true
+	AdService.show_midgame(next)
 
 
 func _exit() -> void:
