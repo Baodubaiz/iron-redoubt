@@ -287,12 +287,12 @@ func _towers() -> void:
 		_branch(&"rapid", "Rapid", "Highest DPS, still weak vs armor.", false, [
 			_tier("Rapid I", "Fire rate 2.6/s", 70, {"fire_rate": 2.6}),
 			_tier("Rapid II", "Fire rate 3.4/s", 130, {"fire_rate": 3.4}),
-			_tier("Rapid III", "Fire rate 4.5/s, damage 14", 240, {"fire_rate": 4.5, "damage": 14.0}),
+			_tier("Rapid III", "Fire rate 4.5/s, damage 6.3", 240, {"fire_rate": 4.5, "damage": 14.0}),
 		], _tier("Storm Array", "Every 20th shot fires a 6-shot burst at enemies in range", 400, {"burst_every": 20, "burst_count": 6})),
 		_branch(&"penetrator", "Penetrator", "Heavy armor-piercing rounds, lower fire rate.", false, [
-			_tier("Penetrator I", "Damage 20, armor pen 2", 70, {"damage": 20.0, "armor_pen": 2.0}),
-			_tier("Penetrator II", "Damage 30, pen 4, rate 1.6/s", 130, {"damage": 30.0, "armor_pen": 4.0, "fire_rate": 1.6}),
-			_tier("Penetrator III", "Damage 45, pen 6, range 180", 240, {"damage": 45.0, "armor_pen": 6.0, "attack_range": 180.0}),
+			_tier("Penetrator I", "Damage 9, armor pen 2", 70, {"damage": 20.0, "armor_pen": 2.0}),
+			_tier("Penetrator II", "Damage 14, pen 4, rate 1.6/s", 130, {"damage": 30.0, "armor_pen": 4.0, "fire_rate": 1.6}),
+			_tier("Penetrator III", "Damage 20, pen 6, range 180", 240, {"damage": 45.0, "armor_pen": 6.0, "attack_range": 180.0}),
 		], _tier("Railspike", "Shots pierce up to 3 enemies in a line", 400, {"pierce": 3})),
 		_branch(&"sensor", "Sensor", "Reveals stealth and marks targets for the team.", true, [
 			_tier("Sensor I", "Reveals stealth within 90", 70, {"reveal_radius": 90.0}),
@@ -310,22 +310,22 @@ func _towers() -> void:
 	nova.branches = [
 		_branch(&"cluster", "Cluster", "Bigger blasts and bomblets. Flak at tier 3.", false, [
 			_tier("Cluster I", "Splash radius 70", 120, {"splash_radius": 70.0}),
-			_tier("Cluster II", "+3 bomblets (10 dmg each)", 230, {"bomblets": 3, "bomblet_damage": 10.0}),
+			_tier("Cluster II", "+3 bomblets (4.5 dmg each)", 230, {"bomblets": 3, "bomblet_damage": 10.0}),
 			# Radius trimmed 85->75 (2026-11-15, user feedback: Nova "feels OP" even though its
 			# single-target DPS/credit sits exactly at the B-rank cap test. The cap formula only
 			# values damage against one target; Nova's real power is splash hitting many enemies at
 			# once, which the cap can't see. This is the actual lever for Nova's strength, not base DPS.
-			_tier("Cluster III", "Radius 75, damage 45, Flak: can target air", 420, {"splash_radius": 75.0, "damage": 45.0, "can_target_air": true}),
+			_tier("Cluster III", "Radius 75, damage 20, Flak: can target air", 420, {"splash_radius": 75.0, "damage": 45.0, "can_target_air": true}),
 		], _tier("Cascade", "Every 4th shell detonates again after 0.5 s", 700, {"echo_every": 4, "echo_delay": 0.5})),
 		_branch(&"incendiary", "Incendiary", "Burn ignores armor; burning enemies heal 50% less.", false, [
-			_tier("Incendiary I", "Burn 6/s for 3 s (ignores armor)", 120, {"burn_dps": 6.0, "burn_duration": 3.0}),
-			_tier("Incendiary II", "Burn 10/s", 230, {"burn_dps": 10.0}),
+			_tier("Incendiary I", "Burn 2.7/s for 3 s (ignores armor)", 120, {"burn_dps": 6.0, "burn_duration": 3.0}),
+			_tier("Incendiary II", "Burn 4.5/s", 230, {"burn_dps": 10.0}),
 			_tier("Incendiary III", "Leaves a fire patch (2 s, radius 40)", 420, {"fire_patch_duration": 2.0, "fire_patch_radius": 40.0}),
 		], _tier("Inferno", "Burning enemies explode on death (30 splash, no chain reactions)", 700, {"death_explosion": 30.0})),
 		_branch(&"siege", "Siege", "Shreds armor, long range, staggers.", true, [
 			_tier("Siege I", "Shred -2 armor per hit (stacks to -6)", 120, {"shred": 2.0, "shred_cap": 6.0}),
 			_tier("Siege II", "Range 220", 230, {"attack_range": 220.0}),
-			_tier("Siege III", "Damage 60, Stagger 0.3 s", 420, {"damage": 60.0, "stagger": 0.3}),
+			_tier("Siege III", "Damage 27, Stagger 0.3 s", 420, {"damage": 60.0, "stagger": 0.3}),
 		], _tier("Quake", "Every 4th shell stuns ground enemies 0.8 s (bosses: slow)", 700, {"stun_every": 4, "stun_duration": 0.8})),
 	]
 	nova.rarity = &"B"
@@ -338,9 +338,9 @@ func _towers() -> void:
 	lance.armor_pen = 6
 	lance.branches = [
 		_branch(&"overcharge", "Overcharge", "Massive single hits. Overkill on small enemies.", false, [
-			_tier("Overcharge I", "Damage 120", 160, {"damage": 120.0}),
-			_tier("Overcharge II", "Damage 170, pen 8", 300, {"damage": 170.0, "armor_pen": 8.0}),
-			_tier("Overcharge III", "Damage 240, +25% vs boss", 540, {"damage": 240.0, "boss_mult": 1.25}),
+			_tier("Overcharge I", "Damage 54", 160, {"damage": 120.0}),
+			_tier("Overcharge II", "Damage 77, pen 8", 300, {"damage": 170.0, "armor_pen": 8.0}),
+			_tier("Overcharge III", "Damage 108, +25% vs boss", 540, {"damage": 240.0, "boss_mult": 1.25}),
 		], _tier("Annihilator", "Every 4th shot deals x3 damage", 900, {"crit_every": 4, "crit_mult": 3.0})),
 		_branch(&"arc", "Arc", "Chains between enemies (60% damage per jump).", false, [
 			_tier("Arc I", "Chains to 2 more enemies", 160, {"chain": 2, "chain_falloff": 0.6}),
@@ -348,7 +348,7 @@ func _towers() -> void:
 			_tier("Arc III", "Chains to 4, x3 vs shields; Conductive: +1 jump between Chilled", 540, {"chain": 4, "chain_shield_mult": 3.0, "conductive": true, "conductive_bonus": 1}),
 		], _tier("Tesla Web", "Conductive +2 jumps; chain hits Stagger 0.4 s", 900, {"conductive_bonus": 2, "chain_stagger": 0.4})),
 		_branch(&"focus", "Focus", "Continuous beam that ramps up on one target.", true, [
-			_tier("Focus I", "Beam 40 dps, ramps to x3 over 3 s", 160, {"beam_dps": 40.0, "ramp_max": 3.0, "ramp_time": 3.0}),
+			_tier("Focus I", "Beam 18 dps, ramps to x3 over 3 s", 160, {"beam_dps": 40.0, "ramp_max": 3.0, "ramp_time": 3.0}),
 			_tier("Focus II", "Range 280", 300, {"attack_range": 280.0}),
 			_tier("Focus III", "Ramp up to x4", 540, {"ramp_max": 4.0}),
 		], _tier("Phase Beam", "The beam pierces every enemy along its line", 900, {"beam_pierce": true})),
@@ -400,10 +400,10 @@ func _towers() -> void:
 			_tier("Snare III", "Slow 50%", 200, {"trap_slow_pct": 0.50}),
 		], _tier("Stasis Net", "Traps hold enemies in place (bosses only slowed)", 340, {"trap_stop": true})),
 		_branch(&"livewire", "Live Wire", "Traps zap harder.", false, [
-			_tier("Live Wire I", "Trap damage 6/s", 60, {"trap_dps": 6.0}),
-			_tier("Live Wire II", "Trap damage 9/s", 110, {"trap_dps": 9.0}),
-			_tier("Live Wire III", "Trap damage 13/s, shell damage 14", 200, {"trap_dps": 13.0, "damage": 14.0}),
-		], _tier("Arc Mine", "Trap damage 18/s; zapped enemies take +10% damage", 340, {"trap_dps": 18.0, "trap_vuln": 1.1})),
+			_tier("Live Wire I", "Trap damage 2.7/s", 60, {"trap_dps": 6.0}),
+			_tier("Live Wire II", "Trap damage 4/s", 110, {"trap_dps": 9.0}),
+			_tier("Live Wire III", "Trap damage 5.9/s, shell damage 6.3", 200, {"trap_dps": 13.0, "damage": 14.0}),
+		], _tier("Arc Mine", "Trap damage 8.1/s; zapped enemies take +10% damage", 340, {"trap_dps": 18.0, "trap_vuln": 1.1})),
 		_branch(&"minefield", "Minefield", "Bigger traps, thrown more often.", true, [
 			_tier("Minefield I", "Trap radius 42", 60, {"trap_radius": 42.0}),
 			_tier("Minefield II", "Fire rate 0.7/s", 110, {"fire_rate": 0.7}),
@@ -433,9 +433,9 @@ func _towers() -> void:
 	venom.base_params = {"venom_dps": 2.2, "venom_stacks": 4, "venom_duration": 4.0}
 	venom.branches = [
 		_branch(&"potency", "Potency", "Stronger poison.", false, [
-			_tier("Potency I", "Poison 3.2/s per stack", 100, {"venom_dps": 3.2}),
-			_tier("Potency II", "Poison 4/s per stack", 190, {"venom_dps": 4.0}),
-			_tier("Potency III", "Poison 5/s per stack", 340, {"venom_dps": 5.0}),
+			_tier("Potency I", "Poison 1.6/s per stack", 100, {"venom_dps": 3.2}),
+			_tier("Potency II", "Poison 2/s per stack", 190, {"venom_dps": 4.0}),
+			_tier("Potency III", "Poison 2.5/s per stack", 340, {"venom_dps": 5.0}),
 		], _tier("Neurotoxin", "Up to 6 stacks; poisoned enemies are slowed 15%", 560, {"venom_stacks": 6, "venom_slow_pct": 0.15})),
 		_branch(&"corrosion", "Corrosion", "Poison eats armor.", false, [
 			_tier("Corrosion I", "-0.5 armor per stack", 100, {"venom_armor": 0.5}),
@@ -506,7 +506,7 @@ func _towers() -> void:
 		_branch(&"penetrator", "Penetrator", "Rounds pass through enemies.", false, [
 			_tier("Penetrator I", "Pierces 2 enemies, pen 6", 170, {"pierce": 2, "armor_pen": 6.0}),
 			_tier("Penetrator II", "Pierces 3", 320, {"pierce": 3}),
-			_tier("Penetrator III", "Damage 150", 560, {"damage": 150.0}),
+			_tier("Penetrator III", "Damage 68", 560, {"damage": 150.0}),
 		], _tier("Railgun", "Pierces 5, pen 10", 900, {"pierce": 5, "armor_pen": 10.0})),
 		_branch(&"spotter", "Spotter", "Marks targets for the team.", true, [
 			_tier("Spotter I", "Hits Mark: +10% damage taken (4 s)", 170, {"mark": 0.10, "mark_duration": 4.0}),
@@ -561,7 +561,7 @@ func _towers() -> void:
 			_tier("Tempest III", "Chains to 5", 700, {"chain": 5}),
 		], _tier("Thunderhead", "Chains to 6", 1100, {"chain": 6})),
 		_branch(&"overload", "Overload", "Heavier critical strikes.", false, [
-			_tier("Overload I", "Damage 75", 220, {"damage": 75.0}),
+			_tier("Overload I", "Damage 34", 220, {"damage": 75.0}),
 			_tier("Overload II", "Every 3rd shot is a crit", 400, {"crit_every": 3}),
 			_tier("Overload III", "Crits x3", 700, {"crit_mult": 3.0}),
 		], _tier("Superconductor", "Every 2nd shot is a crit", 1100, {"crit_every": 2})),

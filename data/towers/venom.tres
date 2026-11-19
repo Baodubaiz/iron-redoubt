@@ -17,7 +17,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_2xg0a"]
 script = ExtResource("2_4w8h6")
 display_name = "Potency I"
-description = "Poison 3.2/s per stack"
+description = "Poison 1.6/s per stack"
 cost = 57
 stats = {
 "venom_dps": 1.6
@@ -26,7 +26,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_tdamb"]
 script = ExtResource("2_4w8h6")
 display_name = "Potency II"
-description = "Poison 4/s per stack"
+description = "Poison 2/s per stack"
 cost = 115
 stats = {
 "venom_dps": 2.0
@@ -35,7 +35,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_e60kp"]
 script = ExtResource("2_4w8h6")
 display_name = "Potency III"
-description = "Poison 5/s per stack"
+description = "Poison 2.5/s per stack"
 cost = 215
 stats = {
 "venom_dps": 2.5

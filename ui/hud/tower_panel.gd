@@ -172,7 +172,7 @@ func _ready() -> void:
 		card.add_child(box)
 		var head := HBoxContainer.new()
 		box.add_child(head)
-		var t := UiKit.label("", 15, P.TEXT)
+		var t := UiKit.label("", 14, P.TEXT) # 14: "Overcharge" fits next to the pips
 		t.add_theme_font_override("font", UiKit.font("head", 1))
 		# Autowrap (UiKit.label's default) + max_lines_visible keeps the MINIMUM width small so a long
 		# translated branch name (e.g. Vietnamese) can't widen the card past its 176px slot; AUTOWRAP_OFF
@@ -191,12 +191,12 @@ func _ready() -> void:
 		d.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		_make_holdable(d)
 		box.add_child(d)
-		var pv := UiKit.label("", 13, P.GREEN)
+		var pv := UiKit.label("", 12, P.GREEN)
 		pv.add_theme_font_override("font", UiKit.font("ui")) # Chakra Petch has the arrow glyph
 		# Same fix as the branch/evo titles: AUTOWRAP_OFF reports the full untrimmed text as the
 		# minimum size regardless of text_overrun_behavior, which was widening this card (and the
 		# whole panel) again whenever a preview line like "Slow 20% -> 0%  Buff +10%" ran long.
-		pv.max_lines_visible = 1
+		pv.max_lines_visible = 2 # 2026-11-19: one line cut Vietnamese previews ("Sát thương 54 -> 76…")
 		pv.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		box.add_child(pv)
 		var idx := i
@@ -479,6 +479,7 @@ func refresh() -> void:
 		else:
 			_evo_button.text = I18n.f("Evolve %d", controller.evolution_cost(t)) if r == "" else r
 			_evo_button.disabled = r != ""
+			_evo_button.icon = UiKit.icon("star") if r == "" else null # reasons get the full width
 		_evo_card.add_theme_stylebox_override("panel", _card_style(Color(P.SURFACE, 0.9), Color(P.ORANGE, 0.7), 2))
 	else:
 		_evo_title.text = I18n.t("Evolution")
@@ -488,6 +489,7 @@ func refresh() -> void:
 			_evo_desc.text = I18n.t("Main branch to tier 3 (+1 secondary branch up to tier 2). All towers can evolve.")
 		_evo_button.text = I18n.t("Not available")
 		_evo_button.disabled = true
+		_evo_button.icon = null
 		_evo_card.add_theme_stylebox_override("panel", _card_style(Color(P.SURFACE, 0.45), P.SURFACE_LINE, 1))
 
 	var refund := controller.sell_refund(t)

@@ -133,6 +133,7 @@ func _region_tab(rg: StringName) -> Button:
 	var m := _margin(b, 16, 10)
 	var h := HBoxContainer.new()
 	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	h.add_theme_constant_override("separation", 14) # keep the 10/10 counter clear of the description
 	m.add_child(h)
 	var tv := VBoxContainer.new()
 	tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL

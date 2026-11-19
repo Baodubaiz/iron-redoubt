@@ -35,7 +35,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_d6bbe"]
 script = ExtResource("2_cfea6")
 display_name = "Rapid III"
-description = "Fire rate 4.5/s, damage 14"
+description = "Fire rate 4.5/s, damage 6.3"
 cost = 152
 stats = {
 "damage": 6.3,
@@ -62,7 +62,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_knkli"]
 script = ExtResource("2_cfea6")
 display_name = "Penetrator I"
-description = "Damage 20, armor pen 2"
+description = "Damage 9, armor pen 2"
 cost = 40
 stats = {
 "armor_pen": 2.0,
@@ -72,7 +72,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_rmr2b"]
 script = ExtResource("2_cfea6")
 display_name = "Penetrator II"
-description = "Damage 30, pen 4, rate 1.6/s"
+description = "Damage 14, pen 4, rate 1.6/s"
 cost = 78
 stats = {
 "armor_pen": 4.0,
@@ -83,7 +83,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_vt1mh"]
 script = ExtResource("2_cfea6")
 display_name = "Penetrator III"
-description = "Damage 45, pen 6, range 180"
+description = "Damage 20, pen 6, range 180"
 cost = 152
 stats = {
 "armor_pen": 6.0,

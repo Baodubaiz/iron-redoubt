@@ -26,7 +26,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_ll4b8"]
 script = ExtResource("2_4qf4c")
 display_name = "Cluster II"
-description = "+3 bomblets (10 dmg each)"
+description = "+3 bomblets (4.5 dmg each)"
 cost = 139
 stats = {
 "bomblet_damage": 4.5,
@@ -36,7 +36,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_ijinh"]
 script = ExtResource("2_4qf4c")
 display_name = "Cluster III"
-description = "Radius 75, damage 45, Flak: can target air"
+description = "Radius 75, damage 20, Flak: can target air"
 cost = 266
 stats = {
 "can_target_air": true,
@@ -64,7 +64,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_lvat3"]
 script = ExtResource("2_4qf4c")
 display_name = "Incendiary I"
-description = "Burn 6/s for 3 s (ignores armor)"
+description = "Burn 2.7/s for 3 s (ignores armor)"
 cost = 69
 stats = {
 "burn_dps": 2.7,
@@ -74,7 +74,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_ansm1"]
 script = ExtResource("2_4qf4c")
 display_name = "Incendiary II"
-description = "Burn 10/s"
+description = "Burn 4.5/s"
 cost = 139
 stats = {
 "burn_dps": 4.5
@@ -130,7 +130,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_hunlq"]
 script = ExtResource("2_4qf4c")
 display_name = "Siege III"
-description = "Damage 60, Stagger 0.3 s"
+description = "Damage 27, Stagger 0.3 s"
 cost = 266
 stats = {
 "damage": 27.0,

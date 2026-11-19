@@ -81,7 +81,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_b0cfp"]
 script = ExtResource("2_adjjk")
 display_name = "Penetrator III"
-description = "Damage 150"
+description = "Damage 68"
 cost = 354
 stats = {
 "damage": 67.5

@@ -17,7 +17,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_egbtk"]
 script = ExtResource("2_uj75d")
 display_name = "Overcharge I"
-description = "Damage 120"
+description = "Damage 54"
 cost = 92
 stats = {
 "damage": 54.0
@@ -26,7 +26,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_migl5"]
 script = ExtResource("2_uj75d")
 display_name = "Overcharge II"
-description = "Damage 170, pen 8"
+description = "Damage 77, pen 8"
 cost = 181
 stats = {
 "armor_pen": 8.0,
@@ -36,7 +36,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_15xbd"]
 script = ExtResource("2_uj75d")
 display_name = "Overcharge III"
-description = "Damage 240, +25% vs boss"
+description = "Damage 108, +25% vs boss"
 cost = 342
 stats = {
 "boss_mult": 1.25,
@@ -112,7 +112,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_y4m5l"]
 script = ExtResource("2_uj75d")
 display_name = "Focus I"
-description = "Beam 40 dps, ramps to x3 over 3 s"
+description = "Beam 18 dps, ramps to x3 over 3 s"
 cost = 92
 stats = {
 "beam_dps": 18.0,

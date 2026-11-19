@@ -60,7 +60,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_ti7kw"]
 script = ExtResource("2_7bxb6")
 display_name = "Overload I"
-description = "Damage 75"
+description = "Damage 34"
 cost = 126
 stats = {
 "damage": 33.75

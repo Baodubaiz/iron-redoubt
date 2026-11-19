@@ -51,7 +51,7 @@ evolution = SubResource("Resource_q437i")
 [sub_resource type="Resource" id="Resource_d4kv7"]
 script = ExtResource("2_scaed")
 display_name = "Arc Mine"
-description = "Trap damage 18/s; zapped enemies take +10% damage"
+description = "Trap damage 8.1/s; zapped enemies take +10% damage"
 cost = 235
 stats = {
 "trap_dps": 8.1,
@@ -61,7 +61,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_1it8l"]
 script = ExtResource("2_scaed")
 display_name = "Live Wire I"
-description = "Trap damage 6/s"
+description = "Trap damage 2.7/s"
 cost = 35
 stats = {
 "trap_dps": 2.7
@@ -70,7 +70,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_pfevb"]
 script = ExtResource("2_scaed")
 display_name = "Live Wire II"
-description = "Trap damage 9/s"
+description = "Trap damage 4/s"
 cost = 66
 stats = {
 "trap_dps": 4.05
@@ -79,7 +79,7 @@ stats = {
 [sub_resource type="Resource" id="Resource_48eeg"]
 script = ExtResource("2_scaed")
 display_name = "Live Wire III"
-description = "Trap damage 13/s, shell damage 14"
+description = "Trap damage 5.9/s, shell damage 6.3"
 cost = 127
 stats = {
 "damage": 6.3,

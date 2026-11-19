@@ -14,7 +14,7 @@ keys,vi
 +25 more starting currency (+50 total).,Thêm +25 tiền khởi đầu (tổng +50).
 +25 starting currency.,+25 tiền khởi đầu.
 +3 Base HP.,+3 HP căn cứ.
-+3 bomblets (10 dmg each),+3 bom con (mỗi quả 10 sát thương)
++3 bomblets (4.5 dmg each),"+3 bom con (mỗi quả 4,5 sát thương)"
 +4 every 10 s during waves,+4 mỗi 10 giây trong lúc có wave
 1 — First Contact,1 — Chạm Trán Đầu Tiên
 2 entrances,2 lối vào
@@ -31,8 +31,8 @@ Achievement: %s,Thành tựu: %s
 Achievements  %d/%d,Thành tựu  %d/%d
 Aegis,Khiên Chắn
 Aegis shields regenerate. Energy breaks them twice as fast.,Khiên của Khiên Chắn tự hồi. Năng lượng phá khiên nhanh gấp đôi.
-Air: no,Bắn không quân: không
-Air: yes,Bắn không quân: có
+Air: no,Bắn quái bay: không
+Air: yes,Bắn quái bay: có
 Already evolved,Đã tiến hoá
 Also +15% attack rate,Thêm +15% tốc độ tấn công
 Amplifier,Khuếch Đại
@@ -59,7 +59,7 @@ Beacon,Hải Đăng
 Beacon Evolution,Tiến Hoá Hải Đăng
 Beam,Tia
 Beam %d dps x%.1f,Tia %d dps x%.1f
-"Beam 40 dps, ramps to x3 over 3 s","Tia 40 dps, tăng dần tới x3 trong 3 giây"
+"Beam 18 dps, ramps to x3 over 3 s","Tia 18 dps, tăng dần tới x3 trong 3 giây"
 Bigger blasts and bomblets. Flak at tier 3.,Vụ nổ lớn hơn và bom con. Bậc 3 bắn được không quân.
 Blitz,Chớp Nhoáng
 Blocked terrain,Địa hình bị chặn
@@ -72,8 +72,8 @@ Buff: +%d%% dmg,Tăng: +%d%% sát thương
 Buffed: +%d%% dmg  +%d%% rate  +%d%% range,Được tăng: +%d%% ST  +%d%% tốc bắn  +%d%% tầm
 Build,Xây
 "Build, then start",Xây tháp rồi bắt đầu
-Burn 10/s,Đốt 10/giây
-Burn 6/s for 3 s (ignores armor),Đốt 6/giây trong 3 giây (bỏ qua giáp)
+Burn 4.5/s,"Đốt 4,5/giây"
+Burn 2.7/s for 3 s (ignores armor),"Đốt 2,7/giây trong 3 giây (bỏ qua giáp)"
 Burn ignores armor; burning enemies heal 50% less.,Đốt bỏ qua giáp; địch đang cháy được hồi máu ít hơn 50%.
 "Burning enemies explode on death (30 splash, no chain reactions)","Địch đang cháy phát nổ khi chết (30 sát thương lan, không nổ dây chuyền)"
 Buy  %d Cores,Mua  %d Lõi
@@ -149,13 +149,13 @@ Cryo III,Băng Giá III
 DEFENSE PROTOCOL,GIAO THỨC PHÒNG THỦ
 DISRUPTED %.1fs,BỊ VÔ HIỆU %.1fs
 Daily,Hằng ngày
-Damage 120,Sát thương 120
-"Damage 170, pen 8","Sát thương 170, xuyên 8"
-"Damage 20, armor pen 2","Sát thương 20, xuyên giáp 2"
-"Damage 240, +25% vs boss","Sát thương 240, +25% với trùm"
-"Damage 30, pen 4, rate 1.6/s","Sát thương 30, xuyên 4, tốc bắn 1,6/giây"
-"Damage 45, pen 6, range 180","Sát thương 45, xuyên 6, tầm 180"
-"Damage 60, Stagger 0.3 s","Sát thương 60, choáng nhẹ 0,3 giây"
+Damage 54,Sát thương 54
+"Damage 77, pen 8","Sát thương 77, xuyên 8"
+"Damage 9, armor pen 2","Sát thương 9, xuyên giáp 2"
+"Damage 108, +25% vs boss","Sát thương 108, +25% với trùm"
+"Damage 14, pen 4, rate 1.6/s","Sát thương 14, xuyên 4, tốc bắn 1,6/giây"
+"Damage 20, pen 6, range 180","Sát thương 20, xuyên 6, tầm 180"
+"Damage 27, Stagger 0.3 s","Sát thương 27, choáng nhẹ 0,3 giây"
 Dart,Phi Tiêu
 Day,Ngày
 Day/Night,Ngày/Đêm
@@ -189,7 +189,7 @@ Exterminator,Kẻ Diệt Trừ
 Field Scanner,Máy Quét Chiến Trường
 Fire rate 2.6/s,"Tốc bắn 2,6/giây"
 Fire rate 3.4/s,"Tốc bắn 3,4/giây"
-"Fire rate 4.5/s, damage 14","Tốc bắn 4,5/giây, sát thương 14"
+"Fire rate 4.5/s, damage 6.3","Tốc bắn 4,5/giây, sát thương 6,3"
 First clear,Thưởng lần đầu
 First clear!,Lần đầu hoàn thành!
 First clear: %d Cores,Lần đầu qua màn: %d Lõi
@@ -269,7 +269,7 @@ No selling,Không được bán
 No such branch,Không có nhánh này
 No tower,Không có tháp
 North,Bắc
-Not available,Chưa khả dụng
+Not available,Chưa mở
 Not enough currency,Không đủ tiền
 Nova,Pháo Nổ
 Nova Evolution,Tiến Hoá Pháo Nổ
@@ -302,7 +302,7 @@ Pulse Evolution,Tiến Hoá Xung Kích
 Pulse Purist,Tín Đồ Xung Kích
 Quake,Địa Chấn
 Quick Deploy,Triển Khai Nhanh
-"Radius 75, damage 45, Flak: can target air","Bán kính 75, sát thương 45, Phòng không: bắn được địch bay"
+"Radius 75, damage 20, Flak: can target air","Bán kính 75, sát thương 20, Phòng không: bắn được địch bay"
 Railspike,Đinh Ray
 Ramp up to x4,Tăng dần tới x4
 Range,Tầm
@@ -638,7 +638,7 @@ Untargetable and immune to all damage.,Không thể bị nhắm và miễn mọi
 Damage,Sát thương
 Fire rate,Tốc bắn
 Armor pen,Xuyên giáp
-Hits air,Bắn trên không
+Hits air,Bắn được quái bay
 Vs air,Với quái bay
 Vs boss,Với trùm
 Vs tag,Theo nhãn
@@ -700,7 +700,7 @@ On towers,Lên tháp
 Ignores armor,Bỏ qua giáp
 Always ignores armor,Luôn bỏ qua giáp
 "Ignores armor, unless the enemy specifically resists it","Bỏ qua giáp, trừ khi quái kháng riêng loại này"
-"A few enemies are built to resist poison specifically (e.g. machines) -- it does less to them even with 0 regular armor.","Vài loại quái được thiết kế để kháng riêng độc (vd máy móc) -- độc gây ít sát thương hơn lên chúng dù giáp thường = 0."
+A few enemies are built to resist poison specifically (e.g. machines) -- it does less to them even with 0 regular armor.,Vài loại quái được thiết kế để kháng riêng độc (vd máy móc) -- độc gây ít sát thương hơn lên chúng dù giáp thường = 0.
 At least %d%% passes armor,Luôn xuyên ít nhất %d%% qua giáp
 x%s vs shields,x%s với khiên
 Dealt by:,Gây bởi:
@@ -859,7 +859,7 @@ Railgun,Súng Điện Từ
 "Pierces 5, pen 10","Xuyên 5 quái, xuyên giáp 10"
 "Pierces 2 enemies, pen 6","Xuyên 2 quái, xuyên giáp 6"
 Pierces 3,Xuyên 3 quái
-Damage 150,Sát thương 150
+Damage 68,Sát thương 68
 Rounds pass through enemies.,Đạn bắn xuyên qua quái.
 Overwatch,Canh Gác
 Range 420,Tầm 420
@@ -884,13 +884,13 @@ Slow 50%,Làm chậm 50%
 Snare,Bẫy Chân
 "Stronger, longer-lasting slow.",Làm chậm mạnh và lâu hơn.
 Arc Mine,Mìn Hồ Quang
-Trap damage 18/s; zapped enemies take +10% damage,Bẫy gây 18/giây; quái bị giật nhận thêm 10% sát thương
+Trap damage 8.1/s; zapped enemies take +10% damage,"Bẫy gây 8,1/giây; quái bị giật nhận thêm 10% sát thương"
 Live Wire I,Dây Điện I
-Trap damage 6/s,Bẫy gây 6/giây
+Trap damage 2.7/s,"Bẫy gây 2,7/giây"
 Live Wire II,Dây Điện II
-Trap damage 9/s,Bẫy gây 9/giây
+Trap damage 4/s,Bẫy gây 4/giây
 Live Wire III,Dây Điện III
-"Trap damage 13/s, shell damage 14","Bẫy gây 13/giây, đạn gây 14"
+"Trap damage 5.9/s, shell damage 6.3","Bẫy gây 5,9/giây, đạn gây 6,3"
 Live Wire,Dây Điện
 Traps zap harder.,Bẫy giật mạnh hơn.
 Carpet,Rải Thảm
@@ -908,11 +908,11 @@ Lobs shock traps onto the lane: enemies on them are slowed and zapped. Ground on
 Neurotoxin,Độc Thần Kinh
 Up to 6 stacks; poisoned enemies are slowed 15%,Tối đa 6 tầng; quái trúng độc bị chậm 15%
 Potency I,Cường Độc I
-Poison 3.2/s per stack,Độc 3.2/giây mỗi tầng
+Poison 1.6/s per stack,"Độc 1,6/giây mỗi tầng"
 Potency II,Cường Độc II
-Poison 4/s per stack,Độc 4/giây mỗi tầng
+Poison 2/s per stack,Độc 2/giây mỗi tầng
 Potency III,Cường Độc III
-Poison 5/s per stack,Độc 5/giây mỗi tầng
+Poison 2.5/s per stack,"Độc 2,5/giây mỗi tầng"
 Potency,Cường Độc
 Stronger poison.,Độc mạnh hơn.
 Acid Bath,Bể Axit
@@ -987,7 +987,7 @@ Tempest,Bão Tố
 Lightning jumps further.,Sét nảy xa hơn.
 Superconductor,Siêu Dẫn
 Overload I,Quá Áp I
-Damage 75,Sát thương 75
+Damage 34,Sát thương 34
 Overload II,Quá Áp II
 Every 3rd shot is a crit,Cứ 3 phát có 1 phát chí mạng
 Overload III,Quá Áp III
@@ -1111,13 +1111,13 @@ Air,Bay
 Hide items,Ẩn vật phẩm
 Show items,Hiện vật phẩm
 Skips shields entirely,Bỏ qua khiên hoàn toàn
-"+%d innate armor pierce","+%d xuyên giáp sẵn có"
++%d innate armor pierce,+%d xuyên giáp sẵn có
 "Some heavily-built enemies resist Plasma specifically, even without regular armor.","Vài loại quái thân hình chắc nặng kháng riêng Plasma, dù giáp thường = 0."
 "A few enemies (e.g. goo) resist Energy specifically, even without regular armor.","Vài loại quái (vd chất nhầy) kháng riêng Điện, dù giáp thường = 0."
 Plasma,Plasma
 "Lots of HP, slow. Focus fire on it. Resists Plasma (Spotter) specifically.","Máu nhiều, chậm. Tập trung hoả lực vào nó. Kháng riêng Plasma (Thương Quang)."
 "Regenerates quickly. Poison and burst damage beat it. Resists Energy (Lance, Storm) specifically.","Hồi máu nhanh. Độc và dồn sát thương sẽ hạ được nó. Kháng riêng Điện (Lance, Storm)."
-"Support. Weak shots mark enemies: marked enemies take +8% damage from every tower. Hits air. Shots skip shields entirely (Plasma).","Hỗ trợ. Bắn yếu đánh dấu quái: quái bị đánh dấu nhận +8% sát thương từ mọi tháp. Bắn được quái bay. Đạn bỏ qua khiên hoàn toàn (Plasma)."
+Support. Weak shots mark enemies: marked enemies take +8% damage from every tower. Hits air. Shots skip shields entirely (Plasma).,Hỗ trợ. Bắn yếu đánh dấu quái: quái bị đánh dấu nhận +8% sát thương từ mọi tháp. Bắn được quái bay. Đạn bỏ qua khiên hoàn toàn (Plasma).
 "Stealthed until revealed. Beacon light or Sensor; splash still hits. -30% from plain Kinetic hits (Pulse, Sniper) -- a tower's own %-damage bonus (e.g. Beacon's buff) counters this, armor pierce does not.","Tàng hình cho tới khi bị lộ diện. Ánh sáng Hải Đăng hoặc Sensor; splash vẫn trúng. -30% với đòn Kinetic thường (Pulse, Sniper) -- bonus % sát thương riêng của tháp (vd buff Hải Đăng) khắc được, xuyên giáp thì không."
 "Regenerating shield. Energy (Lance, Arc) breaks it twice as fast. Periodically jams nearby towers' fire rate.","Khiên tự hồi. Năng lượng (Lance, Arc) phá nhanh gấp đôi. Định kỳ làm chậm tốc bắn xung quanh."
 "Flies over the lane. Pulse, Lance or Flak Nova; Sensor can ground it. Periodically shortens nearby towers' range.","Bay qua đường. Pulse, Lance hoặc Flak Nova; Sensor hạ được nó. Định kỳ giảm tầm bắn xung quanh."
@@ -1154,7 +1154,7 @@ Reactive armor,Giáp phản ứng
 Continue,Tiếp tục
 Abandon saved match,Bỏ trận đang lưu
 Level %d · Wave %d/%d,Level %d · Wave %d/%d
-Reset research  (+%d Cores),Đặt lại nghiên cứu  (+%d Cores)
+Reset research  (+%d Cores),Đặt lại nghiên cứu  (+%d Lõi)
 Tap again to reset all research,Chạm lần nữa để đặt lại toàn bộ nghiên cứu
 %d waves survived,Trụ được %d wave
 Tap the map: instant 150 explosive damage in the area you pick.,Chạm bản đồ: gây ngay 150 sát thương nổ ở vùng bạn chọn.
