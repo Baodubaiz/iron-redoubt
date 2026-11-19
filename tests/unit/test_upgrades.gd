@@ -51,12 +51,18 @@ func test_either_branch_can_become_main() -> void:
 func test_beacon_secondary_combines_slow_and_buff() -> void:
 	var m := make_lab(5000)
 	var b := m.try_build(real_tower("beacon"), Vector2(300, 400))
-	check(m.try_upgrade(b, 0), "Amplifier I (slow 0)")
-	near(b.pf("slow"), 0.0, 0.0001, "Amplifier alone removes slow")
+	check(m.try_upgrade(b, 0), "Amplifier I")
+	near(b.pf("slow"), 0.15, 0.0001, "Amplifier only trims the slow (-5%)")
 	check(m.try_upgrade(b, 1), "Cryo I as secondary")
 	var base_slow := float(b.def.base_params["slow"])
-	near(b.pf("slow"), base_slow + (0.0 - base_slow) + (float(b.def.branches[1].tiers[0].stats["slow"]) - base_slow), 0.0001,
-		"Amplifier's -slow and Cryo's +slow add up")
+	near(b.pf("slow"), base_slow + (float(b.def.branches[0].tiers[0].stats["slow"]) - base_slow)
+		+ (float(b.def.branches[1].tiers[0].stats["slow"]) - base_slow), 0.0001, "Amplifier's -slow and Cryo's +slow add up")
+	var c := m.try_build(real_tower("beacon"), Vector2(500, 400))
+	for i in range(3):
+		m.try_upgrade(c, 1) # Cryo III (main)
+	m.try_upgrade(c, 0)
+	m.try_upgrade(c, 0) # Amplifier II (secondary)
+	near(c.pf("slow"), 0.45, 0.0001, "maxed Cryo keeps 45% slow with Amplifier")
 	near(b.pf("amp_damage"), 0.10, 0.0001, "buff kept")
 
 
@@ -180,26 +186,30 @@ func test_storm_array_burst_fires_extra_shots() -> void:
 	eq(int(m.interaction_counts.get("storm_array", 0)), 1)
 
 
-## 2026-11-19: Focus is a firing mode only as the MAIN branch; as a secondary it ramps normal shots, and a
-## secondary Overcharge raises the beam.
+## 2026-11-19: Focus always fires a beam (main or secondary, any order) and the other branch's passives apply
+## to it: Overcharge damage (70% of the gain) and Annihilator crits.
 func test_lance_branches_work_together() -> void:
 	var m := make_lab(100000)
-	var oc := m.try_build(real_tower("lance"), Vector2(300, 420))
-	m.try_upgrade(oc, 0)
-	m.try_upgrade(oc, 0) # Overcharge II (main)
-	m.try_upgrade(oc, 2) # Focus I (secondary)
-	eq(oc.branch, 0)
-	near(oc.pf("beam_dps"), 0.0, 0.0001, "secondary Focus does not turn the tower into a beam")
-	check(oc.pf("ramp_max") > 1.0, "but lends its ramp")
-	var e := put(m, make_enemy_def(1.0e6, 0), 300)
-	run(m, 4.0)
-	check(oc.shots_fired > 0, "still fires shots")
-	check(oc.shot_ramp() > 1.5, "shots ramp on the same target")
-	check(e.hp < e.max_hp, "and hit")
-	var fo := m.try_build(real_tower("lance"), Vector2(600, 420))
+	var oc := m.try_build(real_tower("lance"), Vector2(600, 420))
+	m.try_upgrade(oc, 0) # Overcharge I first
+	m.try_upgrade(oc, 2) # then Focus I
+	check(oc.pf("beam_dps") > 0.0, "Focus bought second still beams")
+	var fo := m.try_build(real_tower("lance"), Vector2(900, 420))
 	m.try_upgrade(fo, 2)
-	m.try_upgrade(fo, 2) # Focus II (main)
 	var plain := fo.beam_dps()
-	m.try_upgrade(fo, 0) # Overcharge I (secondary)
-	check(fo.pf("beam_dps") > 0.0, "main Focus keeps the beam")
-	check(fo.beam_dps() > plain * 1.2, "secondary Overcharge raises the beam (%.1f -> %.1f)" % [plain, fo.beam_dps()])
+	m.try_upgrade(fo, 0) # Overcharge I as secondary
+	var gain := fo.damage / fo.def.damage - 1.0
+	near(fo.beam_dps(), plain * (1.0 + 0.7 * gain), 0.001, "beam gets 70% of Overcharge's damage gain")
+	# Annihilator (Overcharge evolution) on a beam: every 4th beat at fire rate jolts for x3
+	var an := m.try_build(real_tower("lance"), Vector2(300, 420))
+	for i in range(3):
+		m.try_upgrade(an, 0)
+	m.try_upgrade(an, 2)
+	an.waves_since_t3 = 2
+	m.unlocks.evolutions[&"lance"] = true
+	check(m.try_evolve(an), "Annihilator")
+	check(an.pf("beam_dps") > 0.0 and an.pf("crit_every") > 0.0, "beam + crit")
+	var e := put(m, make_enemy_def(1.0e7, 0), 300)
+	run(m, 12.0)
+	check(e.hp < e.max_hp, "beam hits")
+	check(m.interaction_counts.size() >= 0 and an._beam_shots >= 4, "the beam keeps a shot rhythm for Annihilator (%d beats)" % an._beam_shots)

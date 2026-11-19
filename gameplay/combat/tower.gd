@@ -72,9 +72,7 @@ var target: Enemy = null
 var aim_angle: float = -PI * 0.5
 var shots_fired: int = 0
 var beam_time: float = 0.0
-var beam_from_main := false ## Focus is the main branch: the tower fires a continuous beam
-var ramp_time_on_target := 0.0 ## normal shots: seconds spent on the current target (secondary Focus ramp)
-var _ramp_target: Enemy = null
+var _beam_shots := 0 ## beam towers: "virtual shots" at fire_rate, for every-Nth effects (Annihilator)
 var aura_timer: float = 0.0 ## Cryo freeze pulse
 var mint_timer: float = 0.0
 var mint_count: int = 0
@@ -179,7 +177,6 @@ func recompute() -> void:
 	var deltas := {}
 	var others := {}
 	var touched_neg := {}
-	beam_from_main = false
 	for b in range(mini(def.branches.size(), tiers.size())):
 		if tiers[b] <= 0:
 			continue
@@ -188,8 +185,6 @@ func recompute() -> void:
 			bp.merge(def.branches[b].tiers[i].stats, true)
 		if b == main_b and evolved and def.branches[b].evolution != null:
 			bp.merge(def.branches[b].evolution.stats, true)
-		if b == main_b and bp.has("beam_dps"):
-			beam_from_main = true
 		for k in bp:
 			var v: Variant = bp[k]
 			var bv: Variant = base.get(k)
@@ -208,10 +203,6 @@ func recompute() -> void:
 		if not touched_neg.has(k):
 			total = maxf(total, 0.0)
 		params[k] = int(round(total)) if (bv is int or (bv == null and _all_int(k, main_b))) else total
-	# Focus (beam) is a firing mode: only the MAIN branch can switch the tower to a beam. As a secondary
-	# branch it lends its ramp to normal shots on the same target instead (see shot_ramp()).
-	if not beam_from_main:
-		params.erase("beam_dps")
 	damage = float(params["damage"])
 	fire_rate = maxf(float(params["fire_rate"]), 0.01)
 	attack_range = float(params["attack_range"])
@@ -347,12 +338,12 @@ func step(dt: float, ctrl: MatchController) -> void:
 			beam_time = 0.0
 		beam_time += cdt
 		ctrl.beam_tick(self, target, cdt)
+		if _cooldown <= 0.0 and is_instance_valid(target) and target.is_alive():
+			_cooldown += 1.0 / eff_rate()
+			_beam_shots += 1
+			ctrl.beam_pulse(self, target, _beam_shots)
 		queue_redraw()
 		return
-	if _ramp_target != target:
-		_ramp_target = target
-		ramp_time_on_target = 0.0
-	ramp_time_on_target += cdt
 	if _cooldown <= 0.0:
 		_cooldown += 1.0 / eff_rate()
 		shots_fired += 1
@@ -366,19 +357,15 @@ func beam_ramp() -> float:
 	return 1.0 + (ramp_max - 1.0) * minf(beam_time / ramp_time, 1.0)
 
 
-## Beam damage per second before ramp: Focus beam scaled by any damage gain (secondary Overcharge) and buffs.
+## Share of a damage gain (Overcharge) that a Focus beam receives (2026-11-19, user: 70%).
+const BEAM_DAMAGE_SHARE := 0.7
+
+
+## Beam damage per second before ramp: Focus beam, raised by 70% of any damage gain from the other branch
+## (Overcharge), plus buffs. Focus alone: exactly beam_dps.
 func beam_dps() -> float:
-	var dmg_scale := damage / def.damage if def.damage > 0.0 else 1.0
-	return pf("beam_dps") * dmg_scale * (1.0 + amp_damage)
-
-
-## Secondary Focus on a shooting tower: shots ramp up on the same target, like the beam does.
-func shot_ramp() -> float:
-	if pf("ramp_max") <= 1.0 or pf("beam_dps") > 0.0:
-		return 1.0
-	var ramp_max := pf("ramp_max")
-	var ramp_t := maxf(pf("ramp_time"), 0.01)
-	return 1.0 + (ramp_max - 1.0) * minf(ramp_time_on_target / ramp_t, 1.0)
+	var gain := (damage / def.damage - 1.0) if def.damage > 0.0 else 0.0
+	return pf("beam_dps") * (1.0 + BEAM_DAMAGE_SHARE * gain) * (1.0 + amp_damage)
 
 
 ## Presentation hook (read-only): the enemy the continuous beam is on, or null.

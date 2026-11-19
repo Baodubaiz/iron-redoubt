@@ -363,8 +363,8 @@ func _towers() -> void:
 	beacon.attack_mode = TowerDef.AttackMode.AURA
 	beacon.base_params = {"slow": 0.2}
 	beacon.branches = [
-		_branch(&"amplifier", "Amplifier", "Buffs nearby towers (strongest Amplifier only). Loses slow.", false, [
-			_tier("Amplifier I", "Nearby towers +10% damage (slow removed)", 100, {"slow": 0.0, "amp_damage": 0.10}),
+		_branch(&"amplifier", "Amplifier", "Buffs nearby towers (strongest Amplifier only). Slightly weaker slow.", false, [
+			_tier("Amplifier I", "Nearby towers +10% damage (slow -5%)", 100, {"slow": 0.15, "amp_damage": 0.10}),
 			_tier("Amplifier II", "+15% damage", 190, {"amp_damage": 0.15}),
 			_tier("Amplifier III", "+20% damage, +10% range", 350, {"amp_damage": 0.20, "amp_range": 0.10}),
 		], _tier("Overclock Core", "Also +15% attack rate", 600, {"amp_rate": 0.15})),
@@ -373,8 +373,8 @@ func _towers() -> void:
 			_tier("Cryo II", "Slow 40%", 190, {"slow": 0.4}),
 			_tier("Cryo III", "Slow 50%; Freeze 1 s every 6 s (non-boss)", 350, {"slow": 0.5, "freeze_every": 6.0, "freeze_duration": 1.0}),
 		], _tier("Absolute Zero", "Frozen enemies take +50% explosive damage (Shatter)", 600, {"shatter": 0.5})),
-		_branch(&"relay", "Relay", "Economy. Diminishing returns per extra Relay. Loses slow.", true, [
-			_tier("Relay I", "+10 per cleared wave (slow removed, reveal kept)", 100, {"slow": 0.0, "wave_income": 10.0}),
+		_branch(&"relay", "Relay", "Economy. Diminishing returns per extra Relay. Slightly weaker slow.", true, [
+			_tier("Relay I", "+10 per cleared wave (slow -5%)", 100, {"slow": 0.15, "wave_income": 10.0}),
 			_tier("Relay II", "+16 per wave, aura 160", 190, {"wave_income": 16.0, "attack_range": 160.0}),
 			_tier("Relay III", "+24 per wave; kills in aura +1", 350, {"wave_income": 24.0, "bounty_bonus": 1}),
 		], _tier("Mint", "+4 every 10 s during waves", 600, {"mint_amount": 4, "mint_interval": 10.0})),

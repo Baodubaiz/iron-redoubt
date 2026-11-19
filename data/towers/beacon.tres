@@ -16,11 +16,11 @@ stats = {
 [sub_resource type="Resource" id="Resource_1dncb"]
 script = ExtResource("2_rvova")
 display_name = "Amplifier I"
-description = "Nearby towers +10% damage (slow removed)"
+description = "Nearby towers +10% damage (slow -5%)"
 cost = 57
 stats = {
 "amp_damage": 0.1,
-"slow": 0.0
+"slow": 0.15
 }
 
 [sub_resource type="Resource" id="Resource_vd3xx"]
@@ -46,7 +46,7 @@ stats = {
 script = ExtResource("1_38vpk")
 id = &"amplifier"
 display_name = "Amplifier"
-description = "Buffs nearby towers (strongest Amplifier only). Loses slow."
+description = "Buffs nearby towers (strongest Amplifier only). Slightly weaker slow."
 tiers = Array[ExtResource("2_rvova")]([SubResource("Resource_1dncb"), SubResource("Resource_vd3xx"), SubResource("Resource_556it")])
 evolution = SubResource("Resource_tiitw")
 
@@ -109,10 +109,10 @@ stats = {
 [sub_resource type="Resource" id="Resource_enlo5"]
 script = ExtResource("2_rvova")
 display_name = "Relay I"
-description = "+10 per cleared wave (slow removed, reveal kept)"
+description = "+10 per cleared wave (slow -5%)"
 cost = 57
 stats = {
-"slow": 0.0,
+"slow": 0.15,
 "wave_income": 10.0
 }
 
@@ -140,7 +140,7 @@ stats = {
 script = ExtResource("1_38vpk")
 id = &"relay"
 display_name = "Relay"
-description = "Economy. Diminishing returns per extra Relay. Loses slow."
+description = "Economy. Diminishing returns per extra Relay. Slightly weaker slow."
 tiers = Array[ExtResource("2_rvova")]([SubResource("Resource_enlo5"), SubResource("Resource_fhmx6"), SubResource("Resource_mvakf")])
 evolution = SubResource("Resource_fe3wa")
 requires_research = true

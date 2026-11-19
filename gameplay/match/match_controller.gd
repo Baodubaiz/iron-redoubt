@@ -314,7 +314,6 @@ func _on_enemy_reached_base(e: Enemy) -> void:
 ## Called by Tower when its cooldown allows a shot.
 func fire(t: Tower, target: Enemy) -> void:
 	var s := projectiles.spawn(t, target)
-	s.damage *= t.shot_ramp() # secondary Focus: shots ramp up on the same target
 	shot_fired.emit(t)
 	var n := t.shots_fired
 	if _every(t, "crit_every", n):
@@ -513,6 +512,18 @@ func _chain(t: Tower, start: Enemy, dmg: float, continuous: bool = false, fx: bo
 
 
 ## Focus beam: continuous damage that ramps on the same target. Phase Beam pierces the line.
+## Beam towers keep a "virtual shot" rhythm at their fire rate: every-Nth effects (Annihilator: every 4th
+## shot x3) become an extra jolt of (crit_mult - 1) x one shot's worth of beam damage (2026-11-19).
+func beam_pulse(t: Tower, target: Enemy, n: int) -> void:
+	if not _every(t, "crit_every", n):
+		return
+	var shot := t.beam_dps() * t.beam_ramp() / maxf(t.eff_rate(), 0.01)
+	var extra := shot * (maxf(t.pf("crit_mult"), 1.0) - 1.0)
+	if extra > 0.0:
+		damage_enemy(target, extra * _hit_mult(t, target), Damage.Type.ENERGY, t.armor_pen)
+		projectiles.ring(target.position, 14.0, t.def.color, 0.25)
+
+
 const BEAM_CHAIN_FX_EVERY := 0.4 ## s between drawn arcs / Stagger procs of a chaining beam
 var _beam_chain_fx := {} ## tower uid -> match_time of the next drawn arc
 

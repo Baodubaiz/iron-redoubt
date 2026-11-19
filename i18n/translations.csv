@@ -7,7 +7,6 @@ keys,vi
 +%d early bonus,+%d thưởng gọi sớm
 +%d%% range,+%d%% tầm
 +%d%% rate,+%d%% tốc bắn
-"+10 per cleared wave (slow removed, reveal kept)","+10 mỗi wave hoàn thành (bỏ làm chậm, vẫn lộ diện)"
 +15% damage,+15% sát thương
 "+16 per wave, aura 160","+16 mỗi wave, hào quang 160"
 "+20% damage, +10% range","+20% sát thương, +10% tầm"
@@ -71,7 +70,6 @@ Brute,Cự Binh
 Buff,Tăng
 Buff: +%d%% dmg,Tăng: +%d%% sát thương
 Buffed: +%d%% dmg  +%d%% rate  +%d%% range,Được tăng: +%d%% ST  +%d%% tốc bắn  +%d%% tầm
-Buffs nearby towers (strongest Amplifier only). Loses slow.,Tăng sức mạnh tháp gần đó (chỉ lấy Khuếch Đại mạnh nhất). Mất khả năng làm chậm.
 Build,Xây
 "Build, then start",Xây tháp rồi bắt đầu
 Burn 10/s,Đốt 10/giây
@@ -172,7 +170,6 @@ Drone,Drone
 EMP incoming!,EMP sắp phát!
 Eager,Nôn Nóng
 Early-start bonus +25%.,Thưởng gọi sớm +25%.
-Economy. Diminishing returns per extra Relay. Loses slow.,Kinh tế. Hiệu quả giảm dần với mỗi Trạm Tiếp Vận thêm. Mất khả năng làm chậm.
 Elite mixes and three gate switches. Hedge your coverage.,Đội hình tinh nhuệ và ba lần đổi cổng. Hãy phủ tầm cả hai đường.
 Enemies: %d,Địch: %d
 Energy complex. Gates reroute the enemy mid-battle.,Tổ hợp năng lượng. Cổng đổi đường địch giữa trận.
@@ -257,7 +254,6 @@ Monolith on a Thread,Treo Sợi Tóc
 Monolith: EMP phase — spread out!,Cự Thạch: pha EMP — hãy dàn tháp ra!
 Music,Nhạc nền
 NEW,MỚI
-Nearby towers +10% damage (slow removed),Tháp gần đó +10% sát thương (bỏ làm chậm)
 Need %d more,Thiếu %d
 Need %d more Cores,Thiếu %d Lõi
 New,Mới
@@ -1165,3 +1161,7 @@ Tap the map: instant 150 explosive damage in the area you pick.,Chạm bản đ�
 Tap the map: freezes regular enemies in the area for 2 s (bosses only stagger).,Chạm bản đồ: đóng băng quái thường trong vùng 2 giây (trùm chỉ khựng lại).
 Tap the map to use %s,Chạm bản đồ để dùng %s
 Replace saved match (level %d)? Tap again,Thay trận đang lưu (màn %d)? Chạm lần nữa
+Buffs nearby towers (strongest Amplifier only). Slightly weaker slow.,Tăng sức mạnh tháp gần đó (chỉ lấy Khuếch Đại mạnh nhất). Làm chậm yếu đi một chút.
+Nearby towers +10% damage (slow -5%),Tháp gần đó +10% sát thương (làm chậm -5%)
+Economy. Diminishing returns per extra Relay. Slightly weaker slow.,Kinh tế. Hiệu quả giảm dần với mỗi Trạm Tiếp Vận thêm. Làm chậm yếu đi một chút.
++10 per cleared wave (slow -5%),+10 mỗi wave hoàn thành (làm chậm -5%)
