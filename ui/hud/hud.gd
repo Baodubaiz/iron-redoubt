@@ -73,9 +73,16 @@ var _next_level: LevelDef
 var _rays: Control
 
 
+## Whole-HUD scale on small screens (ScreenLayout.ui_scale): the layer is drawn k times larger and its root
+## is made k times smaller, so the same layout fits and every text is k times bigger.
+var ui_scale := 1.0
+
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 10
+	ui_scale = ScreenLayout.ui_scale()
+	scale = Vector2(ui_scale, ui_scale)
 	var root := Control.new()
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -547,8 +554,16 @@ func _build_results(root: Control) -> Control:
 
 
 func apply_insets(ins: Dictionary) -> void:
-	if _root != null:
-		ScreenLayout.apply_to_control(_root, ins)
+	if _root == null:
+		return
+	ui_scale = ScreenLayout.ui_scale()
+	scale = Vector2(ui_scale, ui_scale)
+	var k := ui_scale
+	var vis := _root.get_viewport().get_visible_rect().size
+	_root.offset_left = ins["left"] / k
+	_root.offset_top = ins["top"] / k
+	_root.offset_right = -(vis.x - vis.x / k) - ins["right"] / k
+	_root.offset_bottom = -(vis.y - vis.y / k) - ins["bottom"] / k
 
 
 ## Between matches only: a CrazyGames break ad (skipped by them while on cooldown), then go on.
@@ -733,7 +748,7 @@ func _refresh_wave_controls() -> void:
 			_map_label.text = txt
 	match controller.state:
 		MatchController.State.WAITING_FIRST_WAVE:
-			_status_chip.visible = true
+			_status_chip.visible = ui_scale <= 1.05 # small screens: the Start button alone (no room)
 			_status_icon.texture = UiKit.icon("research") if wave_preview else UiKit.icon("clock")
 			_status_label.text = I18n.t("Build, then start")
 			_next_wave_note()
@@ -809,7 +824,7 @@ func _on_ghost_changed(world_pos: Vector2, visible_now: bool, valid: bool) -> vo
 	_confirm_box.visible = show
 	_confirm_ok.disabled = not valid
 	if show:
-		var screen := controller.get_global_transform_with_canvas() * world_pos
+		var screen := controller.get_global_transform_with_canvas() * world_pos / ui_scale
 		var size := Vector2(218, 52)
 		var pos := screen + Vector2(-size.x * 0.5, 34)
 		var area := _root.get_global_rect()
@@ -964,7 +979,7 @@ func _floater(world_pos: Vector2, text: String, col: Color) -> void:
 	l.add_theme_color_override("font_outline_color", Color(P.BG_DEEP, 0.9))
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_floaters.add_child(l)
-	var screen := controller.get_global_transform_with_canvas() * world_pos
+	var screen := controller.get_global_transform_with_canvas() * world_pos / ui_scale
 	l.global_position = screen + Vector2(-20, -40)
 	var tw := l.create_tween().set_parallel(true)
 	tw.tween_property(l, "position:y", l.position.y - 36.0, 0.9).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)

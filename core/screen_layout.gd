@@ -65,3 +65,19 @@ static func apply_to_control(c: Control, ins: Dictionary) -> void:
 	c.offset_top = ins["top"]
 	c.offset_right = -ins["right"]
 	c.offset_bottom = -ins["bottom"]
+
+
+## Small screens (2026-11-19, CrazyGames readability: 800x450 mobile, 821x462 desktop iframes). The game is laid
+## out for 1280x720 and scaled to the window; below ~0.8 of that, small text gets too tiny. Returns how much to
+## enlarge the in-match HUD / small menu text (1.0 = normal, up to 1.3).
+static func ui_scale() -> float:
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null or tree.root == null:
+		return 1.0
+	var px := Vector2(DisplayServer.window_get_size()) if DisplayServer.get_name() != "headless" else Vector2(1280, 720)
+	if tree.root.has_meta("ui_scale_test_px"): # tests / capture tool
+		px = tree.root.get_meta("ui_scale_test_px")
+	var fit := minf(px.x / 1280.0, px.y / 720.0)
+	if fit <= 0.0 or fit >= 0.8:
+		return 1.0
+	return clampf(0.8 / fit, 1.0, 1.3)

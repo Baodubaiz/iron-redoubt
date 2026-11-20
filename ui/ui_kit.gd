@@ -244,10 +244,21 @@ static func screen(root: Control, backdrop_mode: int = MenuBackdrop.Mode.AMBIENT
 	return v
 
 
+## Off while a match is on screen (its HUD is scaled as a whole instead).
+static var grow_small_text := true
+
+
+## Font size adjusted for small screens: body text (<= 18) grows with ScreenLayout.ui_scale().
+static func fs(size: int) -> int:
+	if not grow_small_text or size > 18:
+		return size
+	return int(round(size * ScreenLayout.ui_scale()))
+
+
 static func label(text: String, size: int = 20, color: Color = TEXT) -> Label:
 	var l := Label.new()
 	l.text = text
-	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_font_size_override("font_size", fs(size))
 	l.add_theme_color_override("font_color", color)
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	return l

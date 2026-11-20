@@ -113,7 +113,7 @@ func _add_reset_button(v: VBoxContainer) -> void:
 	var b := UiKit.button(I18n.f("Reset research  (+%d Cores)", refund), func() -> void: pass, Vector2(0, 48), "", "lock")
 	b.name = "ResetResearch"
 	b.disabled = model.profile.data["research"].is_empty()
-	b.add_theme_font_size_override("font_size", 15)
+	b.add_theme_font_size_override("font_size", UiKit.fs(15))
 	var armed := [false]
 	b.pressed.connect(func() -> void:
 		if not armed[0]:
@@ -204,7 +204,7 @@ func _build_tower_filters(v: VBoxContainer) -> void:
 		b.toggle_mode = true
 		b.button_group = tg
 		b.button_pressed = _rank_filter == rk
-		b.add_theme_font_size_override("font_size", 14)
+		b.add_theme_font_size_override("font_size", UiKit.fs(14))
 		row.add_child(b)
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -216,7 +216,7 @@ func _build_tower_filters(v: VBoxContainer) -> void:
 	inc.name = "Filter_incomplete"
 	inc.toggle_mode = true
 	inc.button_pressed = _only_incomplete
-	inc.add_theme_font_size_override("font_size", 14)
+	inc.add_theme_font_size_override("font_size", UiKit.fs(14))
 	row.add_child(inc)
 
 
@@ -329,7 +329,7 @@ func _item_card(r: ResearchDef, reopen_tower: StringName) -> Control:
 	elif owned:
 		b.add_theme_color_override("icon_disabled_color", VisualPalette.GREEN)
 	b.disabled = reason != ""
-	b.add_theme_font_size_override("font_size", 15)
+	b.add_theme_font_size_override("font_size", UiKit.fs(15))
 	cv.add_child(b)
 	return card
 

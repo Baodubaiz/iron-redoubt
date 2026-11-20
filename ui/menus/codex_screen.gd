@@ -112,7 +112,7 @@ func _ready() -> void:
 		b.toggle_mode = true
 		b.button_group = tg
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.add_theme_font_size_override("font_size", 15)
+		b.add_theme_font_size_override("font_size", UiKit.fs(15))
 		b.clip_text = true
 		tabs.add_child(b)
 		_tabs[t[0]] = b
@@ -202,7 +202,7 @@ func _build_filters() -> void:
 			b.toggle_mode = true
 			b.button_group = tg
 			b.button_pressed = _tower_rank == rk
-			b.add_theme_font_size_override("font_size", 13)
+			b.add_theme_font_size_override("font_size", UiKit.fs(13))
 			_filters.add_child(b)
 	elif _tab == "enemies":
 		var tg := ButtonGroup.new()
@@ -216,7 +216,7 @@ func _build_filters() -> void:
 			b.toggle_mode = true
 			b.button_group = tg
 			b.button_pressed = _enemy_trait == tr[0]
-			b.add_theme_font_size_override("font_size", 13)
+			b.add_theme_font_size_override("font_size", UiKit.fs(13))
 			_filters.add_child(b)
 		var spacer := Control.new()
 		spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -228,7 +228,7 @@ func _build_filters() -> void:
 		unseen.name = "Filter_unseen"
 		unseen.toggle_mode = true
 		unseen.button_pressed = _enemy_unseen_only
-		unseen.add_theme_font_size_override("font_size", 13)
+		unseen.add_theme_font_size_override("font_size", UiKit.fs(13))
 		_filters.add_child(unseen)
 
 

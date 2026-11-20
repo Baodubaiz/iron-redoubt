@@ -94,6 +94,23 @@ static func when_ready(cb: Callable) -> void:
 # Calls go through a try/catch in JS so a disabled module ("Progress Save" not selected at submission) or a
 # size error returns a failure instead of an engine error.
 
+## On a CrazyGames page (or the localhost test page)? Known before the SDK finishes starting.
+static func on_crazygames_host() -> bool:
+	if not is_target():
+		return false
+	var host := str(JavaScriptBridge.eval("window.location.hostname", true))
+	return host == "crazygames.com" or host.ends_with(".crazygames.com") or host == "localhost" or host == "127.0.0.1"
+
+
+## The player's locale: SDK user.systemInfo.locale once the SDK is up, else the browser language. "" = unknown.
+static func locale() -> String:
+	if not is_target():
+		return ""
+	var js := "(function(){try{var s=window.CrazyGames.SDK.user.systemInfo;if(s&&s.locale)return String(s.locale);}catch(e){}"
+	js += "return String(navigator.language||'');})()"
+	return str(JavaScriptBridge.eval(js, true))
+
+
 ## Reads `key`. {ok, value: String ("" when absent), error}
 static func data_get(key: String) -> Dictionary:
 	if not is_active():

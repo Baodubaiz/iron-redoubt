@@ -16,6 +16,8 @@ func _initialize() -> void:
 			_out = a.substr(6)
 		elif a.begins_with("--lang="):
 			_lang = a.substr(7)
+		elif a.begins_with("--ui-scale="):
+			root.content_scale_factor = float(a.substr(11))
 	DirAccess.make_dir_recursive_absolute(_out)
 
 

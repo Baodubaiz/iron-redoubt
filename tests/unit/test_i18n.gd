@@ -143,3 +143,15 @@ func test_sharp_graphics_setting_round_trip() -> void:
 	t.load_from(path)
 	eq(t.sharp_graphics, true, "saved and loaded")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+
+
+## CrazyGames: an untouched language setting follows the player's locale (vi -> Vietnamese, else English).
+func test_platform_locale_only_drives_auto() -> void:
+	eq(I18n.from_locale("vi-VN"), "vi")
+	eq(I18n.from_locale("en-US"), "en")
+	eq(I18n.from_locale("fr-FR"), "en", "unsupported -> English")
+	I18n.platform_locale = "vi"
+	eq(I18n.resolve("auto"), "vi", "CrazyGames + Vietnamese locale")
+	eq(I18n.resolve("en"), "en", "a player's own pick always wins")
+	I18n.platform_locale = ""
+	eq(I18n.resolve("auto"), "en", "everywhere else: English")

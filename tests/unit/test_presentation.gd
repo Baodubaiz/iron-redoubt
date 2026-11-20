@@ -113,3 +113,17 @@ func test_camera_zoom_glides_and_pan_coasts() -> void:
 	eq(cam._vel, Vector2.ZERO, "and comes to rest")
 	cam.world.free()
 	cam.free()
+
+
+## Small CrazyGames iframes (800x450, 821x462) enlarge the HUD / small text; 1280x720 and up stay as designed.
+func test_ui_scale_for_small_windows() -> void:
+	var root := (Engine.get_main_loop() as SceneTree).root
+	root.set_meta("ui_scale_test_px", Vector2(800, 450))
+	near(ScreenLayout.ui_scale(), 1.28, 0.01, "800x450")
+	root.set_meta("ui_scale_test_px", Vector2(907, 510))
+	check(ScreenLayout.ui_scale() > 1.1, "907x510 grows a little")
+	root.set_meta("ui_scale_test_px", Vector2(1280, 720))
+	eq(ScreenLayout.ui_scale(), 1.0, "design size unchanged")
+	root.set_meta("ui_scale_test_px", Vector2(1920, 1080))
+	eq(ScreenLayout.ui_scale(), 1.0, "big screens unchanged")
+	root.remove_meta("ui_scale_test_px")

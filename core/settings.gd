@@ -10,7 +10,21 @@ var data := GameSettings.new()
 
 func _ready() -> void:
 	data.load_from(PATH)
+	if CrazyGamesSdk.on_crazygames_host(): # browser language right away, the SDK's locale once it is up
+		I18n.platform_locale = I18n.from_locale(CrazyGamesSdk.locale())
+		CrazyGamesSdk.when_ready(_on_sdk_locale)
 	apply()
+
+
+func _on_sdk_locale() -> void:
+	if not CrazyGamesSdk.is_active():
+		return
+	var lang := I18n.from_locale(CrazyGamesSdk.locale())
+	if lang == I18n.platform_locale:
+		return
+	I18n.platform_locale = lang
+	if data.language == "auto": # only when the player never picked a language themself
+		apply()
 
 
 func apply() -> void:

@@ -14,6 +14,8 @@ const P = preload("res://ui/style/visual_palette.gd")
 ## Priority picks a flying enemy first if one's in range, otherwise it's the same as First.
 const TARGET_MODES := [[TowerDef.TargetRule.FIRST, "First"], [TowerDef.TargetRule.STRONGEST, "Strongest"],
 	[TowerDef.TargetRule.DENSEST, "Cluster"], [TowerDef.TargetRule.AIR_FIRST, "Air"]]
+## Short button captions (the full name is the tooltip): 4 buttons share ~225 px.
+const TARGET_SHORT := {"First": "First", "Strongest": "Strong", "Cluster": "Group", "Air": "Air"}
 
 var controller: MatchController
 var placement: PlacementController
@@ -128,6 +130,11 @@ func _ready() -> void:
 	title_row.add_theme_constant_override("separation", 8)
 	tv.add_child(title_row)
 	_title = UiKit.title("", 21, P.CYAN, 2)
+	# long (Vietnamese) names on small screens: trim with "…" instead of widening the whole panel
+	_title.clip_text = true
+	_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_title.custom_minimum_size = Vector2(40, 0)
 	title_row.add_child(_title)
 	_rank_holder = HBoxContainer.new()
 	_rank_holder.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -154,12 +161,21 @@ func _ready() -> void:
 	info.add_child(_target_row)
 	var target_group := ButtonGroup.new()
 	for mode in TARGET_MODES:
-		var tb := UiKit.button(I18n.t(mode[1]), func() -> void: _on_target(mode[0]), Vector2(0, 28), "CardButton")
+		var tb := UiKit.button(I18n.t(TARGET_SHORT[mode[1]]), func() -> void: _on_target(mode[0]), Vector2(0, 28), "CardButton")
 		tb.toggle_mode = true
 		tb.button_group = target_group
 		tb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		tb.add_theme_font_size_override("font_size", 11)
 		_compact(tb)
+		tb.add_theme_font_size_override("font_size", 12) # after _compact (which sets 14): 4 words must fit
+		tb.add_theme_constant_override("h_separation", 0)
+		for st in ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]: # thin side padding
+			var sb := UiKit.theme().get_stylebox(st, "CardButton")
+			if sb != null:
+				sb = sb.duplicate()
+				sb.content_margin_left = 2
+				sb.content_margin_right = 2
+				tb.add_theme_stylebox_override(st, sb)
+		tb.tooltip_text = I18n.t(mode[1])
 		_target_row.add_child(tb)
 		_target_buttons.append(tb)
 
@@ -306,7 +322,8 @@ func _update_hold_tip(delta: float) -> void:
 	_hold_tip.visible = true
 	_hold_tip.reset_size()
 	var pos := label.get_global_rect().position + Vector2(0, -_hold_tip.size.y - 8)
-	var vp := get_viewport_rect().size
+	var hud_scale := maxf(get_canvas_layer_node().scale.x, 0.01) if get_canvas_layer_node() != null else 1.0
+	var vp := get_viewport_rect().size / hud_scale
 	pos.x = clampf(pos.x, 4.0, vp.x - _hold_tip.size.x - 4.0)
 	pos.y = maxf(pos.y, 4.0)
 	_hold_tip.global_position = pos
@@ -413,6 +430,7 @@ func refresh() -> void:
 	var d := t.def
 	var col := P.tower_color(d.id)
 	_title.text = I18n.t(d.display_name).to_upper()
+	_title.add_theme_font_size_override("font_size", 21 if _title.text.length() <= 8 else 16) # "THƯƠNG QUANG" fits
 	for c in _rank_holder.get_children():
 		c.queue_free()
 	_rank_holder.add_child(UiKit.rank_badge(d.rarity, 13))

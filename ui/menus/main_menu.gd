@@ -41,7 +41,7 @@ func _ready() -> void:
 	top.add_child(sp)
 	var lang := UiKit.button(I18n.resolve(Settings.data.language).to_upper(), _toggle_language, Vector2(104, 52), "GhostButton", "globe")
 	lang.name = "Language"
-	lang.add_theme_font_size_override("font_size", 18)
+	lang.add_theme_font_size_override("font_size", UiKit.fs(18))
 	top.add_child(lang)
 	var gear := UiKit.icon_button("gear", func() -> void: SceneRouter.to_settings(), Vector2(64, 52))
 	gear.name = "Settings"
@@ -93,7 +93,7 @@ func _ready() -> void:
 			MatchSnapshot.clear()
 			SceneRouter.to_menu(), Vector2(480, 40))
 		drop.name = "AbandonSaved"
-		drop.add_theme_font_size_override("font_size", 14)
+		drop.add_theme_font_size_override("font_size", UiKit.fs(14))
 		col.add_child(drop)
 	var nav := HBoxContainer.new()
 	nav.add_theme_constant_override("separation", 12)
@@ -111,7 +111,7 @@ func _ready() -> void:
 		b.name = it[0]
 		b.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
 		b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		b.add_theme_font_size_override("font_size", 16)
+		b.add_theme_font_size_override("font_size", UiKit.fs(16))
 		nav.add_child(b)
 		nav_buttons.append(b)
 

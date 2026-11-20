@@ -69,6 +69,8 @@ func _ready() -> void:
 	placement.name = "Placement"
 	placement.controller = controller
 	controller.add_child(placement) # drawn above towers/enemies, same world transform
+	UiKit.grow_small_text = false # the HUD scales as a whole on small screens (Hud.ui_scale)
+	tree_exiting.connect(func() -> void: UiKit.grow_small_text = true)
 	hud = Hud.new()
 	hud.controller = controller
 	hud.placement = placement
@@ -102,11 +104,12 @@ func _ready() -> void:
 ## Centres the 1280x720 world in the safe area and insets the HUD (notches, any aspect ratio).
 func _relayout() -> void:
 	var ins := ScreenLayout.insets(get_viewport())
-	_world_offset = ScreenLayout.world_offset(get_viewport().get_visible_rect().size, ins, Hud.PALETTE_W + 8.0)
 	var vis := get_viewport().get_visible_rect().size
 	# area the map may use: below the top bar, left of the tower palette, inside the safe area
-	var area := Rect2(ins["left"], ins["top"] + Hud.TOP_H,
-		vis.x - ins["left"] - ins["right"] - Hud.PALETTE_W - 8.0, vis.y - ins["top"] - ins["bottom"] - Hud.TOP_H)
+	var k := hud.ui_scale # the HUD is drawn k times larger on small screens
+	_world_offset = ScreenLayout.world_offset(vis, ins, (Hud.PALETTE_W + 8.0) * k)
+	var area := Rect2(ins["left"], ins["top"] + Hud.TOP_H * k,
+		vis.x - ins["left"] - ins["right"] - (Hud.PALETTE_W + 8.0) * k, vis.y - ins["top"] - ins["bottom"] - Hud.TOP_H * k)
 	camera.reset(_world_offset, area)
 	hud.apply_insets(ins)
 

@@ -16,11 +16,21 @@ static func f(fmt: String, args: Variant) -> String:
 
 
 ## English is the default language (2026-11-19, user: Vietnamese is the optional second language).
-## "auto" (the setting nobody has changed yet) = English, whatever the device language.
+## "auto" (the setting nobody has changed yet) = English, whatever the device language, EXCEPT on CrazyGames,
+## whose requirements say translated games must follow the player's locale from the SDK (systemInfo.locale)
+## and fall back to English: `platform_locale` is set from it there ("" elsewhere).
+static var platform_locale := ""
+
+
 static func resolve(setting: String) -> String:
 	if setting == "en" or setting == "vi":
 		return setting
-	return "en"
+	return platform_locale if platform_locale in ["en", "vi"] else "en"
+
+
+## "vi-VN" / "vi" -> "vi"; anything else -> "en" (the only two languages shipped).
+static func from_locale(locale: String) -> String:
+	return "vi" if locale.to_lower().begins_with("vi") else "en"
 
 
 static func apply(setting: String) -> void:

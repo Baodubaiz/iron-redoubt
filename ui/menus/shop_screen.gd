@@ -123,7 +123,7 @@ func _card(model: ProgressionModel, t: TowerDef) -> Control:
 	ad.name = "Ad"
 	ad.disabled = ad_reason != ""
 	ad.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	ad.add_theme_font_size_override("font_size", 15)
+	ad.add_theme_font_size_override("font_size", UiKit.fs(15))
 	btns.add_child(ad)
 	var price := model.campaign.core_price(t)
 	var buy := UiKit.button(I18n.f("Buy  %d Cores", price) if buy_reason == "" else buy_reason,
@@ -133,7 +133,7 @@ func _card(model: ProgressionModel, t: TowerDef) -> Control:
 	buy.name = "Buy"
 	buy.disabled = buy_reason != ""
 	buy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	buy.add_theme_font_size_override("font_size", 15)
+	buy.add_theme_font_size_override("font_size", UiKit.fs(15))
 	if buy_reason == "":
 		buy.add_theme_color_override("font_color", VisualPalette.ORANGE)
 		buy.add_theme_color_override("icon_normal_color", VisualPalette.ORANGE)
@@ -169,7 +169,7 @@ func _item_card(model: ProgressionModel, it: ConsumableDef) -> Control:
 		if Progression.model.buy_item(it):
 			_build.call_deferred(), Vector2(0, 48), "", "cores")
 	buy.disabled = model.profile.cores() < it.cost
-	buy.add_theme_font_size_override("font_size", 15)
+	buy.add_theme_font_size_override("font_size", UiKit.fs(15))
 	if not buy.disabled:
 		buy.add_theme_color_override("font_color", VisualPalette.ORANGE)
 		buy.add_theme_color_override("icon_normal_color", VisualPalette.ORANGE)
