@@ -182,7 +182,10 @@ func _watch_ad(t: TowerDef) -> void:
 		if ok and Progression.model.grant_ad_reward(t, _now()):
 			_build.call_deferred()
 		elif not ok:
-			_flash(I18n.t("No ad available right now. Try again later.")))
+			if not AdService.is_available(): # ads switched off (CrazyGames Basic Launch): show it on the buttons
+				_build.call_deferred()
+			else:
+				_flash(I18n.t("No ad available right now. Try again later.")))
 
 
 var _flash_label: Label

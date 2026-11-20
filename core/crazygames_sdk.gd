@@ -22,6 +22,8 @@ static var _ready_cbs: Array[Callable] = [] ## run once init() resolves (any env
 static var _site_muted := false
 static var _ad_muted := false
 static var _settings_cb: JavaScriptObject
+## Set once the SDK answers an ad request with "adsDisabled" (ads are off during a CrazyGames Basic Launch).
+static var ads_disabled := false
 
 
 ## True when the page carries the SDK script (web builds). Says nothing about where it runs: see is_active().
@@ -188,7 +190,10 @@ static func request_ad(kind: String, on_done: Callable) -> void:
 	var finished := JavaScriptBridge.create_callback(func(_a: Array) -> void:
 		_end_ad()
 		on_done.call(true))
-	var failed := JavaScriptBridge.create_callback(func(_a: Array) -> void:
+	var failed := JavaScriptBridge.create_callback(func(a: Array) -> void:
+		var err: Variant = a[0] if a.size() > 0 else null
+		if err is JavaScriptObject and str((err as JavaScriptObject).code) == "adsDisabled":
+			ads_disabled = true # Basic Launch: CrazyGames turns ads off -> stop offering them
 		_end_ad()
 		on_done.call(false))
 	cbs.adStarted = started

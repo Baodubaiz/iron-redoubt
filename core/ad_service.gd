@@ -30,7 +30,7 @@ static func is_test_mode() -> bool:
 static func is_available() -> bool:
 	match provider():
 		"test": return true
-		"crazygames": return CrazyGamesSdk.is_active()
+		"crazygames": return CrazyGamesSdk.is_active() and not CrazyGamesSdk.ads_disabled
 	return false
 
 
