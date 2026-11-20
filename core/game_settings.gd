@@ -8,6 +8,9 @@ var music_volume: float = 0.6 ## 0..1 linear
 var sfx_volume: float = 0.8 ## 0..1 linear
 var language: String = "auto" ## "auto" (= English, the default), "en" or "vi"
 var reduce_effects: bool = false ## fewer particles, no screen shake / flashes
+## Web builds only (2026-11-19 perf): false = render at the 1280x720 base and scale up to the screen (much
+## lighter on laptops / phones with big or high-DPI screens); true = render at full screen resolution (sharper).
+var sharp_graphics: bool = false
 
 
 func clamp_values() -> void:
@@ -25,6 +28,7 @@ func save(path: String) -> Error:
 	cf.set_value("audio", "sfx_volume", sfx_volume)
 	cf.set_value("ui", "language", language)
 	cf.set_value("ui", "reduce_effects", reduce_effects)
+	cf.set_value("ui", "sharp_graphics", sharp_graphics)
 	return cf.save(path)
 
 
@@ -39,6 +43,7 @@ func load_from(path: String) -> void:
 	sfx_volume = float(cf.get_value("audio", "sfx_volume", sfx_volume))
 	language = String(cf.get_value("ui", "language", language))
 	reduce_effects = bool(cf.get_value("ui", "reduce_effects", reduce_effects))
+	sharp_graphics = bool(cf.get_value("ui", "sharp_graphics", sharp_graphics))
 	clamp_values()
 
 

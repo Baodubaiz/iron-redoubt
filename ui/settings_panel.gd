@@ -39,6 +39,17 @@ func _ready() -> void:
 		Settings.data.reduce_effects = on
 		Settings.save())
 	v.add_child(fx)
+	if OS.has_feature("web"): # browser builds: sharper picture costs a lot of speed on big screens
+		var sharp := CheckButton.new()
+		sharp.text = I18n.t("Sharp graphics (slower)")
+		sharp.tooltip_text = I18n.t("Draws at your screen's full resolution. Turn off if the game feels slow.")
+		sharp.button_pressed = s.sharp_graphics
+		sharp.custom_minimum_size = Vector2(230, 56)
+		sharp.add_theme_font_size_override("font_size", 20)
+		sharp.toggled.connect(func(on: bool) -> void:
+			Settings.data.sharp_graphics = on
+			Settings.save())
+		v.add_child(sharp)
 	if show_language:
 		_language_row(v)
 	v.add_child(UiKit.label(I18n.t("Use the x1/x2 button in a match to change speed. Targeting is automatic."), 14, UiKit.MUTED))

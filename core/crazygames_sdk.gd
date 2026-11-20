@@ -14,6 +14,14 @@ static var _ad_cbs: Array = [] ## JS callbacks must stay referenced until the SD
 static var _ad_running := false
 static var _playing := false ## last gameplay state asked for (replayed once the SDK is ready)
 static var _sent_playing := false
+static var _ready_cbs: Array[Callable] = [] ## run once init() resolves (any environment)
+## Audio is silenced (Master bus) while an ad plays OR while the CrazyGames site's mute setting is on.
+## https://docs.crazygames.com/sdk/game/ : game.settings.muteAudio has priority over in-game audio settings;
+## game.addSettingsChangeListener() reports changes. The in-game Music / SFX settings drive their own buses,
+## so they can never re-enable sound while the site mutes it.
+static var _site_muted := false
+static var _ad_muted := false
+static var _settings_cb: JavaScriptObject
 
 
 ## True when the page carries the SDK script (web builds). Says nothing about where it runs: see is_active().
@@ -60,10 +68,57 @@ static func init() -> void:
 		_environment = str(s.environment) if s != null else "none"
 		_ready = true
 		if is_active():
+			_watch_settings()
+		for cb in _ready_cbs:
+			cb.call()
+		_ready_cbs.clear()
+		if is_active():
 			_game_call("loadingStop")
 			if _playing: # a match started before the SDK finished starting
 				_send_gameplay(true))
 	sdk.init().then(_init_cb)
+
+
+## Runs `cb` once the SDK finished starting (right away if it already did). Web builds only.
+static func when_ready(cb: Callable) -> void:
+	if _ready:
+		cb.call()
+	elif is_target():
+		_ready_cbs.append(cb)
+
+
+# ---------------------------------------------------------------- Data module (progress save)
+# https://docs.crazygames.com/sdk/data/ : same API as localStorage (getItem / setItem / removeItem / clear),
+# synchronous, 1 MB max. Logged-in players: saved to their CrazyGames account and synced across devices;
+# guests: browser localStorage. The SDK swaps the data itself when the player logs in or out.
+# Calls go through a try/catch in JS so a disabled module ("Progress Save" not selected at submission) or a
+# size error returns a failure instead of an engine error.
+
+## Reads `key`. {ok, value: String ("" when absent), error}
+static func data_get(key: String) -> Dictionary:
+	if not is_active():
+		return {"ok": false, "value": "", "error": "sdk not active"}
+	var w: JavaScriptObject = JavaScriptBridge.get_interface("window")
+	w.__irKey = key
+	var r: Variant = JavaScriptBridge.eval("""(function(){try{var v=window.CrazyGames.SDK.data.getItem(window.__irKey);
+		return JSON.stringify({ok:true,value:(v===null||v===undefined)?"":String(v)});}
+		catch(e){return JSON.stringify({ok:false,value:"",error:String(e&&e.code||e)});}})()""", true)
+	var d: Variant = JSON.parse_string(str(r))
+	return d if d is Dictionary else {"ok": false, "value": "", "error": "bad reply"}
+
+
+## Writes `value` under `key`. {ok, error}
+static func data_set(key: String, value: String) -> Dictionary:
+	if not is_active():
+		return {"ok": false, "error": "sdk not active"}
+	var w: JavaScriptObject = JavaScriptBridge.get_interface("window")
+	w.__irKey = key
+	w.__irVal = value
+	var r: Variant = JavaScriptBridge.eval("""(function(){try{window.CrazyGames.SDK.data.setItem(window.__irKey,window.__irVal);
+		window.__irVal=null;return JSON.stringify({ok:true});}
+		catch(e){window.__irVal=null;return JSON.stringify({ok:false,error:String(e&&e.code||e)});}})()""", true)
+	var d: Variant = JSON.parse_string(str(r))
+	return d if d is Dictionary else {"ok": false, "error": "bad reply"}
 
 
 static func _game_call(fn: String) -> void:
@@ -111,7 +166,8 @@ static func request_ad(kind: String, on_done: Callable) -> void:
 	_ad_running = true
 	var cbs: JavaScriptObject = JavaScriptBridge.create_object("Object")
 	var started := JavaScriptBridge.create_callback(func(_a: Array) -> void:
-		AudioServer.set_bus_mute(0, true))
+		_ad_muted = true
+		_apply_mute())
 	var finished := JavaScriptBridge.create_callback(func(_a: Array) -> void:
 		_end_ad()
 		on_done.call(true))
@@ -127,4 +183,27 @@ static func request_ad(kind: String, on_done: Callable) -> void:
 
 static func _end_ad() -> void:
 	_ad_running = false
-	AudioServer.set_bus_mute(0, false)
+	_ad_muted = false
+	_apply_mute()
+
+
+static func _apply_mute() -> void:
+	AudioServer.set_bus_mute(0, _site_muted or _ad_muted)
+
+
+## Reads game.settings.muteAudio now and follows every later change from the site's sound button.
+static func _watch_settings() -> void:
+	var game: JavaScriptObject = _sdk().game
+	var st: JavaScriptObject = game.settings
+	_site_muted = st != null and bool(st.muteAudio)
+	_apply_mute()
+	_settings_cb = JavaScriptBridge.create_callback(func(args: Array) -> void:
+		var ns: Variant = args[0] if args.size() > 0 else null
+		if ns is JavaScriptObject:
+			_site_muted = bool((ns as JavaScriptObject).muteAudio)
+			_apply_mute())
+	game.addSettingsChangeListener(_settings_cb)
+
+
+static func site_muted() -> bool:
+	return _site_muted

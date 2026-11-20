@@ -130,3 +130,16 @@ func test_default_language_is_english() -> void:
 	eq(I18n.resolve(""), "en")
 	eq(I18n.resolve("vi"), "vi")
 	eq(GameSettings.new().language, "auto", "a fresh settings file starts on the default")
+
+
+## 2026-11-19: the web "sharp graphics" choice persists (default off = lighter rendering).
+func test_sharp_graphics_setting_round_trip() -> void:
+	var s := GameSettings.new()
+	eq(s.sharp_graphics, false, "off by default")
+	s.sharp_graphics = true
+	var path := "user://test_settings_sharp.cfg"
+	s.save(path)
+	var t := GameSettings.new()
+	t.load_from(path)
+	eq(t.sharp_graphics, true, "saved and loaded")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
