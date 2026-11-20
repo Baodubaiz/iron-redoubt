@@ -48,7 +48,7 @@ const WAVES := {
 	],
 	"level_21": [ # 4 — Coil Maze  (peak 70)
 		"plated*4@1.1~0.0, drone*8@0.55+4.0~0.1", # w1: 12 enemies, threat 21 (30% of peak)
-		"plated*4@1.1~0.0, glider*4@0.7+4.0~0.1", # w2: 8 enemies, threat 22 (31% of peak)
+		"plated*4@1.1~0.0, drone*8@0.7+4.0~0.1", # w2: 12 enemies, threat 21 (31% of peak)
 		"dart*11@0.38~0.1, drone*13@0.55+3.0~0.1", # w3: 24 enemies, threat 23 (32% of peak)
 		"drone*14@0.55~0.1, dart*11@0.38+4.0~0.1", # w4: 25 enemies, threat 24 (35% of peak)
 		"brute*1@1.5~0.0, glider*4@0.7+3.0~0.1, plated*3@1.1+7.0~0.1", # w5: 8 enemies, threat 27 (39% of peak)
@@ -91,8 +91,8 @@ const WAVES := {
 		"plated*18@2.42~0.0, swarmling*77@0.31+12.11~0.0, escort*10@2.88+19.37~0.0 | special", # w14: 105 enemies, threat 120 (100% of peak)
 	],
 	"level_23": [ # 7 — Step Down  (peak 120)
-		"glider*10@0.7~0.0, drone*15@0.55+4.0~0.1", # w1: 25 enemies, threat 36 (30% of peak)
-		"dart*14@0.38~0.1, glider*12@0.7+4.0~0.1", # w2: 26 enemies, threat 37 (30% of peak)
+		"drone*21@0.7~0.0, drone*15@0.55+4.0~0.1", # w1: 36 enemies, threat 36 (30% of peak)
+		"dart*14@0.38~0.1, drone*24@0.7+4.0~0.1", # w2: 38 enemies, threat 37 (30% of peak)
 		"brute*3@1.5~0.0, dart*15@0.38+4.0~0.1", # w3: 18 enemies, threat 38 (32% of peak)
 		"vanguard*3@2.0~0.0, escort*3@1.3+4.0~0.0", # w4: 6 enemies, threat 43 (34% of peak)
 		"vanguard*3@2.0~0.0, dart*7@0.38+3.0~0.1, brute*1@1.5+7.0~0.0", # w5: 11 enemies, threat 48 (37% of peak)
@@ -108,7 +108,7 @@ const WAVES := {
 	],
 	"level_24": [ # 8 — Grid Lock  (peak 120)
 		"swarmling*35@0.14~0.1, brute*3@1.5+4.0~0.0", # w1: 38 enemies, threat 37 (30% of peak)
-		"glider*8@0.7~0.1, plated*6@1.1+4.0~0.0", # w2: 14 enemies, threat 37 (30% of peak)
+		"drone*16@0.7~0.1, plated*6@1.1+4.0~0.0", # w2: 22 enemies, threat 36 (30% of peak)
 		"swarmling*37@0.14~0.1, glider*12@0.7+3.0~0.1", # w3: 49 enemies, threat 38 (31% of peak)
 		"disruptor*4@1.8~0.0, swarmling*61@0.14+5.0~0.1", # w4: 65 enemies, threat 41 (33% of peak)
 		"disruptor*2@1.8~0.0, plated*10@1.1+4.0~0.0", # w5: 12 enemies, threat 43 (36% of peak)
@@ -124,7 +124,7 @@ const WAVES := {
 		"escort*6@1.36~0.0, dart*22@0.4+4.7~0.0, vanguard*7@2.09+9.4~0.0, swarmling*3@1.36~0.0 | special", # w15: 38 enemies, threat 118 (100% of peak)
 	],
 	"level_25": [ # 9 — Arc Furnace  (peak 120)
-		"glider*9@0.7~0.0, plated*5@1.1+3.0~0.0", # w1: 14 enemies, threat 35 (30% of peak)
+		"drone*18@0.7~0.0, plated*5@1.1+3.0~0.0", # w1: 23 enemies, threat 35 (30% of peak)
 		"plated*7@1.1~0.0, brute*1@1.5+5.0~0.0", # w2: 8 enemies, threat 32 (30% of peak)
 		"glider*8@0.7~0.0, brute*2@1.5+3.0~0.0", # w3: 10 enemies, threat 33 (31% of peak)
 		"static_crawler*3@1.8~0.0, plated*6@1.1+4.0~0.0", # w4: 9 enemies, threat 42 (33% of peak)
@@ -141,7 +141,7 @@ const WAVES := {
 		"swarmling*67@0.13~0.0, brute*5@1.39+5.31~0.0, glider*26@0.65+7.43~0.0 | special", # w15: 98 enemies, threat 119 (100% of peak)
 	],
 	"level_26": [ # 10 — Dynamo  (peak 120)
-		"glider*10@0.7~0.0, dart*17@0.38+3.0~0.1", # w1: 27 enemies, threat 36 (30% of peak)
+		"drone*21@0.7~0.0, dart*17@0.38+3.0~0.1", # w1: 38 enemies, threat 36 (30% of peak)
 		"plated*7@1.1~0.0, swarmling*31@0.14+5.0~0.1", # w2: 38 enemies, threat 35 (30% of peak)
 		"brute*2@1.5~0.0, plated*6@1.1+4.0~0.0", # w3: 8 enemies, threat 37 (31% of peak)
 		"swarmling*51@0.14~0.1, dart*24@0.38+3.0~0.1", # w4: 75 enemies, threat 40 (33% of peak)
@@ -190,7 +190,7 @@ const WAVES := {
 	],
 	"level_27": [ # 13 — Marsh Fork  (peak 170)
 		"drone*21@0.55~0.0, plated*9@1.1+3.0~0.0#1", # w1: 30 enemies, threat 51 (30% of peak)
-		"dart*27@0.38~0.0#1, glider*13@0.7+4.0~0.0", # w2: 40 enemies, threat 51 (30% of peak)
+		"dart*27@0.38~0.0#1, drone*27@0.7+4.0~0.0", # w2: 54 enemies, threat 51 (30% of peak)
 		"drone*33@0.55~0.1, swarmling*59@0.14+5.0~0.1#1 | night", # w3: 92 enemies, threat 54 (32% of peak)
 		"sludge*8@1.4~0.0#1, drone*20@0.55+3.0~0.1", # w4: 28 enemies, threat 59 (34% of peak)
 		"sludge*7@1.4~0.0, swarmling*37@0.14+4.0~0.1#1, dart*18@0.38+8.0~0.1", # w5: 62 enemies, threat 63 (37% of peak)
@@ -205,8 +205,8 @@ const WAVES := {
 		"dart*38@0.35~0.0#1, plated*20@1.0+4.0~0.0, aegis*14@1.0+6.0~0.0#1 | special", # w14: 72 enemies, threat 170 (100% of peak)
 	],
 	"level_28": [ # 14 — Twin Canal  (peak 170)
-		"swarmling*58@0.14~0.1, glider*15@0.7+4.0~0.0", # w1: 73 enemies, threat 52 (30% of peak)
-		"glider*13@0.7~0.0, brute*3@1.5+4.0~0.0", # w2: 16 enemies, threat 52 (30% of peak)
+		"swarmling*58@0.14~0.1, drone*30@0.7+4.0~0.0", # w1: 88 enemies, threat 51 (30% of peak)
+		"drone*27@0.7~0.0, brute*3@1.5+4.0~0.0", # w2: 30 enemies, threat 52 (30% of peak)
 		"glider*14@0.7~0.0, brute*3@1.5+4.0~0.0#1 | night", # w3: 17 enemies, threat 54 (32% of peak)
 		"rallier*10@1.2~0.0#1, swarmling*57@0.14+3.0~0.1", # w4: 67 enemies, threat 57 (34% of peak)
 		"rallier*9@1.2~0.0, swarmling*32@0.14+5.0~0.1#1, phantom*7@0.9+8.0~0.0", # w5: 48 enemies, threat 63 (37% of peak)
@@ -238,7 +238,7 @@ const WAVES := {
 		"carrier*1@1.0~0.0, drone*110@1.0+5.0~0.0#1 | boss", # w15: 111 enemies, threat 170 (100% of peak)
 	],
 	"level_29": [ # 16 — Flood Plain  (peak 220)
-		"drone*30@0.55~0.1, glider*18@0.7+3.0~0.0", # w1: 48 enemies, threat 67 (30% of peak)
+		"drone*30@0.55~0.1, drone*36@0.7+3.0~0.0", # w1: 66 enemies, threat 66 (30% of peak)
 		"drone*38@0.55~0.1#1, dart*32@0.38+5.0~0.1", # w2: 70 enemies, threat 67 (30% of peak)
 		"drone*38@0.55~0.1, dart*33@0.38+5.0~0.1#1 | night", # w3: 71 enemies, threat 68 (31% of peak)
 		"cloaker*4@2.2~0.0#1, plated*16@1.1+3.0~0.0", # w4: 20 enemies, threat 72 (33% of peak)
@@ -272,7 +272,7 @@ const WAVES := {
 		"glider*39@1.76~0.0, swarmling*106@0.34+8.53~0.0#1, phantom*39@2.27+22.75~0.0 | special, night", # w15: 184 enemies, threat 220 (100% of peak)
 	],
 	"level_31": [ # 18 — Delta Bridge  (peak 220)
-		"plated*8@1.1~0.0, glider*19@0.7+3.0~0.0", # w1: 27 enemies, threat 66 (30% of peak)
+		"plated*8@1.1~0.0, drone*39@0.7+3.0~0.0", # w1: 47 enemies, threat 66 (30% of peak)
 		"plated*12@1.1~0.0#1, drone*27@0.55+4.0~0.1", # w2: 39 enemies, threat 67 (30% of peak)
 		"plated*11@1.1~0.0, drone*31@0.55+4.0~0.1#1 | night", # w3: 42 enemies, threat 68 (31% of peak)
 		"wraith*7@1.4~0.0#1, aegis*9@1.1+4.0~0.0", # w4: 16 enemies, threat 69 (33% of peak)
@@ -290,8 +290,8 @@ const WAVES := {
 		"rallier*26@1.15~0.0#1, dart*68@0.36+3.21~0.0, cloaker*14@2.1+7.5~0.0#1 | special", # w16: 108 enemies, threat 220 (100% of peak)
 	],
 	"level_32": [ # 19 — Mangrove  (peak 220)
-		"swarmling*59@0.14~0.1, glider*22@0.7+4.0~0.0", # w1: 81 enemies, threat 66 (30% of peak)
-		"drone*30@0.55~0.1#1, glider*18@0.7+4.0~0.0", # w2: 48 enemies, threat 67 (30% of peak)
+		"swarmling*59@0.14~0.1, drone*45@0.7+4.0~0.0", # w1: 104 enemies, threat 66 (30% of peak)
+		"drone*30@0.55~0.1#1, drone*36@0.7+4.0~0.0", # w2: 66 enemies, threat 66 (30% of peak)
 		"plated*12@1.1~0.0, drone*28@0.55+4.0~0.1#1 | night", # w3: 40 enemies, threat 68 (31% of peak)
 		"aegis*10@1.1~0.0#1, swarmling*63@0.14+4.0~0.1", # w4: 73 enemies, threat 71 (33% of peak)
 		"sludge*6@1.4~0.0, aegis*10@1.1+3.0~0.0#1", # w5: 16 enemies, threat 78 (35% of peak)
@@ -308,7 +308,7 @@ const WAVES := {
 		"swarmling*135@0.31~0.0#1, phantom*55@1.93+11.74~0.0, mender*9@5.57+16.44~0.0#1 | special", # w16: 199 enemies, threat 221 (100% of peak)
 	],
 	"level_33": [ # 20 — Leviathan  (peak 220)
-		"glider*19@0.7~0.0, drone*28@0.55+5.0~0.0#1", # w1: 47 enemies, threat 67 (30% of peak)
+		"drone*38@0.7~0.0, drone*28@0.55+5.0~0.0#1", # w1: 66 enemies, threat 66 (30% of peak)
 		"drone*32@0.55~0.1#1, plated*10@1.1+4.0~0.0", # w2: 42 enemies, threat 66 (30% of peak)
 		"drone*40@0.55~0.1, dart*32@0.38+4.0~0.1#1 | night", # w3: 72 enemies, threat 69 (31% of peak)
 		"vanguard*4@2.0~0.0#1, glider*13@0.7+5.0~0.0", # w4: 17 enemies, threat 72 (33% of peak)
@@ -326,8 +326,8 @@ const WAVES := {
 		"leviathan*1@1.0~0.0, aegis*26@1.4+6.0~0.0#1, mender*13@2.6+10.0~0.0 | boss, night", # w16: 40 enemies, threat 221 (100% of peak)
 	],
 	"level_07": [ # 21 — Shifting Gates  (peak 270)
-		"drone*35@0.7~0.1#-1, glider*22@1.5~0.0 | route=0", # w1: 57 enemies, threat 80 (30% of peak)
-		"dart*31@0.45~0.1#-1, glider*26@1.2~0.0", # w2: 57 enemies, threat 82 (30% of peak)
+		"drone*45@0.7~0.1#-1, drone*36@1.5~0.0 | route=0", # w1: 81 enemies, threat 81 (30% of peak)
+		"dart*42@0.45~0.1#-1, drone*43@1.2~0.0", # w2: 85 enemies, threat 81 (30% of peak)
 		"plated*21@1.4~0.0#-1, swarmling*40@0.2+4.0~0.1#-1", # w3: 61 enemies, threat 85 (31% of peak)
 		"glider*20@0.9~0.1, aegis*10@1.6~0.0#-1", # w4: 30 enemies, threat 90 (33% of peak)
 		"brute*9@1.8~0.0#-1, mender*6@3.0+2.0~0.0#-1", # w5: 15 enemies, threat 94 (36% of peak)
@@ -344,7 +344,7 @@ const WAVES := {
 	],
 	"level_08": [ # 22 — Prism Storm  (peak 270)
 		"drone*49@0.6~0.1#-1, dart*36@0.4+3.0~0.1#-1 | route=1", # w1: 85 enemies, threat 81 (30% of peak)
-		"plated*12@1.3~0.0#-1, glider*19@1.0~0.0", # w2: 31 enemies, threat 80 (30% of peak)
+		"plated*15@1.3~0.0#-1, drone*30@1.0~0.0", # w2: 45 enemies, threat 80 (30% of peak)
 		"aegis*16@1.3~0.0#-1, swarmling*17@0.18+3.0~0.1#-1", # w3: 33 enemies, threat 84 (31% of peak)
 		"phantom*21@1.0~0.0#-1, brute*4@1.8~0.0#-1", # w4: 25 enemies, threat 88 (32% of peak)
 		"glider*36@0.7~0.1, mender*5@3.0~0.0#-1 | route=0", # w5: 41 enemies, threat 90 (34% of peak)
@@ -399,7 +399,7 @@ const WAVES := {
 		"aegis*28@0.92~0.0#-1, jammer*19@1.5+5.0~0.0#-1, mender*17@2.17+7.0~0.0#-1, drone*8@0.92~0.0#-1 | special, route=1", # w16: 72 enemies, threat 272 (100% of peak)
 	],
 	"level_36": [ # 25 — Refractor  (peak 270)
-		"brute*5@1.5~0.0#-1, glider*18@0.7+5.0~0.0 | route=0", # w1: 23 enemies, threat 79 (30% of peak)
+		"brute*6@1.5~0.0#-1, drone*27@0.7+5.0~0.0 | route=0", # w1: 33 enemies, threat 77 (30% of peak)
 		"dart*27@0.38~0.1#-1, brute*7@1.5+5.0~0.0#-1", # w2: 34 enemies, threat 82 (30% of peak)
 		"plated*13@1.1~0.0#-1, brute*5@1.5+5.0~0.0#-1", # w3: 18 enemies, threat 85 (31% of peak)
 		"phantom*14@0.9~0.0#-1, plated*15@1.1+3.0~0.0#-1", # w4: 29 enemies, threat 87 (32% of peak)
@@ -457,7 +457,7 @@ const WAVES := {
 		"phantom*48@0.77~0.0#-1, aegis*21@0.94+3.06~0.0#-1, prismling*27@0.94+6.12~0.0#-1, swarmling*3@0.94+3.06~0.0#-1 | special", # w18: 99 enemies, threat 319 (100% of peak)
 	],
 	"level_39": [ # 28 — Spectrum  (peak 320)
-		"brute*5@1.49~0.0#-1, glider*25@0.7+4.0~0.0 | route=0", # w1: 30 enemies, threat 93 (30% of peak)
+		"brute*7@1.49~0.0#-1, drone*39@0.7+4.0~0.0 | route=0", # w1: 46 enemies, threat 97 (30% of peak)
 		"brute*8@1.46~0.0#-1, dart*36@0.37+4.0~0.1#-1", # w2: 44 enemies, threat 99 (30% of peak)
 		"brute*4@1.43~0.0#-1, glider*30@0.67+4.0~0.0", # w3: 34 enemies, threat 95 (31% of peak)
 		"prismling*22@1.03~0.0#-1, dart*32@0.36+3.0~0.1#-1", # w4: 54 enemies, threat 102 (32% of peak)
@@ -478,7 +478,7 @@ const WAVES := {
 	],
 	"level_40": [ # 29 — Helix  (peak 320)
 		"plated*15@1.1~0.0#-1, brute*5@1.5+3.0~0.0#-1 | route=0", # w1: 20 enemies, threat 92 (30% of peak)
-		"swarmling*36@0.14~0.1#-1, glider*40@0.7+5.0~0.0", # w2: 76 enemies, threat 95 (30% of peak)
+		"swarmling*56@0.14~0.1#-1, drone*76@0.7+5.0~0.0", # w2: 132 enemies, threat 96 (30% of peak)
 		"brute*5@1.5~0.0#-1, glider*28@0.7+5.0~0.0", # w3: 33 enemies, threat 99 (31% of peak)
 		"glider*18@0.7~0.1, aegis*13@1.1+4.0~0.0#-1", # w4: 31 enemies, threat 100 (32% of peak)
 		"brute*5@1.49~0.0#-1, plated*20@1.09+4.0~0.0#-1", # w5: 25 enemies, threat 109 (34% of peak)
@@ -498,7 +498,7 @@ const WAVES := {
 	],
 	"level_09": [ # 30 — Monolith Awakened  (peak 320)
 		"drone*58@0.6~0.1#-1, dart*43@0.4+3.0~0.1#-1 | route=0", # w1: 101 enemies, threat 97 (30% of peak)
-		"plated*15@1.2~0.0#-1, glider*23@0.9~0.0", # w2: 38 enemies, threat 98 (30% of peak)
+		"plated*18@1.2~0.0#-1, drone*35@0.9~0.0", # w2: 53 enemies, threat 96 (30% of peak)
 		"aegis*18@1.2~0.0#-1, swarmling*35@0.16+3.0~0.1#-1", # w3: 53 enemies, threat 100 (31% of peak)
 		"phantom*31@0.9~0.0#-1, mender*7@3.0+2.0~0.0#-1", # w4: 38 enemies, threat 103 (32% of peak)
 		"brute*7@1.4~0.0#-1, glider*21@0.8+3.0~0.0", # w5: 28 enemies, threat 101 (33% of peak)
@@ -540,7 +540,7 @@ const WAVES := {
 	],
 	"level_11": [ # 32 — Twin Fault  (peak 370)
 		"swarmling*87@0.3~0.1, drone*80@1.18+6.46~0.1#1", # w1: 167 enemies, threat 111 (30% of peak)
-		"glider*36@0.7~0.0, drone*38@0.55+3.0~0.1", # w2: 74 enemies, threat 112 (30% of peak)
+		"drone*60@0.7~0.0, drone*51@0.55+3.0~0.1", # w2: 111 enemies, threat 111 (30% of peak)
 		"drone*42@0.55~0.1, brute*9@1.5+4.0~0.0#1 | night", # w3: 51 enemies, threat 117 (31% of peak)
 		"phantom*27@0.9~0.0#1, shade*21@0.9+3.0~0.0", # w4: 48 enemies, threat 119 (32% of peak)
 		"phantom*35@0.9~0.0, dart*38@0.38+4.0~0.1#1", # w5: 73 enemies, threat 126 (34% of peak)
@@ -579,7 +579,7 @@ const WAVES := {
 		"jammer*29@4.09~0.0#-1, plated*66@2.51+13.92~0.0#-1, swarmling*94@0.31+16.7~0.0#-1 | special", # w18: 189 enemies, threat 369 (100% of peak)
 	],
 	"level_13": [ # 34 — Dark Spiral  (peak 370)
-		"brute*6@1.36~0.0, glider*31@0.63+3.0~0.0", # w1: 37 enemies, threat 114 (30% of peak)
+		"brute*7@1.36~0.0, drone*50@0.63+3.0~0.0", # w1: 57 enemies, threat 108 (30% of peak)
 		"plated*20@0.98~0.0, brute*5@1.33+4.0~0.0", # w2: 25 enemies, threat 109 (30% of peak)
 		"swarmling*49@0.12~0.1, glider*47@0.61+3.0~0.0 | night", # w3: 96 enemies, threat 114 (31% of peak)
 		"phantom*39@0.77~0.0, swarmling*45@0.12+5.0~0.1", # w4: 84 enemies, threat 118 (32% of peak)
@@ -602,7 +602,7 @@ const WAVES := {
 	],
 	"level_14": [ # 35 — Chimera  (peak 370)
 		"brute*6@1.5~0.0, plated*18@1.1+4.0~0.0#1", # w1: 24 enemies, threat 110 (30% of peak)
-		"brute*6@1.5~0.0#1, glider*31@0.7+5.0~0.0", # w2: 37 enemies, threat 114 (30% of peak)
+		"brute*7@1.5~0.0#1, drone*50@0.7+5.0~0.0", # w2: 57 enemies, threat 108 (30% of peak)
 		"plated*22@1.1~0.0, brute*5@1.5+4.0~0.0#1", # w3: 27 enemies, threat 115 (31% of peak)
 		"swarmling*36@0.14~0.1#1, plated*31@1.09+4.0~0.0", # w4: 67 enemies, threat 117 (32% of peak)
 		"plated*20@1.07~0.0, glider*27@0.68+5.0~0.1", # w5: 47 enemies, threat 123 (33% of peak)
@@ -623,7 +623,7 @@ const WAVES := {
 		"chimera*1@1.0~0.0, aegis*41@1.4+6.0~0.0#1, mender*20@2.6+10.0~0.0 | boss", # w20: 62 enemies, threat 374 (100% of peak)
 	],
 	"level_15": [ # 36 — Three Gates  (peak 420)
-		"dart*42@0.38~0.1#-1, glider*43@0.7+4.0~0.0 | route=0", # w1: 85 enemies, threat 127 (30% of peak)
+		"dart*59@0.38~0.1#-1, drone*73@0.7+4.0~0.0 | route=0", # w1: 132 enemies, threat 126 (30% of peak)
 		"drone*46@0.55~0.1#-1, brute*10@1.5+4.0~0.0#-1", # w2: 56 enemies, threat 129 (30% of peak)
 		"swarmling*127@0.34~0.1#-1, dart*94@0.93+7.38~0.1#-1 | night", # w3: 221 enemies, threat 130 (31% of peak)
 		"rallier*30@1.2~0.0#-1, swarmling*64@0.14+4.0~0.1#-1", # w4: 94 enemies, threat 133 (32% of peak)
@@ -667,7 +667,7 @@ const WAVES := {
 		"phantom*66@0.65~0.0#1, brute*12@1.08+3.18~0.0, sludge*30@1.01+7.42~0.0#1, swarmling*4@1.01+7.42~0.0#1 | special", # w20: 112 enemies, threat 420 (100% of peak)
 	],
 	"level_17": [ # 38 — Shortcut  (peak 420)
-		"dart*38@0.34~0.1#-1, glider*45@0.63+4.0~0.0 | route=0", # w1: 83 enemies, threat 127 (30% of peak)
+		"dart*53@0.34~0.1#-1, drone*78@0.63+4.0~0.0 | route=0", # w1: 131 enemies, threat 126 (30% of peak)
 		"dart*66@0.42~0.1#-1, drone*67@0.61+3.71~0.1#-1", # w2: 133 enemies, threat 126 (30% of peak)
 		"drone*72@0.62~0.1#-1, dart*65@0.42+6.43~0.1#-1", # w3: 137 enemies, threat 131 (31% of peak)
 		"glider*48@0.6~0.0, jammer*8@1.55+3.0~0.0#-1", # w4: 56 enemies, threat 130 (31% of peak)
@@ -691,8 +691,8 @@ const WAVES := {
 		"dart*99@0.57~0.0#-1, drone*95@0.83+8.74~0.0#-1, glider*114@1.05+15.29~0.0 | special", # w22: 308 enemies, threat 419 (100% of peak)
 	],
 	"level_18": [ # 39 — Eclipse  (peak 420)
-		"glider*32@0.58~0.0, brute*7@1.24+5.0~0.0#1", # w1: 39 enemies, threat 124 (30% of peak)
-		"glider*26@0.57~0.0, plated*21@0.89+3.0~0.0", # w2: 47 enemies, threat 124 (30% of peak)
+		"drone*51@0.58~0.0, brute*9@1.24+5.0~0.0#1", # w1: 60 enemies, threat 126 (30% of peak)
+		"drone*39@0.57~0.0, plated*26@0.89+3.0~0.0", # w2: 65 enemies, threat 126 (30% of peak)
 		"glider*38@0.56~0.0, brute*6@1.2+3.0~0.0#1 | night", # w3: 44 enemies, threat 128 (31% of peak)
 		"swarmling*44@0.11~0.1#1, plated*34@0.86+3.0~0.0", # w4: 78 enemies, threat 130 (31% of peak)
 		"vanguard*9@1.55~0.0, wraith*10@1.08+3.0~0.0#1", # w5: 19 enemies, threat 137 (33% of peak)
@@ -715,8 +715,8 @@ const WAVES := {
 		"phantom*86@0.59~0.0#1, wraith*34@0.91+3.09~0.0, mender*23@1.69+6.18~0.0#1, swarmling*4@0.91+3.09~0.0 | special", # w22: 147 enemies, threat 423 (100% of peak)
 	],
 	"level_19": [ # 40 — Colossus  (peak 420)
-		"glider*52@0.7~0.0, swarmling*54@0.14+3.0~0.1", # w1: 106 enemies, threat 127 (30% of peak)
-		"glider*45@0.7~0.0, dart*38@0.38+3.0~0.1", # w2: 83 enemies, threat 127 (30% of peak)
+		"drone*97@1.23~0.0, swarmling*81@0.25+5.26~0.1", # w1: 178 enemies, threat 126 (30% of peak)
+		"drone*78@0.7~0.0, dart*53@0.38+3.0~0.1", # w2: 131 enemies, threat 126 (30% of peak)
 		"glider*52@0.7~0.0, swarmling*54@0.14+4.0~0.1 | night", # w3: 106 enemies, threat 127 (30% of peak)
 		"swarmling*40@0.14~0.1, aegis*24@1.08+4.0~0.0", # w4: 64 enemies, threat 131 (31% of peak)
 		"diver*22@0.97~0.0, escort*12@1.26+3.0~0.0", # w5: 34 enemies, threat 134 (32% of peak)

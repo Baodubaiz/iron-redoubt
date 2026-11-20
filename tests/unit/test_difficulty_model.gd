@@ -63,3 +63,12 @@ func test_enemy_traits_raise_pressure() -> void:
 		for w in l.waves:
 			for g in w.groups:
 				check(g.enemy.threat_mult >= 1.0, "%s threat factor set" % g.enemy.id)
+
+
+## 2026-11-21: no Gliders (fliers) in a level's first two waves; the budget goes to ground enemies instead.
+func test_no_gliders_in_the_first_two_waves() -> void:
+	var c: CampaignDef = load("res://data/campaign.tres")
+	for l in c.levels:
+		for wi in range(mini(2, l.waves.size())):
+			for g in l.waves[wi].groups:
+				check(g.enemy == null or g.enemy.id != &"glider", "%s wave %d has no Gliders" % [l.id, wi + 1])

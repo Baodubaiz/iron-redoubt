@@ -52,7 +52,7 @@ func _init() -> void:
 		out.append("\t\"%s\": [ # %s  (peak %d)" % [key, l.display_name, int(peak)])
 		var lines: Array = LP.PLAN[key]
 		for wi in range(lines.size()):
-			var parsed := _plan_wave(String(lines[wi]))
+			var parsed := _plan_wave(String(lines[wi]), wi)
 			var w: WaveDef = parsed[0]
 			var weights: Dictionary = parsed[1]
 			var threat: float = parsed[2]
@@ -96,7 +96,13 @@ func _enemy(id: String) -> EnemyDef:
 
 
 ## [WaveDef, {group: weight} for budgeted groups, threat]
-func _plan_wave(line: String) -> Array:
+## No fliers in a level's first waves (2026-11-21, user): the player has barely built anything yet and most
+## starting towers cannot hit air. These enemies become Drones there, same threat budget (counts re-derived).
+const NO_EARLY := {"glider": 2} ## enemy id -> first wave index (0-based) it may appear in
+const EARLY_STANDIN := "drone"
+
+
+func _plan_wave(line: String, wave_index: int = 99) -> Array:
 	var parts := line.split("|")
 	var w := WaveDef.new()
 	var threat := 100.0
@@ -119,8 +125,14 @@ func _plan_wave(line: String) -> Array:
 			continue
 		var g := SpawnGroupDef.new()
 		g.enemy = _enemy(m.get_string(1))
-		if m.get_string(2) != "":
-			g.count = int(m.get_string(2))
+		var fixed := int(m.get_string(2)) if m.get_string(2) != "" else -1
+		if wave_index < int(NO_EARLY.get(m.get_string(1), 0)):
+			var standin := _enemy(EARLY_STANDIN)
+			if fixed > 0: # fixed count: keep the same threat
+				fixed = maxi(1, int(round(fixed * DifficultyModel.enemy_threat(g.enemy) / DifficultyModel.enemy_threat(standin))))
+			g.enemy = standin
+		if fixed >= 0:
+			g.count = fixed
 		else:
 			weights[g] = float(m.get_string(3)) if m.get_string(3) != "" else 1.0
 		g.interval = float(m.get_string(4))
