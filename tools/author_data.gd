@@ -1414,6 +1414,7 @@ func _levels() -> void:
 	for i in range(ORDER.size()):
 		var l: LevelDef = by_id[ORDER[i]]
 		l.level_number = i + 1
+		l.starting_currency = DifficultyModel.level_start_money(i + 1) # 2026-11-21: same rule as the difficulty
 		var name := l.display_name
 		var cut := name.find("— ")
 		if cut >= 0:
@@ -2266,7 +2267,7 @@ func _level(id: StringName, n: String, num: int, map: MapDef, towers: Array[Towe
 	l.map = map
 	l.available_towers = towers
 	l.economy = econ
-	l.starting_currency = money
+	l.starting_currency = money # campaign levels: replaced by the difficulty rule once renumbered (_levels)
 	l.base_hp = hp
 	return l
 

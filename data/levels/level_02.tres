@@ -233,6 +233,7 @@ display_name = "2 — Heavy Traffic"
 level_number = 2
 map = ExtResource("15_fsgyj")
 waves = Array[ExtResource("17_ae0wk")]([SubResource("Resource_wrn2q"), SubResource("Resource_k0oak"), SubResource("Resource_p4vxe"), SubResource("Resource_s1frf"), SubResource("Resource_eljgo"), SubResource("Resource_7n564"), SubResource("Resource_dsy5i"), SubResource("Resource_1bsep"), SubResource("Resource_1qgxr"), SubResource("Resource_jm4jd")])
+starting_currency = 400
 available_towers = Array[ExtResource("1_qgl00")]([ExtResource("2_erj6y"), ExtResource("3_iuxu2"), ExtResource("4_o6eby"), ExtResource("5_epvvu"), ExtResource("6_dmb5e"), ExtResource("7_ha4fy"), ExtResource("8_w2mc7"), ExtResource("9_bq7j1"), ExtResource("10_q5rrc"), ExtResource("11_7psxw"), ExtResource("12_g64qh"), ExtResource("13_8fnln")])
 economy = ExtResource("14_ynyu8")
 objective = "Brutes soak damage, Swarmlings come in floods. Splash matters."

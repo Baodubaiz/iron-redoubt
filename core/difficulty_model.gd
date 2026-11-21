@@ -191,6 +191,17 @@ const PEAK_STEP_EVERY_LATE := 10
 const PEAK_LATE_FROM := 40
 
 
+## Start money follows the same rule (2026-11-21, user): level 1 = 400, +70 for every +50 peak threat
+## (so +70 every 5 levels up to 40, then every 10). Same for every level of a 5-level step.
+const MONEY_BASE := 400
+const MONEY_PER_PEAK_STEP := 70
+
+
+static func level_start_money(level_number: int) -> int:
+	var steps := roundi((level_peak_threat(level_number) - PEAK_BASE) / PEAK_STEP)
+	return MONEY_BASE + MONEY_PER_PEAK_STEP * steps
+
+
 static func level_peak_threat(level_number: int) -> float:
 	var early := (mini(level_number, PEAK_LATE_FROM) - 1) / PEAK_STEP_EVERY
 	var late := maxi(level_number - PEAK_LATE_FROM, 0) / PEAK_STEP_EVERY_LATE
