@@ -1,0 +1,160 @@
+[gd_resource type="Resource" script_class="TowerDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/branch_def.gd" id="1_hl532"]
+[ext_resource type="Script" path="res://data/defs/tier_def.gd" id="2_bt510"]
+[ext_resource type="Script" path="res://data/defs/tower_def.gd" id="3_501q5"]
+
+[sub_resource type="Resource" id="Resource_t7qdq"]
+script = ExtResource("2_bt510")
+display_name = "Surge"
+description = "Every 4th discharge deals x3 damage"
+cost = 310
+stats = {
+"crit_every": 4,
+"crit_mult": 3.0
+}
+
+[sub_resource type="Resource" id="Resource_qroa5"]
+script = ExtResource("2_bt510")
+display_name = "Overload I"
+description = "Damage 6"
+cost = 45
+stats = {
+"damage": 6.0
+}
+
+[sub_resource type="Resource" id="Resource_f3vv7"]
+script = ExtResource("2_bt510")
+display_name = "Overload II"
+description = "Damage 8, radius 100"
+cost = 88
+stats = {
+"attack_range": 100.0,
+"damage": 8.0
+}
+
+[sub_resource type="Resource" id="Resource_pt2cw"]
+script = ExtResource("2_bt510")
+display_name = "Overload III"
+description = "Damage 11"
+cost = 170
+stats = {
+"damage": 11.0
+}
+
+[sub_resource type="Resource" id="Resource_fpnpc"]
+script = ExtResource("1_hl532")
+id = &"overload"
+display_name = "Overload"
+description = "Stronger discharges."
+tiers = Array[ExtResource("2_bt510")]([SubResource("Resource_qroa5"), SubResource("Resource_f3vv7"), SubResource("Resource_pt2cw")])
+evolution = SubResource("Resource_t7qdq")
+
+[sub_resource type="Resource" id="Resource_k14n0"]
+script = ExtResource("2_bt510")
+display_name = "Lockdown"
+description = "Every 5th discharge stops regular enemies for 1 s (bosses stagger)"
+cost = 310
+stats = {
+"stun_duration": 1.0,
+"stun_every": 5
+}
+
+[sub_resource type="Resource" id="Resource_w6s21"]
+script = ExtResource("2_bt510")
+display_name = "Static I"
+description = "Hit enemies are slowed 15% for 1 s"
+cost = 45
+stats = {
+"pulse_duration": 1.0,
+"pulse_slow_pct": 0.15
+}
+
+[sub_resource type="Resource" id="Resource_we3i5"]
+script = ExtResource("2_bt510")
+display_name = "Static II"
+description = "Slow 25%"
+cost = 88
+stats = {
+"pulse_slow_pct": 0.25
+}
+
+[sub_resource type="Resource" id="Resource_by2bi"]
+script = ExtResource("2_bt510")
+display_name = "Static III"
+description = "Slow 35%"
+cost = 170
+stats = {
+"pulse_slow_pct": 0.35
+}
+
+[sub_resource type="Resource" id="Resource_agc7n"]
+script = ExtResource("1_hl532")
+id = &"static"
+display_name = "Static"
+description = "Discharges slow enemies down."
+tiers = Array[ExtResource("2_bt510")]([SubResource("Resource_w6s21"), SubResource("Resource_we3i5"), SubResource("Resource_by2bi")])
+evolution = SubResource("Resource_k14n0")
+
+[sub_resource type="Resource" id="Resource_kjxer"]
+script = ExtResource("2_bt510")
+display_name = "Arc Relay"
+description = "Each discharge also arcs to the 2 nearest enemies outside the ring for 50% damage"
+cost = 310
+stats = {
+"relay_count": 2,
+"relay_mult": 0.5
+}
+
+[sub_resource type="Resource" id="Resource_l5pj2"]
+script = ExtResource("2_bt510")
+display_name = "Wide Field I"
+description = "Radius 115"
+cost = 45
+stats = {
+"attack_range": 115.0
+}
+
+[sub_resource type="Resource" id="Resource_uhmvy"]
+script = ExtResource("2_bt510")
+display_name = "Wide Field II"
+description = "Radius 130, 1.15 discharges/s"
+cost = 88
+stats = {
+"attack_range": 130.0,
+"fire_rate": 1.15
+}
+
+[sub_resource type="Resource" id="Resource_j8owo"]
+script = ExtResource("2_bt510")
+display_name = "Wide Field III"
+description = "Radius 145"
+cost = 170
+stats = {
+"attack_range": 145.0
+}
+
+[sub_resource type="Resource" id="Resource_c6vam"]
+script = ExtResource("1_hl532")
+id = &"widefield"
+display_name = "Wide Field"
+description = "A larger discharge radius."
+tiers = Array[ExtResource("2_bt510")]([SubResource("Resource_l5pj2"), SubResource("Resource_uhmvy"), SubResource("Resource_j8owo")])
+evolution = SubResource("Resource_kjxer")
+requires_research = true
+
+[resource]
+script = ExtResource("3_501q5")
+id = &"coil"
+display_name = "Coil"
+role = "Discharges every second, hitting every enemy around it (ground and air). Strong against packs, weak against armor."
+cost = 65
+damage = 4.0
+damage_type = 2
+attack_range = 95.0
+projectile_speed = 0.0
+targeting = 4
+attack_mode = 2
+color = Color(0.43529412, 0.8901961, 1, 1)
+shape = 3
+branches = Array[ExtResource("1_hl532")]([SubResource("Resource_fpnpc"), SubResource("Resource_agc7n"), SubResource("Resource_c6vam")])

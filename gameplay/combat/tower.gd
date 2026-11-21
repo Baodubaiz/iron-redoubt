@@ -314,6 +314,16 @@ func step(dt: float, ctrl: MatchController) -> void:
 		return
 	if is_aura():
 		return # auras are applied by MatchController
+	if def.attack_mode == TowerDef.AttackMode.PULSE: # Coil: discharge into every enemy in range
+		if _cooldown <= 0.0:
+			var first := ctrl.coil_pulse(self)
+			if first != null:
+				_cooldown += 1.0 / eff_rate()
+				shots_fired += 1
+				fired.emit(self, first)
+			else:
+				_cooldown = 0.0
+		return
 	var rng := eff_range()
 	if not _has_valid_target(rng):
 		target = null
@@ -349,6 +359,10 @@ func step(dt: float, ctrl: MatchController) -> void:
 		shots_fired += 1
 		ctrl.fire(self, target)
 		fired.emit(self, target)
+
+
+func is_pulse() -> bool:
+	return def.attack_mode == TowerDef.AttackMode.PULSE
 
 
 func beam_ramp() -> float:

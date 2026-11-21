@@ -5,18 +5,21 @@ extends Control
 ## themselves. Enemies and bosses stay hidden ("???") until the player has met them in a match.
 
 const P = preload("res://ui/style/visual_palette.gd")
-const TOWERS := [&"pulse", &"trap", &"spotter", &"nova", &"beacon", &"venom", &"lance", &"sniper", &"bastion", &"storm", &"chronos"]
+const TOWERS := [&"pulse", &"trap", &"spotter", &"coil", &"nova", &"beacon", &"venom", &"lance", &"sniper", &"bastion", &"storm", &"chronos"]
 ## ⚠ DEV: set false to restore production lock behaviour (enemies hidden until met in battle).
 const CODEX_DEV_UNLOCK_ALL := false
 
-const ENEMIES := [&"drone", &"dart", &"swarmling", &"brute", &"plated", &"glider", &"escort", &"phantom", &"aegis", &"sludge",
+const ENEMIES := [&"drone", &"dart", &"hopper", &"swarmling", &"brute", &"plated", &"glider", &"escort", &"phantom", &"aegis", &"sludge",
 	&"mender", &"shade", &"sprinter", &"jammer", &"prismling", &"diver",
 	&"disruptor", &"static_crawler", &"wraith", &"vanguard", &"rallier", &"cloaker", &"mender_elite"]
+## Bosses that exist but are not in a campaign level yet (2026-11-21: Foreman).
+const EXTRA_BOSSES := [&"foreman"]
 const TABS := [["towers", "Towers", "upgrade"], ["enemies", "Enemies", "enemy"], ["bosses", "Bosses", "boss"],
 	["effects", "Effects", "bolt"], ["damage", "Combat", "star"], ["regions", "Regions", "campaign"]]
 const ENEMY_TIP := {
 	&"drone": "Basic walker. Anything kills it -- except Venom, which it resists specifically (it's a machine).",
 	&"dart": "Very fast and fragile. Pulse and slows catch it.",
+	&"hopper": "Moves in hops: a quick dash, then a pause. Packs bunch up while they stop -- perfect for a Coil discharge or Nova splash.",
 	&"swarmling": "Tiny and comes in floods. Nova splash shreds them.",
 	&"brute": "Reactive armor: hits under 30 damage deal only 40%. Use big single shots (Marksman, Lance Overcharge) or poison/burn. Resists Plasma (Marker).",
 	&"plated": "Heavy armor. Lance, Venom (poison ignores armor entirely) or Siege shred.",
@@ -593,6 +596,9 @@ func _bosses() -> Array:
 					seen[g.enemy.id] = true
 					var look := P.map_look(l.map.region_id())
 					out.append([g.enemy, "%s · %s" % [I18n.t(look["name"]), I18n.f("Level %d", l.level_number)]])
+	for id in EXTRA_BOSSES: # bosses not placed in a level yet still get their Codex page
+		if not seen.has(id):
+			out.append([load("res://data/enemies/%s.tres" % id), I18n.t("Not in the campaign yet")])
 	return out
 
 

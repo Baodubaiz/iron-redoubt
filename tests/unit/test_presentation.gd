@@ -82,7 +82,8 @@ func test_every_tower_has_a_shot_sound_or_is_aura() -> void:
 	for t in all_real_towers():
 		if t.attack_mode == TowerDef.AttackMode.AURA:
 			continue
-		check(ResourceLoader.exists("res://audio/sfx/shot_%s.wav" % t.id), "shot sound for %s" % t.id)
+		var sfx := String(MatchAudio.SHOT_SFX.get(t.id, "shot_" + String(t.id))) # Coil borrows the Lance zap
+		check(ResourceLoader.exists("res://audio/sfx/%s.wav" % sfx), "shot sound for %s" % t.id)
 
 
 func test_wide_screen_world_leaves_room_for_the_palette() -> void:

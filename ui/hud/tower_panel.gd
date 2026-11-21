@@ -447,7 +447,7 @@ func refresh() -> void:
 	_subtitle.text = " + ".join(sub) if not sub.is_empty() else I18n.t(d.role)
 	add_theme_stylebox_override("panel", UiKit.chamfer(Color(P.BG_DEEP, 0.94), Color(col, 0.55), 16, 2))
 	_fill_stats(t)
-	_target_row.visible = not t.is_aura() # aura towers (Beacon, Bastion, Chronos) have nothing to aim at
+	_target_row.visible = not t.is_aura() and not t.is_pulse() # auras and Coil hit everything in range
 	if _target_row.visible:
 		var active: int = t.targeting_override if t.targeting_override >= 0 else d.targeting
 		for i in range(TARGET_MODES.size()):

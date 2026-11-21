@@ -33,6 +33,7 @@ const TOWER := {
 	&"bastion": Color("7FB2FF"),
 	&"storm": Color("FF5CE1"),
 	&"chronos": Color("5CFFD8"),
+	&"coil": Color("6FE3FF"),
 }
 
 ## Region look (menus, thumbnails, battlefield), keyed by MapDef.region_id().

@@ -4,7 +4,7 @@ extends Resource
 
 enum TargetRule { FIRST, DENSEST, STRONGEST, AIR_FIRST, NONE }
 enum Shape { TRIANGLE, SQUARE, DIAMOND, CIRCLE }
-enum AttackMode { PROJECTILE, AURA }
+enum AttackMode { PROJECTILE, AURA, PULSE } ## PULSE: periodic discharge hitting every enemy in range (Coil)
 
 @export var id: StringName
 @export var display_name: String = ""

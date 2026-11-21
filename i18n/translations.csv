@@ -1171,3 +1171,42 @@ Sharp graphics (slower),Đồ hoạ sắc nét (chậm hơn)
 Draws at your screen's full resolution. Turn off if the game feels slow.,Vẽ ở độ phân giải đầy đủ của màn hình. Tắt đi nếu game bị chậm.
 Strong,Khoẻ
 Group,Đông
+Coil,Cuộn Điện
+"Discharges every second, hitting every enemy around it (ground and air). Strong against packs, weak against armor.","Phóng điện mỗi giây, trúng mọi quái xung quanh (cả mặt đất và trên không). Mạnh khi quái đi thành đàn, yếu trước giáp."
+Stronger discharges.,Phóng điện mạnh hơn.
+Damage 6,Sát thương 6
+"Damage 8, radius 100","Sát thương 8, bán kính 100"
+Damage 11,Sát thương 11
+Surge,Dâng Áp
+Every 4th discharge deals x3 damage,Mỗi lần phóng thứ 4 gây x3 sát thương
+Discharges slow enemies down.,Phóng điện làm chậm quái.
+Static I,Tĩnh Điện I
+Static II,Tĩnh Điện II
+Static III,Tĩnh Điện III
+Hit enemies are slowed 15% for 1 s,Quái trúng điện bị chậm 15% trong 1 giây
+Slow 25%,Làm chậm 25%
+Slow 35%,Làm chậm 35%
+Lockdown,Phong Toả
+Every 5th discharge stops regular enemies for 1 s (bosses stagger),Mỗi lần phóng thứ 5 làm quái thường đứng im 1 giây (trùm chỉ khựng lại)
+Wide Field,Trường Rộng
+A larger discharge radius.,Bán kính phóng điện lớn hơn.
+Wide Field I,Trường Rộng I
+Wide Field II,Trường Rộng II
+Wide Field III,Trường Rộng III
+Radius 115,Bán kính 115
+"Radius 130, 1.15 discharges/s","Bán kính 130, 1,15 lần phóng/giây"
+Radius 145,Bán kính 145
+Arc Relay,Chuyển Hồ Quang
+Each discharge also arcs to the 2 nearest enemies outside the ring for 50% damage,"Mỗi lần phóng còn nảy sang 2 quái gần nhất ngoài vòng, gây 50% sát thương"
+Wide Field Protocol,Giao Thức Trường Rộng
+Unlocks Coil branch: Wide Field.,Mở nhánh Cuộn Điện: Trường Rộng.
+Coil Evolution,Tiến Hoá Cuộn Điện
+Unlocks evolutions for Coil branches.,Mở tiến hoá cho các nhánh Cuộn Điện.
+Discharge slow,Làm chậm khi phóng
+Slow duration,Thời gian làm chậm
+Arc relay,Nảy hồ quang
+Arc relay damage,Sát thương nảy
+Hopper,Bọ Nhảy
+"Moves in hops: a quick dash, then a pause. Packs bunch up while they stop -- perfect for a Coil discharge or Nova splash.",Di chuyển kiểu nhảy cóc: lao nhanh rồi khựng lại. Cả đàn dồn cục lúc dừng -- rất hợp cho Cuộn Điện hoặc nổ diện rộng của Pháo Nổ.
+Foreman,Đốc Công
+Not in the campaign yet,Chưa có trong chiến dịch

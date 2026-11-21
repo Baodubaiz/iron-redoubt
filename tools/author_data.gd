@@ -32,6 +32,13 @@ func _enemies() -> void:
 	drone.armor_by_type = {"poison": 6.0}
 	_save(drone, "res://data/enemies/drone.tres")
 	_save(_enemy(&"dart", "Dart", C.BASIC, 35, 130, 0, 3, 1, 9, "ffe08f", E.ARROW), "res://data/enemies/dart.tres")
+	# Hopper (2026-11-21): basic enemy that moves in hops -- 0.4 s dash, 0.6 s stop -- averaging ~65 px/s.
+	# No skill, no armor: it teaches timing (packs bunch up while stopped, perfect for a Coil discharge).
+	# Raw 52.4 HP / 61.9 speed = 55 / 65 after the +5% enemy stat pass.
+	var hopper := _enemy(&"hopper", "Hopper", C.BASIC, 52.4, 61.9, 0, 4, 1, 10, "ffaa45", E.CIRCLE)
+	hopper.hop_on = 0.4
+	hopper.hop_off = 0.6
+	_save(hopper, "res://data/enemies/hopper.tres")
 	var brute := _enemy(&"brute", "Brute", C.BASIC, 300, 45, 0, 12, 3, 16, "ff8f8f", E.HEAVY_CIRCLE)
 	# Dense mass (2026-11-16): resists Plasma specifically, same per-type-armor idea as Drone/Poison
 	# and Sludge/Energy, just going the other direction (a tanky brawler, not a support type).
@@ -119,6 +126,12 @@ func _enemies() -> void:
 		S.call(&"sprint", 2, 3, 6.0, 0.8, {"mult": 1.8, "duration": 2.5}),
 		S.call(&"jam", 1, 3, 10.0, 1.3, {"radius": 150.0, "duration": 3.0, "factor": 0.65})]
 	_save(warden, "res://data/enemies/warden.tres")
+	# Foreman (2026-11-21): ultra-light mini boss meant to close a first level -- ~1/5 of the Warden's HP, no
+	# armor, a single phase and one skill (calls 2 Drones behind it every 8 s). Raw 571.4 HP / 38.1 speed =
+	# 600 HP / 30 px/s after the +5% enemy stats and the boss speed factor.
+	var foreman := _boss(&"foreman", "Foreman", 571.4, 38.1, 0, 30, 3, 20, "ffcc33", &"foreman", 1, {"first_skill": 4.0})
+	foreman.boss_skills = [S.call(&"summon", 1, 3, 8.0, 1.0, {"enemy": "res://data/enemies/drone.tres", "count": 2.0, "spacing": -18.0})]
+	_save(foreman, "res://data/enemies/foreman.tres")
 	var carrier := _boss(&"carrier", "Carrier", 5280, 30, 4, 200, 17, 26, "7fa8ff", &"carrier", 2, {"first_skill": 4.0})
 	carrier.summon_enemy = load("res://data/enemies/glider.tres")
 	carrier.boss_skills = [S.call(&"hangar", 1, 3, 9.0, 1.5, {"enemy": "res://data/enemies/glider.tres", "count": 3.0, "spacing": -18.0}),
@@ -491,6 +504,32 @@ func _towers() -> void:
 	_nerf_tower_damage(spotter)
 	_remake_scale_tower(spotter)
 	_save(spotter, "res://data/towers/spotter.tres")
+
+	# Coil (2026-11-21): rank C discharge tower. Every 1 s it pulses ENERGY damage into EVERY enemy within 95
+	# (ground + air, stealth too). Strong vs packs, weak vs single tough or armored enemies. Numbers here are
+	# final (no _nerf_tower_damage / _remake_scale_tower pass).
+	var coil := _tower(&"coil", "Coil", "Discharges every second, hitting every enemy around it (ground and air). Strong against packs, weak against armor.", 65, 4,
+		Damage.Type.ENERGY, 1.0, 95, 0, 0, true, true, TowerDef.TargetRule.NONE, "6fe3ff", TowerDef.Shape.CIRCLE)
+	coil.attack_mode = TowerDef.AttackMode.PULSE
+	coil.rarity = &"C"
+	coil.branches = [
+		_branch(&"overload", "Overload", "Stronger discharges.", false, [
+			_tier("Overload I", "Damage 6", 45, {"damage": 6.0}),
+			_tier("Overload II", "Damage 8, radius 100", 88, {"damage": 8.0, "attack_range": 100.0}),
+			_tier("Overload III", "Damage 11", 170, {"damage": 11.0}),
+		], _tier("Surge", "Every 4th discharge deals x3 damage", 310, {"crit_every": 4, "crit_mult": 3.0})),
+		_branch(&"static", "Static", "Discharges slow enemies down.", false, [
+			_tier("Static I", "Hit enemies are slowed 15% for 1 s", 45, {"pulse_slow_pct": 0.15, "pulse_duration": 1.0}),
+			_tier("Static II", "Slow 25%", 88, {"pulse_slow_pct": 0.25}),
+			_tier("Static III", "Slow 35%", 170, {"pulse_slow_pct": 0.35}),
+		], _tier("Lockdown", "Every 5th discharge stops regular enemies for 1 s (bosses stagger)", 310, {"stun_every": 5, "stun_duration": 1.0})),
+		_branch(&"widefield", "Wide Field", "A larger discharge radius.", true, [
+			_tier("Wide Field I", "Radius 115", 45, {"attack_range": 115.0}),
+			_tier("Wide Field II", "Radius 130, 1.15 discharges/s", 88, {"attack_range": 130.0, "fire_rate": 1.15}),
+			_tier("Wide Field III", "Radius 145", 170, {"attack_range": 145.0}),
+		], _tier("Arc Relay", "Each discharge also arcs to the 2 nearest enemies outside the ring for 50% damage", 310, {"relay_count": 2, "relay_mult": 0.5})),
+	]
+	_save(coil, "res://data/towers/coil.tres")
 
 	var sniper := _tower(&"sniper", "Marksman", "Very long range, slow and heavy shots. Bonus damage against bosses.", 260, 120,
 		Damage.Type.KINETIC, 0.25, 330, 0, 1600, true, true, TowerDef.TargetRule.STRONGEST, "ff6b8a", TowerDef.Shape.DIAMOND)
@@ -1671,6 +1710,8 @@ func _meta() -> void:
 		_research(&"evo_trap", "Shock Trap Evolution", "Unlocks evolutions for Shock Trap branches.", ResearchDef.Kind.EVOLUTION, 75, &"trap", 0, [], &"trap"),
 		_research(&"branch_spotter_widescan", "Wide Scan Protocol", "Unlocks Marker branch: Wide Scan.", ResearchDef.Kind.BRANCH_C, 30, &"spotter", 0, [], &"spotter"),
 		_research(&"evo_spotter", "Marker Evolution", "Unlocks evolutions for Marker branches.", ResearchDef.Kind.EVOLUTION, 65, &"spotter", 0, [], &"spotter"),
+		_research(&"branch_coil_widefield", "Wide Field Protocol", "Unlocks Coil branch: Wide Field.", ResearchDef.Kind.BRANCH_C, 40, &"coil", 0, [], &"coil"),
+		_research(&"evo_coil", "Coil Evolution", "Unlocks evolutions for Coil branches.", ResearchDef.Kind.EVOLUTION, 80, &"coil", 0, [], &"coil"),
 		# B
 		_research(&"branch_nova_siege", "Siege Protocol", "Unlocks Nova branch: Siege.", ResearchDef.Kind.BRANCH_C, 55, &"nova"),
 		_research(&"evo_nova", "Nova Evolution", "Unlocks evolutions for Nova branches.", ResearchDef.Kind.EVOLUTION, 110, &"nova"),
@@ -1874,6 +1915,8 @@ func _catalogs() -> void:
 		["venom_patch_radius", "Cloud size", T, MX, "px", false, true], ["venom_patch_duration", "Cloud time", T, MX, "s", false, true],
 		["spot_vuln", "Mark", T, MX, "x", false, true], ["spot_duration", "Mark time", T, MX, "s", false, false],
 		["spot_armor", "Mark armor break", T, MX, "", false, true], ["spot_slow_pct", "Mark slow", T, MX, "", true, true],
+		["pulse_slow_pct", "Discharge slow", T, MX, "", true, true], ["pulse_duration", "Slow duration", T, MX, "s", false, true],
+		["relay_count", "Arc relay", T, MX, "", false, true], ["relay_mult", "Arc relay damage", T, MX, "x", false, true],
 		["spot_reveal", "Reveal", T, MX, "s", false, true],
 		["field", "Field", T, OR, "", false, false], ["field_slow_pct", "Field slow", T, MX, "", true, true],
 		["field_vuln", "Field exposure", T, MX, "x", false, true],

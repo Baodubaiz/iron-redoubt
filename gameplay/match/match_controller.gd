@@ -524,6 +524,58 @@ func beam_pulse(t: Tower, target: Enemy, n: int) -> void:
 		projectiles.ring(target.position, 14.0, t.def.color, 0.25)
 
 
+## Coil discharge (2026-11-21): every enemy in range takes the tower's damage (ENERGY, x2 vs shields).
+## Surge = every Nth discharge x crit_mult; Static = slow (pulse_slow_pct / pulse_duration); Lockdown =
+## every Nth discharge stuns regular enemies (bosses stagger); Arc Relay = also hits the N nearest enemies just
+## outside the ring for relay_mult. Returns the first enemy hit (null = nobody in range: no discharge).
+func coil_pulse(t: Tower) -> Enemy:
+	var cands: Array[Enemy] = []
+	registry.query_circle(t.position, t.eff_range(), t.can_target_air, cands, true)
+	var hits: Array[Enemy] = []
+	for e in cands:
+		if e.is_alive():
+			hits.append(e)
+	if hits.is_empty():
+		return null
+	var n := t.shots_fired + 1
+	var dmg := t.eff_damage()
+	var crit := _every(t, "crit_every", n)
+	if crit:
+		dmg *= maxf(t.pf("crit_mult"), 1.0)
+	var stun := _every(t, "stun_every", n)
+	var fx: EffectDef = param_effect(t, "pulse") if t.pf("pulse_slow_pct") > 0.0 else null
+	var col := t.def.color
+	projectiles.ring(t.position, t.eff_range(), col, 0.3 if not crit else 0.45)
+	var drawn := 0
+	for e in hits:
+		if drawn < 8:
+			projectiles.line(t.position, e.position, col, 0.12)
+			drawn += 1
+		damage_enemy(e, dmg * _hit_mult(t, e), int(t.def.damage_type), t.armor_pen)
+		if not e.is_alive():
+			continue
+		if fx != null:
+			e.apply_effect(fx, maxf(t.pf("pulse_duration"), 0.1))
+		if stun:
+			e.apply_stun(maxf(t.pf("stun_duration"), 0.1))
+	var relay := int(t.pf("relay_count"))
+	if relay > 0:
+		var near: Array[Enemy] = []
+		registry.query_circle(t.position, t.eff_range() + 90.0, t.can_target_air, near, true)
+		near.sort_custom(func(a: Enemy, b: Enemy) -> bool:
+			return a.position.distance_squared_to(t.position) < b.position.distance_squared_to(t.position))
+		for e in near:
+			if relay <= 0:
+				break
+			if hits.has(e) or not e.is_alive():
+				continue
+			projectiles.line(t.position, e.position, col, 0.15)
+			damage_enemy(e, dmg * float(t.p("relay_mult", 0.5)) * _hit_mult(t, e), int(t.def.damage_type), t.armor_pen)
+			relay -= 1
+	shot_fired.emit(t)
+	return hits[0]
+
+
 const BEAM_CHAIN_FX_EVERY := 0.4 ## s between drawn arcs / Stagger procs of a chaining beam
 var _beam_chain_fx := {} ## tower uid -> match_time of the next drawn arc
 

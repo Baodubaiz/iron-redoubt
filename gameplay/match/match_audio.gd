@@ -16,7 +16,7 @@ func _ready() -> void:
 		else:
 			_play(&"upgrade"))
 	c.tower_sold.connect(func(_t: Tower, _r: int) -> void: _play(&"sell"))
-	c.shot_fired.connect(func(t: Tower) -> void: _play(StringName("shot_" + String(t.def.id))))
+	c.shot_fired.connect(func(t: Tower) -> void: _play(StringName(SHOT_SFX.get(t.def.id, "shot_" + String(t.def.id)))))
 	c.explosion.connect(func(_p: Vector2, _r: float) -> void: _play(&"explosion"))
 	c.enemy_killed.connect(func(_e: Enemy) -> void: _play(&"enemy_death"))
 	c.waves.wave_started.connect(func(_i: int, _b: int) -> void: _play(&"wave_start"))
@@ -25,6 +25,10 @@ func _ready() -> void:
 	c.waves.wave_cleared.connect(func(_i: int, _r: int) -> void: _play(&"wave_clear"))
 	c.towers_disrupted.connect(func(_p: Vector2) -> void: _play(&"emp"))
 	c.match_ended.connect(func(won: bool) -> void: _play(&"victory" if won else &"defeat"))
+
+
+## Towers without their own shot sound borrow one (Coil discharge = the Lance energy zap).
+const SHOT_SFX := {&"coil": "shot_lance"}
 
 
 func _play(id: StringName) -> void:

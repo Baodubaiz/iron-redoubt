@@ -338,3 +338,65 @@ func test_spotter_marks_enemies_for_every_tower() -> void:
 	var d := real_tower("spotter")
 	eq(String(d.rarity), "C")
 	check(float(d.base_params["spot_vuln"]) <= 1.08, "base mark stays C level")
+
+
+## 2026-11-21: Coil discharges into every enemy in range; Static slows, Lockdown stuns, Arc Relay reaches out.
+func test_coil_discharge_hits_every_enemy_in_range() -> void:
+	var m := make_lab(100000)
+	var c := m.try_build(real_tower("coil"), Vector2(300, 360)) # 60 from the test route (y = 300), inside 95
+	check(c != null and c.is_pulse(), "Coil built, pulse mode")
+	var near := []
+	for x in [290.0, 300.0, 310.0]:
+		near.append(put(m, make_enemy_def(1000.0, 0), x))
+	var far := put(m, make_enemy_def(1000.0, 0), 900.0)
+	run(m, 1.1)
+	for e in near:
+		check((e as Enemy).hp < 1000.0, "every enemy in the ring is hit")
+	eq(far.hp, 1000.0, "enemies outside the ring are not")
+	check(c.shots_fired >= 1, "counts discharges")
+
+
+func test_coil_branches_static_and_lockdown() -> void:
+	var m := make_lab(100000)
+	var c := m.try_build(real_tower("coil"), Vector2(300, 360)) # 60 from the test route (y = 300), inside 95
+	for i in range(3):
+		m.try_upgrade(c, 1) # Static III
+	near(c.pf("pulse_slow_pct"), 0.35, 0.001, "Static III slow")
+	c.waves_since_t3 = 5
+	m.unlocks.evolutions[&"coil"] = true
+	check(m.try_evolve(c), "Lockdown")
+	eq(int(c.pf("stun_every")), 5)
+	near(c.pf("stun_duration"), 1.0, 0.001, "1 s stop")
+	var e := put(m, make_enemy_def(100000.0, 50.0), 300.0)
+	run(m, 1.1)
+	check(e.speed_multiplier() < 1.0, "hit enemies are slowed")
+
+
+## Hopper dashes then stops, keeping its average speed.
+func test_hopper_moves_in_hops() -> void:
+	var m := make_lab()
+	var h := put(m, real_enemy("hopper"), 0.0)
+	var start := h.progress
+	var stops := 0
+	var last := h.progress
+	for i in range(int(4.0 / DT)):
+		m.step(DT)
+		if is_equal_approx(h.progress, last):
+			stops += 1
+		last = h.progress
+	check(stops > int(1.5 / DT), "it stands still part of the time (%d still frames)" % stops)
+	near((h.progress - start) / 4.0, h.def.speed, h.def.speed * 0.2, "average speed ~ its speed")
+
+
+## Foreman: weak single-phase boss that calls in Drones.
+func test_foreman_is_a_light_boss_that_summons() -> void:
+	var f: EnemyDef = load("res://data/enemies/foreman.tres")
+	var w: EnemyDef = load("res://data/enemies/warden.tres")
+	check(f.is_boss, "boss")
+	check(f.max_hp * 4.0 < w.max_hp, "far weaker than the level-5 boss")
+	eq(f.boss_phase_count, 1)
+	var m := make_lab()
+	var b := put(m, f, 200.0)
+	var before := m.enemies.size()
+	run(m, 7.0)
+	check(m.enemies.size() > before, "called in Drones")

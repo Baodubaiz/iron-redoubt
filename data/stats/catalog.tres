@@ -427,67 +427,90 @@ percent = true
 
 [sub_resource type="Resource" id="Resource_ox2gc"]
 script = ExtResource("2_5udet")
+id = &"pulse_slow_pct"
+label = "Discharge slow"
+percent = true
+
+[sub_resource type="Resource" id="Resource_da67s"]
+script = ExtResource("2_5udet")
+id = &"pulse_duration"
+label = "Slow duration"
+unit = "s"
+
+[sub_resource type="Resource" id="Resource_qihe5"]
+script = ExtResource("2_5udet")
+id = &"relay_count"
+label = "Arc relay"
+
+[sub_resource type="Resource" id="Resource_3yyj0"]
+script = ExtResource("2_5udet")
+id = &"relay_mult"
+label = "Arc relay damage"
+unit = "x"
+
+[sub_resource type="Resource" id="Resource_llbe2"]
+script = ExtResource("2_5udet")
 id = &"spot_reveal"
 label = "Reveal"
 unit = "s"
 
-[sub_resource type="Resource" id="Resource_da67s"]
+[sub_resource type="Resource" id="Resource_80ooh"]
 script = ExtResource("2_5udet")
 id = &"field"
 label = "Field"
 stack = 1
 shown = false
 
-[sub_resource type="Resource" id="Resource_qihe5"]
+[sub_resource type="Resource" id="Resource_vlf27"]
 script = ExtResource("2_5udet")
 id = &"field_slow_pct"
 label = "Field slow"
 percent = true
 
-[sub_resource type="Resource" id="Resource_3yyj0"]
+[sub_resource type="Resource" id="Resource_tsu5b"]
 script = ExtResource("2_5udet")
 id = &"field_vuln"
 label = "Field exposure"
 unit = "x"
 
-[sub_resource type="Resource" id="Resource_llbe2"]
+[sub_resource type="Resource" id="Resource_vxdwk"]
 script = ExtResource("2_5udet")
 id = &"max_hp"
 label = "HP"
 owner = 1
 
-[sub_resource type="Resource" id="Resource_80ooh"]
+[sub_resource type="Resource" id="Resource_t28jc"]
 script = ExtResource("2_5udet")
 id = &"speed"
 label = "Speed"
 owner = 1
 unit = "px/s"
 
-[sub_resource type="Resource" id="Resource_vlf27"]
+[sub_resource type="Resource" id="Resource_a7esf"]
 script = ExtResource("2_5udet")
 id = &"armor"
 label = "Armor"
 owner = 1
 
-[sub_resource type="Resource" id="Resource_tsu5b"]
+[sub_resource type="Resource" id="Resource_qhtrj"]
 script = ExtResource("2_5udet")
 id = &"shield"
 label = "Shield"
 owner = 1
 
-[sub_resource type="Resource" id="Resource_vxdwk"]
+[sub_resource type="Resource" id="Resource_cfn8n"]
 script = ExtResource("2_5udet")
 id = &"reactive_threshold"
 label = "Reactive armor"
 owner = 1
 
-[sub_resource type="Resource" id="Resource_t28jc"]
+[sub_resource type="Resource" id="Resource_k2iy3"]
 script = ExtResource("2_5udet")
 id = &"bounty"
 label = "Bounty"
 owner = 1
 
-[sub_resource type="Resource" id="Resource_a7esf"]
+[sub_resource type="Resource" id="Resource_dxlv4"]
 script = ExtResource("2_5udet")
 id = &"base_damage"
 label = "Base damage"
@@ -495,4 +518,4 @@ owner = 1
 
 [resource]
 script = ExtResource("1_jb0dq")
-stats = Array[ExtResource("2_5udet")]([SubResource("Resource_mar7i"), SubResource("Resource_hjj4j"), SubResource("Resource_tlqc6"), SubResource("Resource_sqtlh"), SubResource("Resource_4toid"), SubResource("Resource_wugj7"), SubResource("Resource_vgct8"), SubResource("Resource_k6dvh"), SubResource("Resource_6obkn"), SubResource("Resource_pjc46"), SubResource("Resource_5e4xb"), SubResource("Resource_7epq5"), SubResource("Resource_d4pin"), SubResource("Resource_106c2"), SubResource("Resource_sn0pw"), SubResource("Resource_be20j"), SubResource("Resource_t3d2r"), SubResource("Resource_k5dkp"), SubResource("Resource_d05w6"), SubResource("Resource_48hig"), SubResource("Resource_7ls8l"), SubResource("Resource_ytri4"), SubResource("Resource_q3id5"), SubResource("Resource_06ast"), SubResource("Resource_4cesx"), SubResource("Resource_55gxr"), SubResource("Resource_s401c"), SubResource("Resource_hwmam"), SubResource("Resource_gve6c"), SubResource("Resource_wim6x"), SubResource("Resource_wymyh"), SubResource("Resource_3iayu"), SubResource("Resource_q4llr"), SubResource("Resource_pe7fx"), SubResource("Resource_3dmew"), SubResource("Resource_lcv41"), SubResource("Resource_h27cu"), SubResource("Resource_3w213"), SubResource("Resource_hwalv"), SubResource("Resource_nyd2e"), SubResource("Resource_u8b5d"), SubResource("Resource_4cdu5"), SubResource("Resource_wtnp2"), SubResource("Resource_pivl1"), SubResource("Resource_8po2c"), SubResource("Resource_g38j2"), SubResource("Resource_y3ylu"), SubResource("Resource_cx2eg"), SubResource("Resource_lts3x"), SubResource("Resource_cbtqq"), SubResource("Resource_8jh6m"), SubResource("Resource_sjh68"), SubResource("Resource_nacew"), SubResource("Resource_dwp6s"), SubResource("Resource_1puuv"), SubResource("Resource_4wtdp"), SubResource("Resource_glai5"), SubResource("Resource_eqqvm"), SubResource("Resource_po7yp"), SubResource("Resource_wwvhj"), SubResource("Resource_l5hae"), SubResource("Resource_jjhhh"), SubResource("Resource_1gvp8"), SubResource("Resource_huck5"), SubResource("Resource_hs64d"), SubResource("Resource_w1lgf"), SubResource("Resource_12gyd"), SubResource("Resource_pq5sw"), SubResource("Resource_j06st"), SubResource("Resource_g8lyc"), SubResource("Resource_xs2jg"), SubResource("Resource_ybt5l"), SubResource("Resource_ox2gc"), SubResource("Resource_da67s"), SubResource("Resource_qihe5"), SubResource("Resource_3yyj0"), SubResource("Resource_llbe2"), SubResource("Resource_80ooh"), SubResource("Resource_vlf27"), SubResource("Resource_tsu5b"), SubResource("Resource_vxdwk"), SubResource("Resource_t28jc"), SubResource("Resource_a7esf")])
+stats = Array[ExtResource("2_5udet")]([SubResource("Resource_mar7i"), SubResource("Resource_hjj4j"), SubResource("Resource_tlqc6"), SubResource("Resource_sqtlh"), SubResource("Resource_4toid"), SubResource("Resource_wugj7"), SubResource("Resource_vgct8"), SubResource("Resource_k6dvh"), SubResource("Resource_6obkn"), SubResource("Resource_pjc46"), SubResource("Resource_5e4xb"), SubResource("Resource_7epq5"), SubResource("Resource_d4pin"), SubResource("Resource_106c2"), SubResource("Resource_sn0pw"), SubResource("Resource_be20j"), SubResource("Resource_t3d2r"), SubResource("Resource_k5dkp"), SubResource("Resource_d05w6"), SubResource("Resource_48hig"), SubResource("Resource_7ls8l"), SubResource("Resource_ytri4"), SubResource("Resource_q3id5"), SubResource("Resource_06ast"), SubResource("Resource_4cesx"), SubResource("Resource_55gxr"), SubResource("Resource_s401c"), SubResource("Resource_hwmam"), SubResource("Resource_gve6c"), SubResource("Resource_wim6x"), SubResource("Resource_wymyh"), SubResource("Resource_3iayu"), SubResource("Resource_q4llr"), SubResource("Resource_pe7fx"), SubResource("Resource_3dmew"), SubResource("Resource_lcv41"), SubResource("Resource_h27cu"), SubResource("Resource_3w213"), SubResource("Resource_hwalv"), SubResource("Resource_nyd2e"), SubResource("Resource_u8b5d"), SubResource("Resource_4cdu5"), SubResource("Resource_wtnp2"), SubResource("Resource_pivl1"), SubResource("Resource_8po2c"), SubResource("Resource_g38j2"), SubResource("Resource_y3ylu"), SubResource("Resource_cx2eg"), SubResource("Resource_lts3x"), SubResource("Resource_cbtqq"), SubResource("Resource_8jh6m"), SubResource("Resource_sjh68"), SubResource("Resource_nacew"), SubResource("Resource_dwp6s"), SubResource("Resource_1puuv"), SubResource("Resource_4wtdp"), SubResource("Resource_glai5"), SubResource("Resource_eqqvm"), SubResource("Resource_po7yp"), SubResource("Resource_wwvhj"), SubResource("Resource_l5hae"), SubResource("Resource_jjhhh"), SubResource("Resource_1gvp8"), SubResource("Resource_huck5"), SubResource("Resource_hs64d"), SubResource("Resource_w1lgf"), SubResource("Resource_12gyd"), SubResource("Resource_pq5sw"), SubResource("Resource_j06st"), SubResource("Resource_g8lyc"), SubResource("Resource_xs2jg"), SubResource("Resource_ybt5l"), SubResource("Resource_ox2gc"), SubResource("Resource_da67s"), SubResource("Resource_qihe5"), SubResource("Resource_3yyj0"), SubResource("Resource_llbe2"), SubResource("Resource_80ooh"), SubResource("Resource_vlf27"), SubResource("Resource_tsu5b"), SubResource("Resource_vxdwk"), SubResource("Resource_t28jc"), SubResource("Resource_a7esf"), SubResource("Resource_qhtrj"), SubResource("Resource_cfn8n"), SubResource("Resource_k2iy3"), SubResource("Resource_dxlv4")])

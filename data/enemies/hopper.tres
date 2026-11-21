@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EnemyDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/boss_skill_def.gd" id="1_lrlet"]
+[ext_resource type="Script" path="res://data/defs/enemy_def.gd" id="2_xvb4a"]
+
+[resource]
+script = ExtResource("2_xvb4a")
+id = &"hopper"
+display_name = "Hopper"
+max_hp = 55.0
+speed = 65.0
+hop_on = 0.4
+hop_off = 0.6
+bounty = 4
+color = Color(1, 0.6666667, 0.27058825, 1)

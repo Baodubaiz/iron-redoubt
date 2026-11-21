@@ -21,11 +21,12 @@ const BODY := {
 	&"prismling": "prismling", &"diver": "diver",
 	&"disruptor": "disruptor", &"static_crawler": "static_crawler", &"wraith": "wraith",
 	&"vanguard": "vanguard", &"rallier": "rallier", &"cloaker": "cloaker", &"mender_elite": "mender_elite",
+	&"hopper": "hopper", &"foreman": "foreman",
 }
 const KIT_COLOR := {
 	&"monolith": Color("FF5368"), &"warden": Color("FFB84D"), &"carrier": Color("7FA8FF"),
 	&"chimera": Color("C77DFF"), &"colossus": Color("FF5368"), &"dynamo": Color("38D9F5"),
-	&"leviathan": Color("4D8CFF"), &"refractor": Color("A66BFF"),
+	&"leviathan": Color("4D8CFF"), &"refractor": Color("A66BFF"), &"foreman": Color("FFCC33"),
 }
 const PRISM_COLOR := {0: Color("E6EBF5"), 1: Color("FFAA45"), 2: Color("A66BFF")} ## kinetic / explosive / energy
 const LEG := Color("5A5F6E")
@@ -258,6 +259,17 @@ func _parts_under(id: StringName) -> void:
 				var foot := Vector2(fx + sin(ph) * 5.0, side * 22.0)
 				draw_line(Vector2(fx * 0.6, side * 8.0), foot, LEG, 4.0)
 				draw_circle(foot, 2.5, Color("3A3F4E"))
+		&"hopper": # spring legs: tucked while it stands, stretched mid-hop
+			var hp := e.hop_phase()
+			var reach := 14.0 if hp < 0.0 else 14.0 + 10.0 * sin(hp * PI)
+			for i in range(4):
+				var side := -1.0 if i < 2 else 1.0
+				var fx := 9.0 if i % 2 == 0 else -9.0
+				var knee := Vector2(fx * 0.6, side * 10.0)
+				var foot := Vector2(fx + (4.0 if hp >= 0.0 else 0.0) * (-1.0 if fx > 0.0 else 1.0), side * (reach + 4.0))
+				draw_line(Vector2(fx * 0.4, side * 6.0), knee, LEG, 3.5)
+				draw_line(knee, foot, LEG, 3.0)
+				draw_circle(foot, 2.2, Color("3A2E24"))
 		&"swarmling":
 			for i in range(6):
 				var side := -1.0 if i < 3 else 1.0

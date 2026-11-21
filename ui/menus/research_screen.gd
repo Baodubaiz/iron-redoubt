@@ -33,7 +33,8 @@ func _tower_def(id: StringName) -> TowerDef:
 	for t in Progression.model.campaign.levels[0].available_towers:
 		if t.id == id:
 			return t
-	return null
+	var path := "res://data/towers/%s.tres" % id # towers not offered in a level yet (Coil)
+	return load(path) if ResourceLoader.exists(path) else null
 
 
 ## Every distinct tower with research under the "tower" category, sorted C -> SS.

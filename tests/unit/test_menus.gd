@@ -141,7 +141,7 @@ func test_codex_lists_data_and_locks_unmet_enemies() -> void:
 	for c in cx.find_children("Entry_*", "Button", true, false):
 		if c.is_inside_tree() and not c.is_queued_for_deletion():
 			bosses += 1
-	eq(bosses, 8, "all 8 bosses listed (from the campaign data)")
+	eq(bosses, 9, "8 campaign bosses + Foreman (not in a level yet) listed")
 	check(not _texts(cx.find_child("Entry_warden", true, false)).contains("???"), "met boss is named")
 	(_find(cx, "Tab_effects") as Button).pressed.emit()
 	check(cx.find_child("Entry_burn", true, false) != null, "built-in effects listed")

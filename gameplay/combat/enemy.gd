@@ -244,6 +244,27 @@ func speed_multiplier() -> float:
 	return mult
 
 
+var _hop_t := -1.0
+
+
+## Hopper: dash (x cycle/on speed) then stand still; average speed unchanged. Advances the hop clock.
+func hop_factor(dt: float) -> float:
+	if def.hop_on <= 0.0:
+		return 1.0
+	var cycle := def.hop_on + def.hop_off
+	if _hop_t < 0.0:
+		_hop_t = fmod(float(uid) * 0.37, cycle) # not all in step
+	_hop_t = fmod(_hop_t + dt, cycle)
+	return cycle / def.hop_on if _hop_t < def.hop_on else 0.0
+
+
+## 0..1 through the current dash, -1 while standing still (visuals).
+func hop_phase() -> float:
+	if def.hop_on <= 0.0 or _hop_t < 0.0:
+		return -1.0
+	return _hop_t / def.hop_on if _hop_t < def.hop_on else -1.0
+
+
 func current_speed() -> float:
 	return def.speed * speed_multiplier()
 
@@ -356,7 +377,7 @@ func tick_statuses(dt: float) -> float:
 func advance(dt: float) -> bool:
 	if state != State.ALIVE:
 		return false
-	progress += current_speed() * dt
+	progress += current_speed() * hop_factor(dt) * dt
 	if progress >= route.total_length:
 		progress = route.total_length
 		position = route.points[route.points.size() - 1]

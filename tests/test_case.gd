@@ -131,7 +131,7 @@ static func real_enemy(id: String, speed_override: float = -1.0) -> EnemyDef:
 static func all_real_towers() -> Array[TowerDef]:
 	var a: Array[TowerDef] = [real_tower("pulse"), real_tower("nova"), real_tower("lance"), real_tower("beacon"),
 		real_tower("trap"), real_tower("venom"), real_tower("sniper"), real_tower("bastion"), real_tower("spotter"), real_tower("storm"),
-		real_tower("chronos")]
+		real_tower("chronos"), real_tower("coil")]
 	return a
 
 

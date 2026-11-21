@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ResearchDef" format=3]
+
+[ext_resource type="Script" path="res://data/defs/research_def.gd" id="1_vtvm0"]
+
+[resource]
+script = ExtResource("1_vtvm0")
+id = &"branch_coil_widefield"
+display_name = "Wide Field Protocol"
+description = "Unlocks Coil branch: Wide Field."
+kind = 0
+cost = 40
+tower_id = &"coil"
+requires_tower = &"coil"
+category = &"tower"
