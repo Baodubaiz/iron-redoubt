@@ -156,7 +156,7 @@ func test_research_applies_to_match() -> void:
 	tree.root.add_child(mc)
 	_nodes.append(mc)
 	mc.setup(campaign.levels[0], 1, null, pm.build_modifiers())
-	eq(mc.economy.currency, 385 + 25) # 350 * 1.10 seed money + 25 bonus
+	eq(mc.economy.currency, roundi(campaign.levels[0].starting_currency * 1.10) + 25) # seed money x1.10 + 25 bonus
 	eq(mc.base.hp, 20 + 3)
 	near(mc.waves.early_bonus_multiplier, 1.25, 0.0001)
 	var t := mc.try_build(real_tower("pulse"), Vector2(300, 240))
@@ -301,7 +301,7 @@ func test_challenge_modifiers_enforced() -> void:
 	_nodes.append(m)
 	m.setup(campaign.levels[0], 1, null, mods)
 	eq(m.base.hp, 5)
-	eq(m.economy.currency, 308) # 350 * 1.10 * 0.8
+	eq(m.economy.currency, roundi(campaign.levels[0].starting_currency * 1.10 * 0.8))
 	check(not m.is_tower_available(real_tower("nova")), "banned")
 	var t := m.try_build(real_tower("pulse"), Vector2(300, 240))
 	eq(m.try_sell(t), -1, "no selling")

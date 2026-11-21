@@ -65,10 +65,14 @@ func test_enemy_traits_raise_pressure() -> void:
 				check(g.enemy.threat_mult >= 1.0, "%s threat factor set" % g.enemy.id)
 
 
-## 2026-11-21: no Gliders (fliers) in a level's first two waves; the budget goes to ground enemies instead.
-func test_no_gliders_in_the_first_two_waves() -> void:
+## 2026-11-21: every enemy waits for its earliest wave (level_plan.gd FIRST_WAVE), e.g. no Gliders in waves 1-2,
+## no Vanguard before wave 5.
+func test_enemies_respect_their_earliest_wave() -> void:
+	var first: Dictionary = preload("res://tools/level_plan.gd").FIRST_WAVE
+	eq(int(first.get("glider", 1)), 3, "Gliders from wave 3")
 	var c: CampaignDef = load("res://data/campaign.tres")
 	for l in c.levels:
-		for wi in range(mini(2, l.waves.size())):
+		for wi in range(l.waves.size()):
 			for g in l.waves[wi].groups:
-				check(g.enemy == null or g.enemy.id != &"glider", "%s wave %d has no Gliders" % [l.id, wi + 1])
+				var need := int(first.get(String(g.enemy.id), 1))
+				check(wi + 1 >= need, "%s wave %d: %s only from wave %d" % [l.id, wi + 1, g.enemy.id, need])

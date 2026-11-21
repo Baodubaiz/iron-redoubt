@@ -1175,7 +1175,7 @@ const DIFFICULTY := {
 
 
 func _levels() -> void:
-	for id in ["drone", "dart", "brute", "swarmling", "plated", "aegis", "glider", "phantom", "mender", "monolith",
+	for id in ["drone", "dart", "hopper", "foreman", "brute", "swarmling", "plated", "aegis", "glider", "phantom", "mender", "monolith",
 			"warden", "carrier", "chimera", "colossus", "dynamo", "leviathan", "refractor",
 			"escort", "sludge", "shade", "sprinter", "jammer", "prismling", "diver",
 			"disruptor", "static_crawler", "wraith", "vanguard", "rallier", "cloaker", "mender_elite"]:
@@ -1195,7 +1195,7 @@ func _levels() -> void:
 	var t2: Array[TowerDef] = [pulse, nova]
 	var t3: Array[TowerDef] = [pulse, nova, lance]
 	var rookie: Array[TowerDef] = []
-	var all: Array[TowerDef] = [pulse, nova, lance, beacon, load("res://data/towers/trap.tres"),
+	var all: Array[TowerDef] = [pulse, load("res://data/towers/coil.tres"), nova, lance, beacon, load("res://data/towers/trap.tres"),
 		load("res://data/towers/venom.tres"), load("res://data/towers/sniper.tres"), load("res://data/towers/bastion.tres"),
 		load("res://data/towers/spotter.tres"), load("res://data/towers/storm.tres"), load("res://data/towers/chronos.tres")]
 	t2 = all
@@ -1203,8 +1203,10 @@ func _levels() -> void:
 
 	var levels: Array[LevelDef] = []
 
-	var l1 := _level(&"level_01", "1 — First Contact", 1, circuit, t2, econ, 350, 20)
-	l1.objective = "Learn to build: survive 8 waves of Drones and Darts."
+	# Level 1 rework (2026-11-21, CrazyGames feedback: first minutes too long and samey): 5 waves, Pulse + Coil
+	# from the start, Hoppers from wave 3 and the Foreman mini boss to close it. Guided by the tutorial (HUD).
+	var l1 := _level(&"level_01", "1 — First Contact", 1, circuit, t2, econ, 400, 20)
+	l1.objective = "Hold the line: stop 5 waves and the Foreman."
 	l1.cores_first_clear = 10
 	l1.waves = _waves([
 		"drone*6@1.4",
@@ -1788,7 +1790,7 @@ func _meta() -> void:
 		_save(c, "res://data/meta/challenges/%s.tres" % c.id)
 
 	var campaign := CampaignDef.new()
-	var start_t: Array[StringName] = [&"pulse"]
+	var start_t: Array[StringName] = [&"pulse", &"coil"] # Coil: second starter (2026-11-21, level 1 rework)
 	campaign.starting_towers = start_t
 	var lv: Array[LevelDef] = []
 	for id in ORDER:

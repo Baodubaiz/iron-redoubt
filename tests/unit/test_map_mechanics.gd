@@ -109,8 +109,8 @@ func test_all_campaign_data_is_consistent() -> void:
 					check(g.route_index < l.map.routes.size(), "%s route index valid" % l.id)
 	for rg in [&"circuit", &"delta", &"prism", &"rift"]:
 		eq(per_region.get(rg), 10, "%s has 10 levels" % rg)
-	eq(str(boss_levels), str([5, 10, 15, 20, 25, 30, 35, 40]), "every region: a boss on its 5th and 10th level")
-	eq(kits.size(), 8, "eight different boss kits")
+	eq(str(boss_levels), str([1, 5, 10, 15, 20, 25, 30, 35, 40]), "level 1 mini boss + every region: a boss on its 5th and 10th level")
+	eq(kits.size(), 9, "nine different boss kits (Foreman included)")
 	for k in kits:
 		eq(kits[k], 1, "boss kit %s used once" % k)
 	eq(c.research.size(), 27) # 22 tower (branch/evolution, 1-2 per tower; Coil added 2026-11-21) + 5 support

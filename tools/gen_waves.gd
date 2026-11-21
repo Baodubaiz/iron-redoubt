@@ -39,6 +39,7 @@ func _init() -> void:
 			row = "##  "
 	if row.length() > 4:
 		out.append(row)
+	out.append("## Earliest wave per enemy (tools/level_plan.gd FIRST_WAVE): %s" % str(LP.FIRST_WAVE))
 	out.append("")
 	out.append("const WAVES := {")
 	var grand := 0
@@ -96,9 +97,8 @@ func _enemy(id: String) -> EnemyDef:
 
 
 ## [WaveDef, {group: weight} for budgeted groups, threat]
-## No fliers in a level's first waves (2026-11-21, user): the player has barely built anything yet and most
-## starting towers cannot hit air. These enemies become Drones there, same threat budget (counts re-derived).
-const NO_EARLY := {"glider": 2} ## enemy id -> first wave index (0-based) it may appear in
+## Enemies placed before their LP.FIRST_WAVE (2026-11-21, user) become Drones there, same threat budget
+## (budgeted counts are re-derived, fixed counts scaled by the threat ratio).
 const EARLY_STANDIN := "drone"
 
 
@@ -126,16 +126,18 @@ func _plan_wave(line: String, wave_index: int = 99) -> Array:
 		var g := SpawnGroupDef.new()
 		g.enemy = _enemy(m.get_string(1))
 		var fixed := int(m.get_string(2)) if m.get_string(2) != "" else -1
-		if wave_index < int(NO_EARLY.get(m.get_string(1), 0)):
+		var pace := 1.0
+		if wave_index + 1 < int(LP.FIRST_WAVE.get(m.get_string(1), 1)):
 			var standin := _enemy(EARLY_STANDIN)
 			if fixed > 0: # fixed count: keep the same threat
 				fixed = maxi(1, int(round(fixed * DifficultyModel.enemy_threat(g.enemy) / DifficultyModel.enemy_threat(standin))))
+			pace = DifficultyModel.enemy_threat(standin) / DifficultyModel.enemy_threat(g.enemy) # same threat/second
 			g.enemy = standin
 		if fixed >= 0:
 			g.count = fixed
 		else:
 			weights[g] = float(m.get_string(3)) if m.get_string(3) != "" else 1.0
-		g.interval = float(m.get_string(4))
+		g.interval = float(m.get_string(4)) if pace >= 1.0 else maxf(0.5, float(m.get_string(4)) * pace)
 		if m.get_string(5) != "": g.start_delay = float(m.get_string(5))
 		if m.get_string(6) != "": g.count_variance = float(m.get_string(6))
 		if m.get_string(7) != "": g.route_index = int(m.get_string(7))

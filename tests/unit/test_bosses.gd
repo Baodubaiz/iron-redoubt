@@ -28,7 +28,7 @@ func test_every_region_boss_has_a_unique_kit() -> void:
 				if g.enemy.is_boss:
 					check(not kits.has(g.enemy.boss_kit) or kits[g.enemy.boss_kit] == g.enemy.id, "kit %s reused" % g.enemy.boss_kit)
 					kits[g.enemy.boss_kit] = g.enemy.id
-	eq(kits.size(), 8)
+	eq(kits.size(), 9) # 8 region bosses + the level-1 Foreman mini boss (2026-11-21)
 	# each region: the 10th-level boss outclasses the 5th-level one
 	for pair in [["warden", "dynamo"], ["carrier", "leviathan"], ["refractor", "monolith"], ["chimera", "colossus"]]:
 		var a := real_enemy(pair[0])

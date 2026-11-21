@@ -36,10 +36,10 @@ func _scene() -> Control:
 
 func test_default_selection_is_capped_at_loadout_size() -> void:
 	SceneRouter.pending_level = Progression.model.campaign.levels[0]
-	_own(["nova", "lance", "beacon", "trap", "venom", "sniper", "bastion", "spotter"]) # pulse + 8 = 9 owned
+	_own(["nova", "lance", "beacon", "trap", "venom", "sniper", "bastion", "spotter"]) # pulse + coil + 8 = 10 owned
 	var s := _scene()
 	eq(s._selected.size(), LoadoutScreen.LOADOUT_SIZE)
-	eq(s._buttons.size(), 9, "every owned, level-available tower gets a card")
+	eq(s._buttons.size(), 10, "every owned, level-available tower gets a card")
 	var pressed := 0
 	for b in s._buttons.values():
 		if (b as Button).button_pressed:
@@ -49,9 +49,9 @@ func test_default_selection_is_capped_at_loadout_size() -> void:
 
 func test_fewer_owned_than_the_cap_selects_all_of_them() -> void:
 	SceneRouter.pending_level = Progression.model.campaign.levels[0]
-	_own(["nova"]) # pulse + nova = 2 owned, well under the cap
+	_own(["nova"]) # pulse + coil + nova = 3 owned, well under the cap
 	var s := _scene()
-	eq(s._selected.size(), 2)
+	eq(s._selected.size(), 3)
 
 
 func test_toggling_off_then_on_past_the_cap_is_rejected() -> void:

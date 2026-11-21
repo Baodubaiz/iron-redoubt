@@ -5,743 +5,754 @@
 ##   PCT = this wave's threat as % of the level's peak. Peak = last wave = level 1: 70, +50 every 5 levels
 ##   up to 40 (420), then +50 every 10 (DifficultyModel.level_peak_threat). Threat is summed in Drones
 ##   (Drone = 1, Swarmling 0.36, Brute 3.67, ... see the table at the top of tools/level_waves.gd).
-##   Default ramp: 30% + 70% x (progress through the level)^2 -- slow start, heavier near the end.
+##   Default ramp: 20% + 80% x (progress through the level)^2 -- slow start, heavier near the end.
+##   (2026-11-21, user: wave 1 at 20%; every wave remapped 30..100 -> 20..100, same curve shape.)
 ##   flags: boss, special, night, route=N, prep=S
 ## Group:  enemy[*count][:weight]@interval[+start_delay][~count_variance][#route][!hp=x][!ph=n][!dmg=n]
 ##   *count  = fixed count (bosses); its threat counts toward the wave, the rest is filled by the others.
 ##   :weight = share of the wave's (remaining) threat this group gets (default: equal shares).
 ##   Spawn intervals are stretched automatically so no wave spawns > 100 enemies per 25 s.
 
+## Earliest wave (1-based, in every level) each enemy may appear in (2026-11-21, user: no strong enemies at the
+## very start of a level, like old level 7). Earlier than that, gen_waves swaps it for Drones with the same threat
+## budget, so a wave's total difficulty is unchanged. Not listed = any wave. Bosses only appear in boss waves.
+const FIRST_WAVE := {
+	# wave 1+: drone, dart, swarmling, hopper (light)
+	"plated": 2, "sprinter": 2, "escort": 2, "prismling": 2,
+	"glider": 3, "phantom": 3, "shade": 3, "wraith": 3, "cloaker": 3, "diver": 3, # fliers / stealth
+	"aegis": 3, "mender": 3, "jammer": 3, "rallier": 3, "disruptor": 3, "sludge": 3,
+	"brute": 3, # threat 8.3
+	"mender_elite": 4, "static_crawler": 4, # threat 4.6 / 7.2
+	"vanguard": 5, # threat 11.2
+}
+
 const PLAN := {
-	"level_01": [ # 1 — First Contact
-		"drone:100@1.4~0.1 | 30", # w1
-		"drone:100@1.2~0.1 | 31", # w2
-		"drone:57@1.3~0.1, dart:43@0.8+6.0~0.0 | 36", # w3
-		"drone:100@1.0~0.1 | 43", # w4
-		"dart:59@0.7~0.1, drone:41@1.0+4.0~0.1 | 53", # w5
-		"drone:73@0.8~0.1, dart:27@0.6+8.0~0.1 | 66", # w6
-		"drone:63@0.7~0.1, dart:37@0.5+5.0~0.1 | 81", # w7
-		"dart:66@0.45~0.0, drone:34@0.8+6.0~0.0 | 100, special", # w8
+	"level_01": [ # 1 — First Contact (2026-11-21 rework: 5 waves, Hopper, Foreman mini boss)
+		"drone:100@1.5~0.1 | 20", # w1  tutorial: build, start
+		"drone:60@1.2~0.1, dart:40@0.8+5.0~0.0 | 27", # w2  tutorial: Coil
+		"hopper:100@0.9~0.1 | 43", # w3  new enemy
+		"drone:50@1.0~0.1, hopper:50@0.8+4.0~0.1 | 66", # w4  tutorial: upgrade
+		"foreman*1@1.0~0.0, drone:60@1.0+3.0~0.1, hopper:40@0.9+8.0~0.1 | 100, boss", # w5  mini boss
 	],
 	"level_02": [ # 2 — Heavy Traffic
-		"drone:100@1.2~0.1 | 30", # w1
-		"swarmling:44@0.35~0.1, dart:56@0.7+5.0~0.1 | 31", # w2
-		"brute:48@3.0~0.0, drone:52@1.0+2.0~0.1 | 33", # w3
-		"drone:72@0.8~0.1, swarmling:28@0.3+6.0~0.1 | 38", # w4
-		"brute:67@2.5~0.0, dart:33@0.6+4.0~0.1 | 44", # w5
-		"drone:64@0.7~0.1, brute:36@2.5+6.0~0.0 | 52", # w6
-		"swarmling:35@0.25~0.1, brute:65@2.0+5.0~0.0 | 61", # w7
-		"brute:56@1.8~0.1, drone:44@0.6+3.0~0.1 | 72", # w8
-		"drone:47@0.5~0.1, dart:25@0.4+6.0~0.1, brute:29@2.0+10.0~0.0 | 85", # w9
+		"drone:100@1.2~0.1 | 20", # w1
+		"swarmling:44@0.35~0.1, dart:56@0.7+5.0~0.1 | 21", # w2
+		"brute:48@3.0~0.0, drone:52@1.0+2.0~0.1 | 23", # w3
+		"drone:72@0.8~0.1, swarmling:28@0.3+6.0~0.1 | 29", # w4
+		"brute:67@2.5~0.0, dart:33@0.6+4.0~0.1 | 36", # w5
+		"drone:64@0.7~0.1, brute:36@2.5+6.0~0.0 | 45", # w6
+		"swarmling:35@0.25~0.1, brute:65@2.0+5.0~0.0 | 55", # w7
+		"brute:56@1.8~0.1, drone:44@0.6+3.0~0.1 | 68", # w8
+		"drone:47@0.5~0.1, dart:25@0.4+6.0~0.1, brute:29@2.0+10.0~0.0 | 83", # w9
 		"brute:49@1.88~0.0, swarmling:18@0.25+5.0~0.0, drone:34@0.63+10.01~0.0 | 100, special", # w10
 	],
 	"level_20": [ # 3 — Relay Yard
-		"drone:58@0.55~0.1, swarmling:42@0.14+4.0~0.1 | 30", # w1
-		"swarmling:26@0.14~0.1, plated:74@1.1+5.0~0.0 | 31", # w2
-		"drone:56@0.55~0.1, dart:44@0.38+4.0~0.1 | 32", # w3
-		"drone:61@0.55~0.1, swarmling:39@0.14+3.0~0.1 | 35", # w4
-		"drone:29@0.55~0.1, dart:22@0.38+3.0~0.1, plated:48@1.1+6.0~0.1 | 39", # w5
-		"dart:32@0.38~0.0, drone:40@0.55+4.0~0.0, swarmling:27@0.14+7.0~0.0 | 44, special", # w6
-		"drone:36@1.33~0.1, swarmling:23@0.34+7.26~0.1, brute:41@3.63+16.95~0.1 | 51", # w7
-		"drone:39@1.62~0.1, dart:33@1.12+14.74~0.1, swarmling:28@0.41+17.68~0.1 | 58", # w8
-		"dart:32@1.12~0.1, swarmling:27@0.41+8.82~0.1, drone:41@1.62+23.52~0.1 | 67", # w9
-		"drone:34@1.34~0.1, swarmling:23@0.34+7.28~0.1, brute:43@3.64+14.57~0.1 | 77", # w10
-		"drone:30@1.37~0.1, plated:49@2.73+10.13~0.1, swarmling:21@0.35+15.19~0.1 | 88", # w11
+		"drone:58@0.55~0.1, swarmling:42@0.14+4.0~0.1 | 20", # w1
+		"swarmling:26@0.14~0.1, plated:74@1.1+5.0~0.0 | 21", # w2
+		"drone:56@0.55~0.1, dart:44@0.38+4.0~0.1 | 22", # w3
+		"drone:61@0.55~0.1, swarmling:39@0.14+3.0~0.1 | 26", # w4
+		"drone:29@0.55~0.1, dart:22@0.38+3.0~0.1, plated:48@1.1+6.0~0.1 | 30", # w5
+		"dart:32@0.38~0.0, drone:40@0.55+4.0~0.0, swarmling:27@0.14+7.0~0.0 | 36, special", # w6
+		"drone:36@1.33~0.1, swarmling:23@0.34+7.26~0.1, brute:41@3.63+16.95~0.1 | 44", # w7
+		"drone:39@1.62~0.1, dart:33@1.12+14.74~0.1, swarmling:28@0.41+17.68~0.1 | 52", # w8
+		"dart:32@1.12~0.1, swarmling:27@0.41+8.82~0.1, drone:41@1.62+23.52~0.1 | 62", # w9
+		"drone:34@1.34~0.1, swarmling:23@0.34+7.28~0.1, brute:43@3.64+14.57~0.1 | 74", # w10
+		"drone:30@1.37~0.1, plated:49@2.73+10.13~0.1, swarmling:21@0.35+15.19~0.1 | 86", # w11
 		"brute:34@3.42~0.0, swarmling:19@0.31+11.88~0.0, plated:47@2.52+16.63~0.0 | 100, special", # w12
 	],
 	"level_21": [ # 4 — Coil Maze
-		"plated:63@1.1~0.0, drone:37@0.55+4.0~0.1 | 30", # w1
-		"plated:61@1.1~0.0, glider:39@0.7+4.0~0.1 | 31", # w2
-		"dart:44@0.38~0.1, drone:56@0.55+3.0~0.1 | 32", # w3
-		"drone:58@0.55~0.1, dart:42@0.38+4.0~0.1 | 35", # w4
-		"brute:28@1.5~0.0, glider:31@0.7+3.0~0.1, plated:41@1.1+7.0~0.1 | 39", # w5
-		"brute:31@1.5~0.0, plated:42@1.1+4.0~0.0, drone:28@0.55+8.0~0.0 | 44, special", # w6
-		"swarmling:19@0.3~0.1, plated:44@2.34+10.62~0.1, brute:37@3.19+12.75~0.1 | 51", # w7
-		"dart:29@1.01~0.1, brute:46@3.99+10.65~0.1, swarmling:25@0.37+21.3~0.1 | 58", # w8
-		"brute:43@3.93~0.1, dart:31@1.0+10.54~0.1, swarmling:26@0.37+15.81~0.1 | 67", # w9
-		"dart:31@1.05~0.1, glider:41@1.94+14.25~0.1, swarmling:28@0.4+19.95~0.1 | 77", # w10
-		"swarmling:22@0.38~0.1, plated:52@3.04+8.69~0.1, dart:26@1.04+23.18~0.1 | 88", # w11
+		"plated:63@1.1~0.0, drone:37@0.55+4.0~0.1 | 20", # w1
+		"plated:61@1.1~0.0, glider:39@0.7+4.0~0.1 | 21", # w2
+		"dart:44@0.38~0.1, drone:56@0.55+3.0~0.1 | 22", # w3
+		"drone:58@0.55~0.1, dart:42@0.38+4.0~0.1 | 26", # w4
+		"brute:28@1.5~0.0, glider:31@0.7+3.0~0.1, plated:41@1.1+7.0~0.1 | 30", # w5
+		"brute:31@1.5~0.0, plated:42@1.1+4.0~0.0, drone:28@0.55+8.0~0.0 | 36, special", # w6
+		"swarmling:19@0.3~0.1, plated:44@2.34+10.62~0.1, brute:37@3.19+12.75~0.1 | 44", # w7
+		"dart:29@1.01~0.1, brute:46@3.99+10.65~0.1, swarmling:25@0.37+21.3~0.1 | 52", # w8
+		"brute:43@3.93~0.1, dart:31@1.0+10.54~0.1, swarmling:26@0.37+15.81~0.1 | 62", # w9
+		"dart:31@1.05~0.1, glider:41@1.94+14.25~0.1, swarmling:28@0.4+19.95~0.1 | 74", # w10
+		"swarmling:22@0.38~0.1, plated:52@3.04+8.69~0.1, dart:26@1.04+23.18~0.1 | 86", # w11
 		"glider:42@0.92~0.0, dart:22@0.5+4.17~0.0, brute:34@1.95+9.73~0.0, swarmling:2@0.92~0.0 | 100, special", # w12
 	],
 	"level_03": [ # 5 — Iron Convoy
-		"drone:100@0.9~0.1 | 30", # w1
-		"drone:53@0.8~0.1, dart:47@0.5+4.0~0.1 | 31", # w2
-		"plated:62@2.0~0.0, drone:38@0.8+2.0~0.1 | 32", # w3
-		"brute:67@2.5~0.0, swarmling:33@0.25+3.0~0.1 | 35", # w4
-		"drone:41@0.7~0.1, plated:59@1.6+5.0~0.0 | 39", # w5
-		"glider:53@1.2~0.1, drone:47@0.7+2.0~0.1 | 44", # w6
-		"plated:75@1.4~0.1, dart:25@0.45+4.0~0.1 | 51", # w7
-		"glider:59@1.0~0.1, swarmling:33@0.2+3.0~0.1, drone:8@1.0~0.1 | 58", # w8
-		"brute:46@1.8~0.0, plated:54@1.3+4.0~0.0 | 67", # w9
-		"drone:53@0.5~0.1, glider:47@0.8+6.0~0.1 | 77", # w10
-		"plated:54@1.1~0.1, brute:26@2.0+5.0~0.0, dart:20@0.4+8.0~0.1 | 88", # w11
+		"drone:100@0.9~0.1 | 20", # w1
+		"drone:53@0.8~0.1, dart:47@0.5+4.0~0.1 | 21", # w2
+		"plated:62@2.0~0.0, drone:38@0.8+2.0~0.1 | 22", # w3
+		"brute:67@2.5~0.0, swarmling:33@0.25+3.0~0.1 | 26", # w4
+		"drone:41@0.7~0.1, plated:59@1.6+5.0~0.0 | 30", # w5
+		"glider:53@1.2~0.1, drone:47@0.7+2.0~0.1 | 36", # w6
+		"plated:75@1.4~0.1, dart:25@0.45+4.0~0.1 | 44", # w7
+		"glider:59@1.0~0.1, swarmling:33@0.2+3.0~0.1, drone:8@1.0~0.1 | 52", # w8
+		"brute:46@1.8~0.0, plated:54@1.3+4.0~0.0 | 62", # w9
+		"drone:53@0.5~0.1, glider:47@0.8+6.0~0.1 | 74", # w10
+		"plated:54@1.1~0.1, brute:26@2.0+5.0~0.0, dart:20@0.4+8.0~0.1 | 86", # w11
 		"warden*1@1.0~0.0, plated:68@1.4+6.0~0.0, drone:32@0.6+3.0~0.0 | 100, boss", # w12
 	],
 	"level_22": [ # 6 — Crossroads
-		"drone:45@0.55~0.1, brute:55@1.5+5.0~0.0 | 30", # w1
-		"brute:61@1.5~0.0, swarmling:39@0.14+5.0~0.1 | 30", # w2
-		"glider:48@0.7~0.1, brute:52@1.5+3.0~0.0 | 32", # w3
-		"escort:36@1.3~0.0, plated:64@1.1+4.0~0.0 | 34", # w4
-		"escort:29@1.3~0.0, dart:24@0.38+3.0~0.1, plated:46@1.1+7.0~0.0 | 37", # w5
-		"escort:32@1.3~0.0, dart:28@0.38+3.0~0.0, brute:40@1.5+7.0~0.0 | 40, special", # w6
-		"swarmling:20@0.14~0.1, drone:30@0.55+3.0~0.1, plated:49@1.1+8.0~0.1 | 45", # w7
-		"glider:31@1.65~0.1, swarmling:21@0.33+11.8~0.1, plated:48@2.6+16.52~0.1 | 50", # w8
-		"escort:22@1.29~0.0, brute:40@1.49+3.0~0.1, glider:36@0.7+8.0~0.1, swarmling:2@1.29~0.0 | 57", # w9
-		"drone:27@0.64~0.1, plated:42@1.27+5.94~0.1, glider:30@0.81+9.51~0.1, swarmling:1@0.81+9.51~0.1 | 64", # w10
-		"dart:26@0.44~0.1, drone:33@0.63+4.76~0.1, brute:41@1.71+8.32~0.1 | 71", # w11
-		"escort:22@1.23~0.0, brute:41@1.42+3.0~0.0, glider:35@0.66+7.0~0.0, swarmling:2@1.23~0.0 | 80, special", # w12
-		"escort:25@1.21~0.0, brute:40@1.39+5.0~0.1, drone:34@0.51+8.0~0.1, swarmling:1@1.21~0.0 | 90", # w13
+		"drone:45@0.55~0.1, brute:55@1.5+5.0~0.0 | 20", # w1
+		"brute:61@1.5~0.0, swarmling:39@0.14+5.0~0.1 | 20", # w2
+		"glider:48@0.7~0.1, brute:52@1.5+3.0~0.0 | 22", # w3
+		"escort:36@1.3~0.0, plated:64@1.1+4.0~0.0 | 25", # w4
+		"escort:29@1.3~0.0, dart:24@0.38+3.0~0.1, plated:46@1.1+7.0~0.0 | 28", # w5
+		"escort:32@1.3~0.0, dart:28@0.38+3.0~0.0, brute:40@1.5+7.0~0.0 | 31, special", # w6
+		"swarmling:20@0.14~0.1, drone:30@0.55+3.0~0.1, plated:49@1.1+8.0~0.1 | 37", # w7
+		"glider:31@1.65~0.1, swarmling:21@0.33+11.8~0.1, plated:48@2.6+16.52~0.1 | 43", # w8
+		"escort:22@1.29~0.0, brute:40@1.49+3.0~0.1, glider:36@0.7+8.0~0.1, swarmling:2@1.29~0.0 | 51", # w9
+		"drone:27@0.64~0.1, plated:42@1.27+5.94~0.1, glider:30@0.81+9.51~0.1, swarmling:1@0.81+9.51~0.1 | 59", # w10
+		"dart:26@0.44~0.1, drone:33@0.63+4.76~0.1, brute:41@1.71+8.32~0.1 | 67", # w11
+		"escort:22@1.23~0.0, brute:41@1.42+3.0~0.0, glider:35@0.66+7.0~0.0, swarmling:2@1.23~0.0 | 77, special", # w12
+		"escort:25@1.21~0.0, brute:40@1.39+5.0~0.1, drone:34@0.51+8.0~0.1, swarmling:1@1.21~0.0 | 89", # w13
 		"plated:50@2.42~0.0, swarmling:23@0.31+12.11~0.0, escort:27@2.88+19.37~0.0 | 100, special", # w14
 	],
 	"level_23": [ # 7 — Step Down
-		"glider:58@0.7~0.0, drone:42@0.55+4.0~0.1 | 30", # w1
-		"dart:34@0.38~0.1, glider:66@0.7+4.0~0.1 | 30", # w2
-		"brute:64@1.5~0.0, dart:36@0.38+4.0~0.1 | 32", # w3
-		"vanguard:80@2.0~0.0, escort:20@1.3+4.0~0.0 | 34", # w4
-		"vanguard:64@2.0~0.0, dart:14@0.38+3.0~0.1, brute:21@1.5+7.0~0.0 | 37", # w5
-		"swarmling:25@0.14~0.0, brute:47@1.5+4.0~0.0, dart:29@0.38+6.0~0.0 | 40, special", # w6
-		"vanguard:57@2.0~0.0, glider:29@0.7+3.0~0.1, escort:14@1.3+8.0~0.0 | 45", # w7
-		"drone:33@0.63~0.1, dart:25@0.44+3.5~0.1, brute:42@1.74+8.17~0.1 | 50", # w8
-		"vanguard:57@4.62~0.0, glider:24@1.62+9.52~0.1, swarmling:15@0.33+19.05~0.1, dart:4@4.62~0.0 | 57", # w9
-		"glider:41@0.73~0.1, escort:21@1.35+5.46~0.0, dart:38@0.39+7.64~0.1 | 64", # w10
-		"dart:19@0.36~0.1, brute:28@1.4+3.0~0.1, vanguard:53@1.87+8.0~0.0 | 71", # w11
-		"vanguard:55@1.91~0.0, dart:18@0.36+3.12~0.0, brute:27@1.44+7.28~0.0 | 80, special", # w12
-		"vanguard:64@1.94~0.0, brute:22@1.46+3.21~0.1, dart:15@0.36+6.42~0.1 | 90", # w13
+		"glider:58@0.7~0.0, drone:42@0.55+4.0~0.1 | 20", # w1
+		"dart:34@0.38~0.1, glider:66@0.7+4.0~0.1 | 20", # w2
+		"brute:64@1.5~0.0, dart:36@0.38+4.0~0.1 | 22", # w3
+		"vanguard:80@2.0~0.0, escort:20@1.3+4.0~0.0 | 25", # w4
+		"vanguard:64@2.0~0.0, dart:14@0.38+3.0~0.1, brute:21@1.5+7.0~0.0 | 28", # w5
+		"swarmling:25@0.14~0.0, brute:47@1.5+4.0~0.0, dart:29@0.38+6.0~0.0 | 31, special", # w6
+		"vanguard:57@2.0~0.0, glider:29@0.7+3.0~0.1, escort:14@1.3+8.0~0.0 | 37", # w7
+		"drone:33@0.63~0.1, dart:25@0.44+3.5~0.1, brute:42@1.74+8.17~0.1 | 43", # w8
+		"vanguard:57@4.62~0.0, glider:24@1.62+9.52~0.1, swarmling:15@0.33+19.05~0.1, dart:4@4.62~0.0 | 51", # w9
+		"glider:41@0.73~0.1, escort:21@1.35+5.46~0.0, dart:38@0.39+7.64~0.1 | 59", # w10
+		"dart:19@0.36~0.1, brute:28@1.4+3.0~0.1, vanguard:53@1.87+8.0~0.0 | 67", # w11
+		"vanguard:55@1.91~0.0, dart:18@0.36+3.12~0.0, brute:27@1.44+7.28~0.0 | 77, special", # w12
+		"vanguard:64@1.94~0.0, brute:22@1.46+3.21~0.1, dart:15@0.36+6.42~0.1 | 89", # w13
 		"vanguard:54@2.18~0.0, drone:17@0.6+4.9~0.0, glider:26@0.76+8.57~0.0, dart:4@2.18~0.0 | 100, special", # w14
 	],
 	"level_24": [ # 8 — Grid Lock
-		"swarmling:35@0.14~0.1, brute:65@1.5+4.0~0.0 | 30", # w1
-		"glider:44@0.7~0.1, plated:56@1.1+4.0~0.0 | 30", # w2
-		"swarmling:36@0.14~0.1, glider:64@0.7+3.0~0.1 | 31", # w3
-		"disruptor:45@1.8~0.0, swarmling:55@0.14+5.0~0.1 | 33", # w4
-		"disruptor:24@1.8~0.0, plated:76@1.1+4.0~0.0 | 36", # w5
-		"glider:20@0.7~0.0, brute:22@1.5+3.0~0.0, vanguard:58@2.0+7.0~0.0 | 39, special", # w6
-		"plated:32@1.1~0.1, dart:14@0.38+5.0~0.1, vanguard:54@2.0+8.0~0.0 | 43", # w7
-		"glider:29@0.7~0.1, plated:38@1.1+3.0~0.1, brute:32@1.5+8.0~0.1, swarmling:1@0.7~0.1 | 48", # w8
-		"disruptor:10@1.77~0.0, vanguard:62@1.97+5.0~0.0, drone:27@0.54+7.0~0.1, swarmling:1@1.77~0.0 | 53", # w9
-		"disruptor:16@3.98~0.0, swarmling:34@0.32+11.45~0.1, drone:50@1.21+13.74~0.1 | 59", # w10
-		"escort:24@2.92~0.0, glider:45@1.57+11.88~0.1, swarmling:31@0.31+19.0~0.1 | 66", # w11
-		"vanguard:49@1.87~0.0, glider:25@0.65+5.0~0.0, brute:24@1.4+7.0~0.0, swarmling:1@1.87~0.0 | 73, special", # w12
-		"disruptor:27@1.65~0.0, glider:48@0.64+3.0~0.1, escort:22@1.19+7.0~0.0, swarmling:3@1.65~0.0 | 81", # w13
-		"glider:25@1.58~0.1, swarmling:13@0.33+7.51~0.1, vanguard:62@4.53+20.02~0.0 | 90", # w14
+		"swarmling:35@0.14~0.1, brute:65@1.5+4.0~0.0 | 20", # w1
+		"glider:44@0.7~0.1, plated:56@1.1+4.0~0.0 | 20", # w2
+		"swarmling:36@0.14~0.1, glider:64@0.7+3.0~0.1 | 21", # w3
+		"disruptor:45@1.8~0.0, swarmling:55@0.14+5.0~0.1 | 23", # w4
+		"disruptor:24@1.8~0.0, plated:76@1.1+4.0~0.0 | 27", # w5
+		"glider:20@0.7~0.0, brute:22@1.5+3.0~0.0, vanguard:58@2.0+7.0~0.0 | 30, special", # w6
+		"plated:32@1.1~0.1, dart:14@0.38+5.0~0.1, vanguard:54@2.0+8.0~0.0 | 35", # w7
+		"glider:29@0.7~0.1, plated:38@1.1+3.0~0.1, brute:32@1.5+8.0~0.1, swarmling:1@0.7~0.1 | 41", # w8
+		"disruptor:10@1.77~0.0, vanguard:62@1.97+5.0~0.0, drone:27@0.54+7.0~0.1, swarmling:1@1.77~0.0 | 46", # w9
+		"disruptor:16@3.98~0.0, swarmling:34@0.32+11.45~0.1, drone:50@1.21+13.74~0.1 | 53", # w10
+		"escort:24@2.92~0.0, glider:45@1.57+11.88~0.1, swarmling:31@0.31+19.0~0.1 | 61", # w11
+		"vanguard:49@1.87~0.0, glider:25@0.65+5.0~0.0, brute:24@1.4+7.0~0.0, swarmling:1@1.87~0.0 | 69, special", # w12
+		"disruptor:27@1.65~0.0, glider:48@0.64+3.0~0.1, escort:22@1.19+7.0~0.0, swarmling:3@1.65~0.0 | 78", # w13
+		"glider:25@1.58~0.1, swarmling:13@0.33+7.51~0.1, vanguard:62@4.53+20.02~0.0 | 89", # w14
 		"escort:16@1.36~0.0, dart:16@0.4+4.7~0.0, vanguard:66@2.09+9.4~0.0, swarmling:1@1.36~0.0 | 100, special", # w15
 	],
 	"level_25": [ # 9 — Arc Furnace
-		"glider:49@0.7~0.0, plated:51@1.1+3.0~0.0 | 30", # w1
-		"plated:70@1.1~0.0, brute:30@1.5+5.0~0.0 | 30", # w2
-		"glider:46@0.7~0.0, brute:54@1.5+3.0~0.0 | 31", # w3
-		"static_crawler:49@1.8~0.0, plated:51@1.1+4.0~0.0 | 33", # w4
-		"static_crawler:50@1.8~0.0, glider:50@0.7+5.0~0.0 | 36", # w5
-		"dart:20@0.38~0.0, static_crawler:52@1.8+5.0~0.0, drone:28@0.55+8.0~0.0 | 39, special", # w6
-		"glider:44@0.7~0.0, disruptor:24@1.79+4.0~0.0, brute:32@1.49+8.0~0.0 | 43", # w7
-		"glider:31@0.69~0.0, plated:50@1.08+3.0~0.0, disruptor:17@1.77+6.0~0.0, swarmling:2@0.69~0.0 | 48", # w8
-		"static_crawler:41@1.73~0.0, plated:35@1.06+3.0~0.0, dart:24@0.37+7.0~0.1, swarmling:1@1.73~0.0 | 53", # w9
-		"swarmling:37@0.13~0.1, escort:24@1.23+5.0~0.0, dart:39@0.36+6.0~0.1 | 59", # w10
-		"glider:38@0.65~0.1, swarmling:30@0.13+5.0~0.1, dart:32@0.35+8.0~0.1 | 66", # w11
-		"plated:46@1.0~0.0, dart:23@0.35+5.0~0.0, glider:30@0.64+6.0~0.0, swarmling:1@0.64+6.0~0.0 | 73, special", # w12
-		"static_crawler:40@1.62~0.0, dart:25@0.34+4.0~0.1, glider:33@0.63+6.0~0.1, swarmling:2@1.62~0.0 | 81", # w13
-		"brute:29@1.33~0.0, plated:34@0.97+3.0~0.0, static_crawler:36@1.59+8.0~0.0, swarmling:1@1.59+8.0~0.0 | 90", # w14
+		"glider:49@0.7~0.0, plated:51@1.1+3.0~0.0 | 20", # w1
+		"plated:70@1.1~0.0, brute:30@1.5+5.0~0.0 | 20", # w2
+		"glider:46@0.7~0.0, brute:54@1.5+3.0~0.0 | 21", # w3
+		"static_crawler:49@1.8~0.0, plated:51@1.1+4.0~0.0 | 23", # w4
+		"static_crawler:50@1.8~0.0, glider:50@0.7+5.0~0.0 | 27", # w5
+		"dart:20@0.38~0.0, static_crawler:52@1.8+5.0~0.0, drone:28@0.55+8.0~0.0 | 30, special", # w6
+		"glider:44@0.7~0.0, disruptor:24@1.79+4.0~0.0, brute:32@1.49+8.0~0.0 | 35", # w7
+		"glider:31@0.69~0.0, plated:50@1.08+3.0~0.0, disruptor:17@1.77+6.0~0.0, swarmling:2@0.69~0.0 | 41", # w8
+		"static_crawler:41@1.73~0.0, plated:35@1.06+3.0~0.0, dart:24@0.37+7.0~0.1, swarmling:1@1.73~0.0 | 46", # w9
+		"swarmling:37@0.13~0.1, escort:24@1.23+5.0~0.0, dart:39@0.36+6.0~0.1 | 53", # w10
+		"glider:38@0.65~0.1, swarmling:30@0.13+5.0~0.1, dart:32@0.35+8.0~0.1 | 61", # w11
+		"plated:46@1.0~0.0, dart:23@0.35+5.0~0.0, glider:30@0.64+6.0~0.0, swarmling:1@0.64+6.0~0.0 | 69, special", # w12
+		"static_crawler:40@1.62~0.0, dart:25@0.34+4.0~0.1, glider:33@0.63+6.0~0.1, swarmling:2@1.62~0.0 | 78", # w13
+		"brute:29@1.33~0.0, plated:34@0.97+3.0~0.0, static_crawler:36@1.59+8.0~0.0, swarmling:1@1.59+8.0~0.0 | 89", # w14
 		"swarmling:20@0.13~0.0, brute:35@1.39+5.31~0.0, glider:45@0.65+7.43~0.0 | 100, special", # w15
 	],
 	"level_26": [ # 10 — Dynamo
-		"glider:58@0.7~0.0, dart:42@0.38+3.0~0.1 | 30", # w1
-		"plated:69@1.1~0.0, swarmling:31@0.14+5.0~0.1 | 30", # w2
-		"brute:46@1.5~0.0, plated:54@1.1+4.0~0.0 | 31", # w3
-		"swarmling:46@0.14~0.1, dart:54@0.38+3.0~0.1 | 33", # w4
-		"plated:63@1.1~0.0, drone:37@0.55+5.0~0.1 | 35", # w5
-		"drone:41@0.55~0.0, swarmling:27@0.14+5.0~0.0, dart:32@0.38+7.0~0.0 | 38, special", # w6
-		"glider:32@0.7~0.1, drone:25@0.55+3.0~0.1, plated:42@1.09+6.0~0.0 | 41", # w7
-		"dart:18@0.37~0.1, brute:24@1.47+4.0~0.0, vanguard:58@1.96+8.0~0.0 | 45", # w8
-		"brute:40@1.44~0.0, drone:41@0.53+5.0~0.1, escort:19@1.25+6.0~0.0 | 50", # w9
-		"brute:41@1.51~0.0, dart:25@0.38+3.18~0.1, static_crawler:33@1.8+8.48~0.0, drone:1@1.8+8.48~0.0 | 55", # w10
-		"plated:37@1.02~0.1, brute:24@1.39+4.0~0.0, static_crawler:38@1.67+7.0~0.0, drone:1@1.67+7.0~0.0 | 61", # w11
-		"plated:35@1.0~0.0, drone:22@0.5+5.0~0.0, vanguard:43@1.83+6.0~0.0 | 68, special", # w12
-		"drone:26@0.52~0.1, glider:24@0.67+5.3~0.1, vanguard:49@1.91+6.36~0.0 | 75", # w13
-		"drone:25@0.49~0.1, brute:30@1.33+3.0~0.1, static_crawler:45@1.59+6.0~0.0 | 83", # w14
-		"glider:27@0.93~0.0, vanguard:54@2.65+7.61~0.0, dart:15@0.5+12.18~0.0, drone:4@0.93~0.0 | 91, special", # w15
+		"glider:58@0.7~0.0, dart:42@0.38+3.0~0.1 | 20", # w1
+		"plated:69@1.1~0.0, swarmling:31@0.14+5.0~0.1 | 20", # w2
+		"brute:46@1.5~0.0, plated:54@1.1+4.0~0.0 | 21", # w3
+		"swarmling:46@0.14~0.1, dart:54@0.38+3.0~0.1 | 23", # w4
+		"plated:63@1.1~0.0, drone:37@0.55+5.0~0.1 | 26", # w5
+		"drone:41@0.55~0.0, swarmling:27@0.14+5.0~0.0, dart:32@0.38+7.0~0.0 | 29, special", # w6
+		"glider:32@0.7~0.1, drone:25@0.55+3.0~0.1, plated:42@1.09+6.0~0.0 | 33", # w7
+		"dart:18@0.37~0.1, brute:24@1.47+4.0~0.0, vanguard:58@1.96+8.0~0.0 | 37", # w8
+		"brute:40@1.44~0.0, drone:41@0.53+5.0~0.1, escort:19@1.25+6.0~0.0 | 43", # w9
+		"brute:41@1.51~0.0, dart:25@0.38+3.18~0.1, static_crawler:33@1.8+8.48~0.0, drone:1@1.8+8.48~0.0 | 49", # w10
+		"plated:37@1.02~0.1, brute:24@1.39+4.0~0.0, static_crawler:38@1.67+7.0~0.0, drone:1@1.67+7.0~0.0 | 55", # w11
+		"plated:35@1.0~0.0, drone:22@0.5+5.0~0.0, vanguard:43@1.83+6.0~0.0 | 63, special", # w12
+		"drone:26@0.52~0.1, glider:24@0.67+5.3~0.1, vanguard:49@1.91+6.36~0.0 | 71", # w13
+		"drone:25@0.49~0.1, brute:30@1.33+3.0~0.1, static_crawler:45@1.59+6.0~0.0 | 81", # w14
+		"glider:27@0.93~0.0, vanguard:54@2.65+7.61~0.0, dart:15@0.5+12.18~0.0, drone:4@0.93~0.0 | 90, special", # w15
 		"dynamo*1@1.0~0.0, plated:70@1.4+6.0~0.0, brute:30@2.0+12.0~0.0 | 100, boss", # w16
 	],
 	"level_04": [ # 11 — Twin Rivers
-		"drone:50@1.0~0.1, drone:50@1.0~0.1#1 | 30", # w1
-		"dart:40@0.6~0.1, drone:60@0.8~0.1#1 | 31", # w2
-		"plated:67@1.8~0.0, swarmling:33@0.25~0.1#1 | 32", # w3
-		"phantom:57@1.4~0.0, drone:43@0.8~0.1#1 | 35, night", # w4
-		"brute:32@2.5~0.0, glider:45@1.2~0.0, dart:23@0.5~0.1#1 | 39", # w5
-		"plated:68@1.4~0.0#1, drone:32@0.6~0.1 | 44", # w6
-		"glider:48@1.0~0.1, swarmling:23@0.2~0.1, swarmling:23@0.2~0.1#1, drone:6@1.0~0.1 | 51", # w7
-		"phantom:43@1.1~0.0#1, plated:57@1.5~0.0 | 58, night", # w8
-		"brute:55@1.8~0.0, brute:45@1.8~0.0#1 | 67", # w9
-		"drone:42@0.5~0.1, dart:32@0.4~0.1#1, glider:26@1.0+4.0~0.0 | 77", # w10
-		"plated:50@1.2~0.0, plated:50@1.2~0.0#1 | 88", # w11
+		"drone:50@1.0~0.1, drone:50@1.0~0.1#1 | 20", # w1
+		"dart:40@0.6~0.1, drone:60@0.8~0.1#1 | 21", # w2
+		"plated:67@1.8~0.0, swarmling:33@0.25~0.1#1 | 22", # w3
+		"phantom:57@1.4~0.0, drone:43@0.8~0.1#1 | 26, night", # w4
+		"brute:32@2.5~0.0, glider:45@1.2~0.0, dart:23@0.5~0.1#1 | 30", # w5
+		"plated:68@1.4~0.0#1, drone:32@0.6~0.1 | 36", # w6
+		"glider:48@1.0~0.1, swarmling:23@0.2~0.1, swarmling:23@0.2~0.1#1, drone:6@1.0~0.1 | 44", # w7
+		"phantom:43@1.1~0.0#1, plated:57@1.5~0.0 | 52, night", # w8
+		"brute:55@1.8~0.0, brute:45@1.8~0.0#1 | 62", # w9
+		"drone:42@0.5~0.1, dart:32@0.4~0.1#1, glider:26@1.0+4.0~0.0 | 74", # w10
+		"plated:50@1.2~0.0, plated:50@1.2~0.0#1 | 86", # w11
 		"phantom:47@0.9~0.0, phantom:33@1.0~0.0#1, brute:20@2.0+5.0~0.0 | 100, special, night", # w12
 	],
 	"level_05": [ # 12 — Shield Wall
-		"drone:62@0.8~0.1, dart:38@0.5~0.0#1 | 30", # w1
-		"aegis:58@1.8~0.0, drone:42@0.8~0.0#1 | 30", # w2
-		"plated:77@1.5~0.0#1, swarmling:23@0.2~0.1 | 32", # w3
-		"glider:53@1.0~0.0, brute:47@2.0~0.0 | 34", # w4
-		"phantom:48@1.2~0.0, aegis:52@1.8~0.0#1 | 37, night", # w5
-		"aegis:56@1.4~0.0, plated:44@1.4~0.0#1 | 40", # w6
-		"swarmling:30@0.18~0.1, swarmling:30@0.18~0.1#1, glider:40@1.0+5.0~0.0 | 45", # w7
-		"brute:55@1.6~0.0, dart:45@0.35~0.1#1 | 50", # w8
-		"aegis:71@1.2~0.0#1, glider:26@0.9~0.0, swarmling:2@1.2~0.0#1 | 57", # w9
-		"phantom:52@1.0~0.1#1, plated:48@1.3~0.0 | 64, night", # w10
-		"brute:34@1.6~0.0, aegis:42@1.3~0.0#1, drone:24@0.5+6.0~0.1, swarmling:1@1.3~0.0#1 | 71", # w11
-		"glider:40@0.8~0.1, plated:58@1.1~0.0, swarmling:2@0.8~0.1 | 80", # w12
-		"phantom:59@0.9~0.1, aegis:40@1.1~0.0#1, swarmling:1@1.1~0.0#1 | 90, night", # w13
+		"drone:62@0.8~0.1, dart:38@0.5~0.0#1 | 20", # w1
+		"aegis:58@1.8~0.0, drone:42@0.8~0.0#1 | 20", # w2
+		"plated:77@1.5~0.0#1, swarmling:23@0.2~0.1 | 22", # w3
+		"glider:53@1.0~0.0, brute:47@2.0~0.0 | 25", # w4
+		"phantom:48@1.2~0.0, aegis:52@1.8~0.0#1 | 28, night", # w5
+		"aegis:56@1.4~0.0, plated:44@1.4~0.0#1 | 31", # w6
+		"swarmling:30@0.18~0.1, swarmling:30@0.18~0.1#1, glider:40@1.0+5.0~0.0 | 37", # w7
+		"brute:55@1.6~0.0, dart:45@0.35~0.1#1 | 43", # w8
+		"aegis:71@1.2~0.0#1, glider:26@0.9~0.0, swarmling:2@1.2~0.0#1 | 51", # w9
+		"phantom:52@1.0~0.1#1, plated:48@1.3~0.0 | 59, night", # w10
+		"brute:34@1.6~0.0, aegis:42@1.3~0.0#1, drone:24@0.5+6.0~0.1, swarmling:1@1.3~0.0#1 | 67", # w11
+		"glider:40@0.8~0.1, plated:58@1.1~0.0, swarmling:2@0.8~0.1 | 77", # w12
+		"phantom:59@0.9~0.1, aegis:40@1.1~0.0#1, swarmling:1@1.1~0.0#1 | 89, night", # w13
 		"aegis:43@0.9~0.0, aegis:43@0.9~0.0#1, brute:12@2.0+6.0~0.0, swarmling:1@0.9~0.0 | 100, special", # w14
 	],
 	"level_27": [ # 13 — Marsh Fork
-		"drone:41@0.55~0.0, plated:59@1.1+3.0~0.0#1 | 30", # w1
-		"dart:47@0.38~0.0#1, glider:53@0.7+4.0~0.0 | 30", # w2
-		"drone:61@0.55~0.1, swarmling:39@0.14+5.0~0.1#1 | 32, night", # w3
-		"sludge:65@1.4~0.0#1, drone:35@0.55+3.0~0.1 | 34", # w4
-		"sludge:53@1.4~0.0, swarmling:21@0.14+4.0~0.1#1, dart:26@0.38+8.0~0.1 | 37", # w5
-		"dart:21@0.38~0.0#1, plated:49@1.1+4.0~0.0, phantom:30@0.9+6.0~0.0#1 | 40, special, night", # w6
-		"dart:17@0.38~0.1, plated:47@1.1+4.0~0.0#1, phantom:36@0.9+8.0~0.0 | 45", # w7
-		"aegis:39@1.1~0.0#1, plated:38@1.1+5.0~0.0, sludge:20@1.4+8.0~0.0#1, dart:3@1.1~0.0#1 | 50", # w8
-		"sludge:37@1.39~0.0, drone:35@0.55+4.0~0.1#1, dart:28@0.38+6.0~0.1 | 57, night", # w9
-		"dart:25@0.37~0.1#1, drone:29@0.54+3.0~0.1, aegis:46@1.07+6.0~0.0#1 | 64", # w10
-		"drone:30@0.53~0.1, phantom:35@0.87+5.0~0.1#1, sludge:34@1.35+6.0~0.0, dart:1@1.35+6.0~0.0 | 71", # w11
-		"sludge:29@1.32~0.0#1, plated:48@1.04+4.0~0.0, dart:24@0.36+6.0~0.0#1 | 80, special, night", # w12
-		"sludge:34@1.3~0.0, plated:29@1.02+4.0~0.0#1, phantom:36@0.84+7.0~0.1, dart:1@1.3~0.0 | 90", # w13
+		"drone:41@0.55~0.0, plated:59@1.1+3.0~0.0#1 | 20", # w1
+		"dart:47@0.38~0.0#1, glider:53@0.7+4.0~0.0 | 20", # w2
+		"drone:61@0.55~0.1, swarmling:39@0.14+5.0~0.1#1 | 22, night", # w3
+		"sludge:65@1.4~0.0#1, drone:35@0.55+3.0~0.1 | 25", # w4
+		"sludge:53@1.4~0.0, swarmling:21@0.14+4.0~0.1#1, dart:26@0.38+8.0~0.1 | 28", # w5
+		"dart:21@0.38~0.0#1, plated:49@1.1+4.0~0.0, phantom:30@0.9+6.0~0.0#1 | 31, special, night", # w6
+		"dart:17@0.38~0.1, plated:47@1.1+4.0~0.0#1, phantom:36@0.9+8.0~0.0 | 37", # w7
+		"aegis:39@1.1~0.0#1, plated:38@1.1+5.0~0.0, sludge:20@1.4+8.0~0.0#1, dart:3@1.1~0.0#1 | 43", # w8
+		"sludge:37@1.39~0.0, drone:35@0.55+4.0~0.1#1, dart:28@0.38+6.0~0.1 | 51, night", # w9
+		"dart:25@0.37~0.1#1, drone:29@0.54+3.0~0.1, aegis:46@1.07+6.0~0.0#1 | 59", # w10
+		"drone:30@0.53~0.1, phantom:35@0.87+5.0~0.1#1, sludge:34@1.35+6.0~0.0, dart:1@1.35+6.0~0.0 | 67", # w11
+		"sludge:29@1.32~0.0#1, plated:48@1.04+4.0~0.0, dart:24@0.36+6.0~0.0#1 | 77, special, night", # w12
+		"sludge:34@1.3~0.0, plated:29@1.02+4.0~0.0#1, phantom:36@0.84+7.0~0.1, dart:1@1.3~0.0 | 89", # w13
 		"dart:20@0.35~0.0#1, plated:39@1.0+4.0~0.0, aegis:41@1.0+6.0~0.0#1 | 100, special", # w14
 	],
 	"level_28": [ # 14 — Twin Canal
-		"swarmling:41@0.14~0.1, glider:59@0.7+4.0~0.0 | 30", # w1
-		"glider:53@0.7~0.0, brute:47@1.5+4.0~0.0 | 30", # w2
-		"glider:53@0.7~0.0, brute:47@1.5+4.0~0.0#1 | 32, night", # w3
-		"rallier:65@1.2~0.0#1, swarmling:35@0.14+3.0~0.1 | 34", # w4
-		"rallier:52@1.2~0.0, swarmling:18@0.14+5.0~0.1#1, phantom:30@0.9+8.0~0.0 | 37", # w5
-		"swarmling:27@0.14~0.0#1, rallier:53@1.2+4.0~0.0, mender:20@2.6+6.0~0.0#1 | 40, special, night", # w6
-		"aegis:57@1.1~0.0, swarmling:16@0.14+3.0~0.1#1, phantom:27@0.9+6.0~0.0 | 45", # w7
-		"phantom:36@0.9~0.0#1, brute:50@1.5+5.0~0.0, mender:14@2.6+7.0~0.0#1, swarmling:1@2.6+7.0~0.0#1 | 50", # w8
-		"rallier:34@1.2~0.0, brute:52@1.5+4.0~0.0#1, mender:13@2.6+8.0~0.0, swarmling:1@1.2~0.0 | 57, night", # w9
-		"swarmling:25@0.14~0.1#1, phantom:49@0.9+4.0~0.0, rallier:26@1.2+6.0~0.0#1 | 64", # w10
-		"swarmling:23@0.14~0.1, sludge:43@1.4+5.0~0.0#1, drone:33@0.55+7.0~0.1 | 71", # w11
-		"rallier:30@1.19~0.0#1, mender:18@2.59+4.0~0.0, phantom:50@0.9+6.0~0.0#1, swarmling:1@1.19~0.0#1 | 80, special, night", # w12
-		"rallier:40@1.17~0.0, swarmling:24@0.14+3.0~0.1#1, drone:36@0.54+6.0~0.1 | 90", # w13
+		"swarmling:41@0.14~0.1, glider:59@0.7+4.0~0.0 | 20", # w1
+		"glider:53@0.7~0.0, brute:47@1.5+4.0~0.0 | 20", # w2
+		"glider:53@0.7~0.0, brute:47@1.5+4.0~0.0#1 | 22, night", # w3
+		"rallier:65@1.2~0.0#1, swarmling:35@0.14+3.0~0.1 | 25", # w4
+		"rallier:52@1.2~0.0, swarmling:18@0.14+5.0~0.1#1, phantom:30@0.9+8.0~0.0 | 28", # w5
+		"swarmling:27@0.14~0.0#1, rallier:53@1.2+4.0~0.0, mender:20@2.6+6.0~0.0#1 | 31, special, night", # w6
+		"aegis:57@1.1~0.0, swarmling:16@0.14+3.0~0.1#1, phantom:27@0.9+6.0~0.0 | 37", # w7
+		"phantom:36@0.9~0.0#1, brute:50@1.5+5.0~0.0, mender:14@2.6+7.0~0.0#1, swarmling:1@2.6+7.0~0.0#1 | 43", # w8
+		"rallier:34@1.2~0.0, brute:52@1.5+4.0~0.0#1, mender:13@2.6+8.0~0.0, swarmling:1@1.2~0.0 | 51, night", # w9
+		"swarmling:25@0.14~0.1#1, phantom:49@0.9+4.0~0.0, rallier:26@1.2+6.0~0.0#1 | 59", # w10
+		"swarmling:23@0.14~0.1, sludge:43@1.4+5.0~0.0#1, drone:33@0.55+7.0~0.1 | 67", # w11
+		"rallier:30@1.19~0.0#1, mender:18@2.59+4.0~0.0, phantom:50@0.9+6.0~0.0#1, swarmling:1@1.19~0.0#1 | 77, special, night", # w12
+		"rallier:40@1.17~0.0, swarmling:24@0.14+3.0~0.1#1, drone:36@0.54+6.0~0.1 | 89", # w13
 		"aegis:33@1.06~0.0#1, phantom:43@0.87+3.0~0.0, drone:24@0.53+7.0~0.0#1, swarmling:1@1.06~0.0#1 | 100, special", # w14
 	],
 	"level_06": [ # 15 — Night Carrier
-		"drone:50@0.7~0.1, drone:50@0.7~0.1#1 | 30", # w1
-		"mender:48@3.0~0.0, brute:52@2.0~0.0 | 30", # w2
-		"aegis:64@1.4~0.0#1, dart:36@0.45~0.1 | 31", # w3
-		"glider:74@0.9~0.1, swarmling:26@0.2~0.1#1 | 33", # w4
-		"plated:86@1.2~0.0, mender:14@3.0+2.0~0.0 | 36", # w5
-		"phantom:67@1.0~0.0#1, phantom:33@1.2~0.0 | 39, night", # w6
-		"brute:40@1.5~0.0, aegis:60@1.4~0.0#1 | 43", # w7
-		"swarmling:39@0.15~0.1, glider:61@0.8~0.1 | 48", # w8
-		"plated:67@1.1~0.0#1, mender:14@2.5+2.0~0.0#1, brute:19@2.0+4.0~0.0#1, swarmling:1@2.5+2.0~0.0#1 | 53", # w9
-		"mender:14@2.0~0.0, brute:48@1.3+1.0~0.0, aegis:37@1.4~0.0#1, swarmling:1@2.0~0.0 | 59, special", # w10
-		"glider:55@0.7~0.1, dart:43@0.35~0.1#1, swarmling:3@0.7~0.1 | 66", # w11
-		"phantom:47@0.8~0.1, plated:53@1.1~0.0#1 | 73, night", # w12
-		"aegis:65@1.1~0.1, mender:21@2.5+3.0~0.0, swarmling:14@0.18~0.1#1 | 81", # w13
-		"brute:46@1.2~0.0#1, plated:54@1.0~0.0 | 90", # w14
+		"drone:50@0.7~0.1, drone:50@0.7~0.1#1 | 20", # w1
+		"mender:48@3.0~0.0, brute:52@2.0~0.0 | 20", # w2
+		"aegis:64@1.4~0.0#1, dart:36@0.45~0.1 | 21", # w3
+		"glider:74@0.9~0.1, swarmling:26@0.2~0.1#1 | 23", # w4
+		"plated:86@1.2~0.0, mender:14@3.0+2.0~0.0 | 27", # w5
+		"phantom:67@1.0~0.0#1, phantom:33@1.2~0.0 | 30, night", # w6
+		"brute:40@1.5~0.0, aegis:60@1.4~0.0#1 | 35", # w7
+		"swarmling:39@0.15~0.1, glider:61@0.8~0.1 | 41", # w8
+		"plated:67@1.1~0.0#1, mender:14@2.5+2.0~0.0#1, brute:19@2.0+4.0~0.0#1, swarmling:1@2.5+2.0~0.0#1 | 46", # w9
+		"mender:14@2.0~0.0, brute:48@1.3+1.0~0.0, aegis:37@1.4~0.0#1, swarmling:1@2.0~0.0 | 53, special", # w10
+		"glider:55@0.7~0.1, dart:43@0.35~0.1#1, swarmling:3@0.7~0.1 | 61", # w11
+		"phantom:47@0.8~0.1, plated:53@1.1~0.0#1 | 69, night", # w12
+		"aegis:65@1.1~0.1, mender:21@2.5+3.0~0.0, swarmling:14@0.18~0.1#1 | 78", # w13
+		"brute:46@1.2~0.0#1, plated:54@1.0~0.0 | 89", # w14
 		"carrier*1@1.0~0.0, drone:100@1.0+5.0~0.0#1 | 100, boss", # w15
 	],
 	"level_29": [ # 16 — Flood Plain
-		"drone:45@0.55~0.1, glider:55@0.7+3.0~0.0 | 30", # w1
-		"drone:57@0.55~0.1#1, dart:43@0.38+5.0~0.1 | 30", # w2
-		"drone:56@0.55~0.1, dart:44@0.38+5.0~0.1#1 | 31, night", # w3
-		"cloaker:28@2.2~0.0#1, plated:72@1.1+3.0~0.0 | 33", # w4
-		"cloaker:33@2.2~0.0, phantom:67@0.9+4.0~0.0#1 | 36", # w5
-		"phantom:39@0.9~0.0#1, cloaker:22@2.2+5.0~0.0, rallier:39@1.2+7.0~0.0#1 | 39, special, night", # w6
-		"phantom:39@0.9~0.1, glider:36@0.7+5.0~0.1, cloaker:25@2.2+6.0~0.0 | 43", # w7
-		"glider:32@0.7~0.1, dart:26@0.38+5.0~0.1, plated:43@1.1+8.0~0.0#1 | 48", # w8
-		"cloaker:12@2.2~0.0, plated:42@1.1+5.0~0.1#1, aegis:44@1.1+8.0~0.1, dart:2@2.2~0.0 | 53, night", # w9
-		"phantom:30@0.89~0.1#1, glider:26@0.69+4.0~0.1, aegis:40@1.09+8.0~0.1#1, dart:4@0.69+4.0~0.1 | 59", # w10
-		"dart:25@0.37~0.1, aegis:46@1.07+4.0~0.1#1, sludge:28@1.36+7.0~0.0 | 66", # w11
-		"cloaker:15@2.11~0.0#1, phantom:43@0.86+4.0~0.0, sludge:40@1.34+6.0~0.0#1, dart:3@2.11~0.0#1 | 73, special, night", # w12
-		"cloaker:17@2.07~0.0, dart:28@0.36+4.0~0.1#1, plated:55@1.03+7.0~0.1 | 81", # w13
-		"aegis:48@1.02~0.1#1, mender:9@2.41+3.0~0.0, sludge:39@1.3+7.0~0.0#1, dart:4@1.02~0.1#1 | 90", # w14
+		"drone:45@0.55~0.1, glider:55@0.7+3.0~0.0 | 20", # w1
+		"drone:57@0.55~0.1#1, dart:43@0.38+5.0~0.1 | 20", # w2
+		"drone:56@0.55~0.1, dart:44@0.38+5.0~0.1#1 | 21, night", # w3
+		"cloaker:28@2.2~0.0#1, plated:72@1.1+3.0~0.0 | 23", # w4
+		"cloaker:33@2.2~0.0, phantom:67@0.9+4.0~0.0#1 | 27", # w5
+		"phantom:39@0.9~0.0#1, cloaker:22@2.2+5.0~0.0, rallier:39@1.2+7.0~0.0#1 | 30, special, night", # w6
+		"phantom:39@0.9~0.1, glider:36@0.7+5.0~0.1, cloaker:25@2.2+6.0~0.0 | 35", # w7
+		"glider:32@0.7~0.1, dart:26@0.38+5.0~0.1, plated:43@1.1+8.0~0.0#1 | 41", # w8
+		"cloaker:12@2.2~0.0, plated:42@1.1+5.0~0.1#1, aegis:44@1.1+8.0~0.1, dart:2@2.2~0.0 | 46, night", # w9
+		"phantom:30@0.89~0.1#1, glider:26@0.69+4.0~0.1, aegis:40@1.09+8.0~0.1#1, dart:4@0.69+4.0~0.1 | 53", # w10
+		"dart:25@0.37~0.1, aegis:46@1.07+4.0~0.1#1, sludge:28@1.36+7.0~0.0 | 61", # w11
+		"cloaker:15@2.11~0.0#1, phantom:43@0.86+4.0~0.0, sludge:40@1.34+6.0~0.0#1, dart:3@2.11~0.0#1 | 69, special, night", # w12
+		"cloaker:17@2.07~0.0, dart:28@0.36+4.0~0.1#1, plated:55@1.03+7.0~0.1 | 78", # w13
+		"aegis:48@1.02~0.1#1, mender:9@2.41+3.0~0.0, sludge:39@1.3+7.0~0.0#1, dart:4@1.02~0.1#1 | 89", # w14
 		"plated:37@1.0~0.0, drone:24@0.5+5.0~0.0#1, aegis:38@1.0+6.0~0.0, dart:2@1.0+6.0~0.0 | 100, special, night", # w15
 	],
 	"level_30": [ # 17 — Reed Maze
-		"drone:41@0.55~0.1, brute:59@1.5+3.0~0.0#1 | 30", # w1
-		"brute:63@1.5~0.0#1, swarmling:37@0.14+3.0~0.1 | 30", # w2
-		"brute:48@1.5~0.0, drone:52@0.55+5.0~0.1#1 | 31, night", # w3
-		"shade:43@0.9~0.0#1, drone:57@0.55+3.0~0.1 | 33", # w4
-		"shade:73@0.9~0.0, mender:27@2.6+4.0~0.0#1 | 36", # w5
-		"drone:34@0.55~0.0#1, rallier:42@1.2+5.0~0.0, cloaker:23@2.2+7.0~0.0#1 | 39, special, night", # w6
-		"cloaker:22@2.2~0.0, rallier:39@1.2+5.0~0.0#1, glider:39@0.7+6.0~0.1 | 43", # w7
-		"brute:39@1.5~0.0#1, shade:29@0.9+3.0~0.1, rallier:31@1.2+7.0~0.0#1, swarmling:1@1.2+7.0~0.0#1 | 48", # w8
-		"shade:45@1.26~0.1, swarmling:33@0.2+4.26~0.1#1, cloaker:22@3.08+8.51~0.0 | 53, night", # w9
-		"phantom:33@0.87~0.1#1, brute:28@1.45+4.0~0.1, aegis:38@1.06+8.0~0.1#1, swarmling:1@1.06+8.0~0.1#1 | 59", # w10
-		"phantom:43@2.25~0.1, swarmling:23@0.34+13.26~0.1#1, glider:34@1.75+15.92~0.1 | 66", # w11
-		"aegis:61@2.34~0.0#1, cloaker:16@4.66+9.1~0.0, swarmling:23@0.3+15.92~0.0#1 | 73, special, night", # w12
-		"shade:24@0.83~0.1, aegis:46@1.01+5.0~0.1#1, brute:29@1.38+7.0~0.1, swarmling:1@1.01+5.0~0.1#1 | 81", # w13
-		"swarmling:17@0.32~0.1#1, phantom:49@1.98+12.19~0.1, shade:33@1.98+14.63~0.1#1 | 90", # w14
+		"drone:41@0.55~0.1, brute:59@1.5+3.0~0.0#1 | 20", # w1
+		"brute:63@1.5~0.0#1, swarmling:37@0.14+3.0~0.1 | 20", # w2
+		"brute:48@1.5~0.0, drone:52@0.55+5.0~0.1#1 | 21, night", # w3
+		"shade:43@0.9~0.0#1, drone:57@0.55+3.0~0.1 | 23", # w4
+		"shade:73@0.9~0.0, mender:27@2.6+4.0~0.0#1 | 27", # w5
+		"drone:34@0.55~0.0#1, rallier:42@1.2+5.0~0.0, cloaker:23@2.2+7.0~0.0#1 | 30, special, night", # w6
+		"cloaker:22@2.2~0.0, rallier:39@1.2+5.0~0.0#1, glider:39@0.7+6.0~0.1 | 35", # w7
+		"brute:39@1.5~0.0#1, shade:29@0.9+3.0~0.1, rallier:31@1.2+7.0~0.0#1, swarmling:1@1.2+7.0~0.0#1 | 41", # w8
+		"shade:45@1.26~0.1, swarmling:33@0.2+4.26~0.1#1, cloaker:22@3.08+8.51~0.0 | 46, night", # w9
+		"phantom:33@0.87~0.1#1, brute:28@1.45+4.0~0.1, aegis:38@1.06+8.0~0.1#1, swarmling:1@1.06+8.0~0.1#1 | 53", # w10
+		"phantom:43@2.25~0.1, swarmling:23@0.34+13.26~0.1#1, glider:34@1.75+15.92~0.1 | 61", # w11
+		"aegis:61@2.34~0.0#1, cloaker:16@4.66+9.1~0.0, swarmling:23@0.3+15.92~0.0#1 | 69, special, night", # w12
+		"shade:24@0.83~0.1, aegis:46@1.01+5.0~0.1#1, brute:29@1.38+7.0~0.1, swarmling:1@1.01+5.0~0.1#1 | 78", # w13
+		"swarmling:17@0.32~0.1#1, phantom:49@1.98+12.19~0.1, shade:33@1.98+14.63~0.1#1 | 89", # w14
 		"glider:36@1.76~0.0, swarmling:17@0.34+8.53~0.0#1, phantom:46@2.27+22.75~0.0 | 100, special, night", # w15
 	],
 	"level_31": [ # 18 — Delta Bridge
-		"plated:41@1.1~0.0, glider:59@0.7+3.0~0.0 | 30", # w1
-		"plated:59@1.1~0.0#1, drone:41@0.55+4.0~0.1 | 30", # w2
-		"plated:55@1.1~0.0, drone:45@0.55+4.0~0.1#1 | 31, night", # w3
-		"wraith:37@1.4~0.0#1, aegis:63@1.1+4.0~0.0 | 33", # w4
-		"wraith:38@1.4~0.0, sludge:62@1.4+4.0~0.0#1 | 35", # w5
-		"glider:35@0.7~0.0, wraith:32@1.4+4.0~0.0, phantom:33@0.9+7.0~0.0#1 | 38, special, night", # w6
-		"phantom:41@0.9~0.1, shade:26@0.9+3.0~0.0#1, brute:33@1.5+6.0~0.0 | 41", # w7
-		"aegis:43@1.1~0.0#1, rallier:29@1.2+4.0~0.0, phantom:28@0.9+7.0~0.1#1 | 45", # w8
-		"wraith:29@1.39~0.0, cloaker:18@2.19+3.0~0.0#1, phantom:51@0.9+8.0~0.1, dart:2@1.39~0.0 | 50, night", # w9
-		"phantom:39@0.88~0.1#1, dart:25@0.37+5.0~0.1, brute:36@1.46+6.0~0.0#1 | 55", # w10
-		"cloaker:12@2.11~0.0, brute:30@1.44+4.0~0.0#1, aegis:55@1.05+6.0~0.1, dart:2@2.11~0.0 | 61", # w11
-		"wraith:20@1.32~0.0#1, plated:44@1.04+4.0~0.0, phantom:35@0.85+7.0~0.0#1, dart:1@1.32~0.0#1 | 68, special, night", # w12
-		"wraith:45@1.3~0.0, dart:44@0.35+5.0~0.1#1, mender:11@2.41+8.0~0.0 | 75", # w13
-		"wraith:26@1.28~0.0#1, phantom:41@0.83+3.0~0.1, drone:32@0.5+8.0~0.1#1, dart:1@1.28~0.0#1 | 83", # w14
-		"glider:32@0.63~0.1, brute:29@1.36+3.0~0.1#1, sludge:34@1.27+6.0~0.0, dart:5@0.63~0.1 | 91, night", # w15
+		"plated:41@1.1~0.0, glider:59@0.7+3.0~0.0 | 20", # w1
+		"plated:59@1.1~0.0#1, drone:41@0.55+4.0~0.1 | 20", # w2
+		"plated:55@1.1~0.0, drone:45@0.55+4.0~0.1#1 | 21, night", # w3
+		"wraith:37@1.4~0.0#1, aegis:63@1.1+4.0~0.0 | 23", # w4
+		"wraith:38@1.4~0.0, sludge:62@1.4+4.0~0.0#1 | 26", # w5
+		"glider:35@0.7~0.0, wraith:32@1.4+4.0~0.0, phantom:33@0.9+7.0~0.0#1 | 29, special, night", # w6
+		"phantom:41@0.9~0.1, shade:26@0.9+3.0~0.0#1, brute:33@1.5+6.0~0.0 | 33", # w7
+		"aegis:43@1.1~0.0#1, rallier:29@1.2+4.0~0.0, phantom:28@0.9+7.0~0.1#1 | 37", # w8
+		"wraith:29@1.39~0.0, cloaker:18@2.19+3.0~0.0#1, phantom:51@0.9+8.0~0.1, dart:2@1.39~0.0 | 43, night", # w9
+		"phantom:39@0.88~0.1#1, dart:25@0.37+5.0~0.1, brute:36@1.46+6.0~0.0#1 | 49", # w10
+		"cloaker:12@2.11~0.0, brute:30@1.44+4.0~0.0#1, aegis:55@1.05+6.0~0.1, dart:2@2.11~0.0 | 55", # w11
+		"wraith:20@1.32~0.0#1, plated:44@1.04+4.0~0.0, phantom:35@0.85+7.0~0.0#1, dart:1@1.32~0.0#1 | 63, special, night", # w12
+		"wraith:45@1.3~0.0, dart:44@0.35+5.0~0.1#1, mender:11@2.41+8.0~0.0 | 71", # w13
+		"wraith:26@1.28~0.0#1, phantom:41@0.83+3.0~0.1, drone:32@0.5+8.0~0.1#1, dart:1@1.28~0.0#1 | 81", # w14
+		"glider:32@0.63~0.1, brute:29@1.36+3.0~0.1#1, sludge:34@1.27+6.0~0.0, dart:5@0.63~0.1 | 90, night", # w15
 		"rallier:43@1.07~0.0#1, dart:28@0.34+3.0~0.0, cloaker:30@1.96+7.0~0.0#1 | 100, special", # w16
 	],
 	"level_32": [ # 19 — Mangrove
-		"swarmling:32@0.14~0.1, glider:68@0.7+4.0~0.0 | 30", # w1
-		"drone:45@0.55~0.1#1, glider:55@0.7+4.0~0.0 | 30", # w2
-		"plated:59@1.1~0.0, drone:41@0.55+4.0~0.1#1 | 31, night", # w3
-		"aegis:69@1.1~0.0#1, swarmling:31@0.14+4.0~0.1 | 33", # w4
-		"sludge:40@1.4~0.0, aegis:60@1.1+3.0~0.0#1 | 35", # w5
-		"glider:50@0.7~0.0, swarmling:27@0.14+4.0~0.0, mender:23@2.6+6.0~0.0#1 | 38, special, night", # w6
-		"glider:30@0.7~0.1, drone:27@0.55+5.0~0.1#1, plated:42@1.1+8.0~0.0 | 41", # w7
-		"glider:35@0.7~0.1, phantom:45@0.9+4.0~0.1, swarmling:20@0.14+7.0~0.1#1 | 45", # w8
-		"drone:34@0.55~0.1, shade:27@0.9+3.0~0.0#1, glider:37@0.7+8.0~0.1, swarmling:2@0.7+8.0~0.1 | 50, night", # w9
-		"aegis:47@1.1~0.1#1, glider:25@0.7+3.0~0.1, drone:26@0.55+7.0~0.1#1, swarmling:2@1.1~0.1#1 | 55", # w10
-		"swarmling:23@0.22~0.1, phantom:43@1.39+4.68~0.1#1, drone:34@0.84+10.91~0.1 | 61", # w11
-		"plated:41@2.44~0.0#1, aegis:43@2.44+11.53~0.0, swarmling:16@0.32+18.45~0.0#1 | 68, special, night", # w12
-		"plated:46@1.05~0.1, aegis:48@1.05+5.0~0.1#1, mender:6@2.48+6.0~0.0, swarmling:1@1.05+5.0~0.1#1 | 75", # w13
-		"phantom:37@0.85~0.1#1, wraith:17@1.32+5.0~0.0, plated:46@1.03+8.0~0.1#1, swarmling:1@1.32+5.0~0.0 | 83", # w14
-		"phantom:50@0.83~0.1, mender:11@2.4+4.0~0.0#1, sludge:39@1.29+6.0~0.0, swarmling:1@2.4+4.0~0.0#1 | 91, night", # w15
+		"swarmling:32@0.14~0.1, glider:68@0.7+4.0~0.0 | 20", # w1
+		"drone:45@0.55~0.1#1, glider:55@0.7+4.0~0.0 | 20", # w2
+		"plated:59@1.1~0.0, drone:41@0.55+4.0~0.1#1 | 21, night", # w3
+		"aegis:69@1.1~0.0#1, swarmling:31@0.14+4.0~0.1 | 23", # w4
+		"sludge:40@1.4~0.0, aegis:60@1.1+3.0~0.0#1 | 26", # w5
+		"glider:50@0.7~0.0, swarmling:27@0.14+4.0~0.0, mender:23@2.6+6.0~0.0#1 | 29, special, night", # w6
+		"glider:30@0.7~0.1, drone:27@0.55+5.0~0.1#1, plated:42@1.1+8.0~0.0 | 33", # w7
+		"glider:35@0.7~0.1, phantom:45@0.9+4.0~0.1, swarmling:20@0.14+7.0~0.1#1 | 37", # w8
+		"drone:34@0.55~0.1, shade:27@0.9+3.0~0.0#1, glider:37@0.7+8.0~0.1, swarmling:2@0.7+8.0~0.1 | 43, night", # w9
+		"aegis:47@1.1~0.1#1, glider:25@0.7+3.0~0.1, drone:26@0.55+7.0~0.1#1, swarmling:2@1.1~0.1#1 | 49", # w10
+		"swarmling:23@0.22~0.1, phantom:43@1.39+4.68~0.1#1, drone:34@0.84+10.91~0.1 | 55", # w11
+		"plated:41@2.44~0.0#1, aegis:43@2.44+11.53~0.0, swarmling:16@0.32+18.45~0.0#1 | 63, special, night", # w12
+		"plated:46@1.05~0.1, aegis:48@1.05+5.0~0.1#1, mender:6@2.48+6.0~0.0, swarmling:1@1.05+5.0~0.1#1 | 71", # w13
+		"phantom:37@0.85~0.1#1, wraith:17@1.32+5.0~0.0, plated:46@1.03+8.0~0.1#1, swarmling:1@1.32+5.0~0.0 | 81", # w14
+		"phantom:50@0.83~0.1, mender:11@2.4+4.0~0.0#1, sludge:39@1.29+6.0~0.0, swarmling:1@2.4+4.0~0.0#1 | 90, night", # w15
 		"swarmling:22@0.29~0.0#1, phantom:65@1.82+11.08~0.0, mender:13@5.25+15.51~0.0#1 | 100, special", # w16
 	],
 	"level_33": [ # 20 — Leviathan
-		"glider:58@0.7~0.0, drone:42@0.55+5.0~0.0#1 | 30", # w1
-		"drone:48@0.55~0.1#1, plated:52@1.1+4.0~0.0 | 30", # w2
-		"drone:58@0.55~0.1, dart:42@0.38+4.0~0.1#1 | 31, night", # w3
-		"vanguard:64@2.0~0.0#1, glider:36@0.7+5.0~0.0 | 33", # w4
-		"glider:53@0.7~0.0, brute:47@1.5+3.0~0.0#1 | 35", # w5
-		"wraith:36@1.4~0.0#1, shade:33@0.9+4.0~0.0, drone:32@0.55+7.0~0.0#1 | 38, special, night", # w6
-		"dart:30@0.38~0.1, glider:42@0.7+4.0~0.1, shade:28@0.9+8.0~0.0 | 41", # w7
-		"drone:38@0.55~0.1#1, brute:50@1.5+4.0~0.0, mender:12@2.6+8.0~0.0#1 | 45", # w8
-		"dart:22@0.38~0.1, glider:31@0.7+4.0~0.1, phantom:43@0.9+6.0~0.1, drone:4@0.7+4.0~0.1 | 50, night", # w9
-		"plated:45@1.1~0.0#1, mender:5@2.6+4.0~0.0, aegis:47@1.1+6.0~0.0#1, drone:2@2.6+4.0~0.0 | 55", # w10
-		"brute:37@1.5~0.0, drone:32@0.55+3.0~0.1#1, wraith:31@1.4+7.0~0.0 | 61", # w11
-		"shade:27@0.88~0.0#1, brute:32@1.47+5.0~0.0, phantom:41@0.88+7.0~0.0#1 | 68, special, night", # w12
-		"vanguard:58@1.93~0.0, wraith:20@1.35+3.0~0.0#1, dart:19@0.37+6.0~0.1, drone:2@1.93~0.0 | 75", # w13
-		"brute:32@1.42~0.0#1, dart:20@0.36+5.0~0.1, phantom:48@0.85+7.0~0.1#1 | 83", # w14
-		"brute:28@1.4~0.0, drone:28@0.52+4.0~0.0#1, aegis:44@1.03+8.0~0.0 | 91, special, night", # w15
+		"glider:58@0.7~0.0, drone:42@0.55+5.0~0.0#1 | 20", # w1
+		"drone:48@0.55~0.1#1, plated:52@1.1+4.0~0.0 | 20", # w2
+		"drone:58@0.55~0.1, dart:42@0.38+4.0~0.1#1 | 21, night", # w3
+		"vanguard:64@2.0~0.0#1, glider:36@0.7+5.0~0.0 | 23", # w4
+		"glider:53@0.7~0.0, brute:47@1.5+3.0~0.0#1 | 26", # w5
+		"wraith:36@1.4~0.0#1, shade:33@0.9+4.0~0.0, drone:32@0.55+7.0~0.0#1 | 29, special, night", # w6
+		"dart:30@0.38~0.1, glider:42@0.7+4.0~0.1, shade:28@0.9+8.0~0.0 | 33", # w7
+		"drone:38@0.55~0.1#1, brute:50@1.5+4.0~0.0, mender:12@2.6+8.0~0.0#1 | 37", # w8
+		"dart:22@0.38~0.1, glider:31@0.7+4.0~0.1, phantom:43@0.9+6.0~0.1, drone:4@0.7+4.0~0.1 | 43, night", # w9
+		"plated:45@1.1~0.0#1, mender:5@2.6+4.0~0.0, aegis:47@1.1+6.0~0.0#1, drone:2@2.6+4.0~0.0 | 49", # w10
+		"brute:37@1.5~0.0, drone:32@0.55+3.0~0.1#1, wraith:31@1.4+7.0~0.0 | 55", # w11
+		"shade:27@0.88~0.0#1, brute:32@1.47+5.0~0.0, phantom:41@0.88+7.0~0.0#1 | 63, special, night", # w12
+		"vanguard:58@1.93~0.0, wraith:20@1.35+3.0~0.0#1, dart:19@0.37+6.0~0.1, drone:2@1.93~0.0 | 71", # w13
+		"brute:32@1.42~0.0#1, dart:20@0.36+5.0~0.1, phantom:48@0.85+7.0~0.1#1 | 81", # w14
+		"brute:28@1.4~0.0, drone:28@0.52+4.0~0.0#1, aegis:44@1.03+8.0~0.0 | 90, special, night", # w15
 		"leviathan*1@1.0~0.0, aegis:76@1.4+6.0~0.0#1, mender:24@2.6+10.0~0.0 | 100, boss, night", # w16
 	],
 	"level_07": [ # 21 — Shifting Gates
-		"drone:56@0.7~0.1#-1, glider:44@1.5~0.0 | 30, route=0", # w1
-		"dart:47@0.45~0.1#-1, glider:53@1.2~0.0 | 30", # w2
-		"plated:63@1.4~0.0#-1, swarmling:37@0.2+4.0~0.1#-1 | 31", # w3
-		"glider:46@0.9~0.1, aegis:54@1.6~0.0#-1 | 33", # w4
-		"brute:81@1.8~0.0#-1, mender:19@3.0+2.0~0.0#-1 | 36", # w5
-		"glider:62@0.8~0.1, drone:38@0.6~0.1#-1 | 39, route=1", # w6
-		"phantom:48@1.1~0.1#-1, plated:52@1.3~0.0#-1 | 43", # w7
-		"aegis:66@1.2~0.1#-1, glider:31@0.8+3.0~0.1, swarmling:2@1.2~0.1#-1 | 48", # w8
-		"swarmling:38@0.15~0.1#-1, brute:62@1.6+4.0~0.0#-1 | 53", # w9
-		"glider:75@0.6~0.1, mender:21@2.5~0.0#-1, swarmling:4@0.6~0.1 | 59", # w10
-		"plated:60@1.0~0.1#-1, aegis:40@1.3+4.0~0.0#-1, swarmling:1@1.3+4.0~0.0#-1 | 66, route=0", # w11
-		"phantom:62@0.9~0.1#-1, glider:36@0.8+3.0~0.1, swarmling:1@0.8+3.0~0.1 | 73", # w12
-		"brute:79@1.3~0.1#-1, mender:20@2.5+3.0~0.0#-1, swarmling:1@2.5+3.0~0.0#-1 | 81", # w13
-		"glider:70@0.5~0.1, dart:27@0.35+4.0~0.1#-1, swarmling:3@0.5~0.1 | 90", # w14
+		"drone:56@0.7~0.1#-1, glider:44@1.5~0.0 | 20, route=0", # w1
+		"dart:47@0.45~0.1#-1, glider:53@1.2~0.0 | 20", # w2
+		"plated:63@1.4~0.0#-1, swarmling:37@0.2+4.0~0.1#-1 | 21", # w3
+		"glider:46@0.9~0.1, aegis:54@1.6~0.0#-1 | 23", # w4
+		"brute:81@1.8~0.0#-1, mender:19@3.0+2.0~0.0#-1 | 27", # w5
+		"glider:62@0.8~0.1, drone:38@0.6~0.1#-1 | 30, route=1", # w6
+		"phantom:48@1.1~0.1#-1, plated:52@1.3~0.0#-1 | 35", # w7
+		"aegis:66@1.2~0.1#-1, glider:31@0.8+3.0~0.1, swarmling:2@1.2~0.1#-1 | 41", # w8
+		"swarmling:38@0.15~0.1#-1, brute:62@1.6+4.0~0.0#-1 | 46", # w9
+		"glider:75@0.6~0.1, mender:21@2.5~0.0#-1, swarmling:4@0.6~0.1 | 53", # w10
+		"plated:60@1.0~0.1#-1, aegis:40@1.3+4.0~0.0#-1, swarmling:1@1.3+4.0~0.0#-1 | 61, route=0", # w11
+		"phantom:62@0.9~0.1#-1, glider:36@0.8+3.0~0.1, swarmling:1@0.8+3.0~0.1 | 69", # w12
+		"brute:79@1.3~0.1#-1, mender:20@2.5+3.0~0.0#-1, swarmling:1@2.5+3.0~0.0#-1 | 78", # w13
+		"glider:70@0.5~0.1, dart:27@0.35+4.0~0.1#-1, swarmling:3@0.5~0.1 | 89", # w14
 		"glider:41@0.45~0.0, aegis:31@1.0+5.0~0.0#-1, plated:26@1.1+8.0~0.0#-1, swarmling:2@0.45~0.0 | 100, special", # w15
 	],
 	"level_08": [ # 22 — Prism Storm
-		"drone:60@0.6~0.1#-1, dart:40@0.4+3.0~0.1#-1 | 30, route=1", # w1
-		"plated:51@1.3~0.0#-1, glider:49@1.0~0.0 | 30", # w2
-		"aegis:82@1.3~0.0#-1, swarmling:18@0.18+3.0~0.1#-1 | 31", # w3
-		"phantom:64@1.0~0.0#-1, brute:36@1.8~0.0#-1 | 32", # w4
-		"glider:81@0.7~0.1, mender:19@3.0~0.0#-1 | 34, route=0", # w5
-		"plated:74@1.0~0.1#-1, dart:26@0.35+4.0~0.1#-1 | 36", # w6
-		"aegis:73@1.0~0.1#-1, glider:27@0.7+3.0~0.1 | 39", # w7
-		"brute:73@1.3~0.0#-1, mender:27@2.5+2.0~0.0#-1 | 42", # w8
-		"swarmling:39@0.12~0.1#-1, phantom:61@1.0+4.0~0.0#-1 | 46", # w9
-		"glider:47@0.5~0.1, plated:51@1.0+4.0~0.0#-1, swarmling:2@0.5~0.1 | 50, route=1", # w10
-		"aegis:65@0.9~0.1#-1, brute:34@1.5+5.0~0.0#-1, swarmling:1@0.9~0.1#-1 | 54", # w11
-		"phantom:81@0.8~0.1#-1, mender:19@2.5+3.0~0.0#-1, swarmling:1@2.5+3.0~0.0#-1 | 59", # w12
-		"glider:74@0.5~0.1, swarmling:26@0.15+3.0~0.1#-1 | 65", # w13
-		"plated:62@0.8~0.1#-1, aegis:38@1.1+6.0~0.0#-1, swarmling:1@1.1+6.0~0.0#-1 | 71, route=0", # w14
-		"brute:80@1.0~0.1#-1, mender:19@2.2+2.0~0.0#-1, swarmling:1@2.2+2.0~0.0#-1 | 77", # w15
-		"glider:63@0.4~0.1, dart:34@0.3+3.0~0.1#-1, swarmling:3@0.4~0.1 | 84", # w16
-		"aegis:40@0.8~0.1#-1, plated:33@0.9+5.0~0.1#-1, phantom:26@0.9+10.0~0.1#-1, swarmling:1@0.8~0.1#-1 | 92", # w17
+		"drone:60@0.6~0.1#-1, dart:40@0.4+3.0~0.1#-1 | 20, route=1", # w1
+		"plated:51@1.3~0.0#-1, glider:49@1.0~0.0 | 20", # w2
+		"aegis:82@1.3~0.0#-1, swarmling:18@0.18+3.0~0.1#-1 | 21", # w3
+		"phantom:64@1.0~0.0#-1, brute:36@1.8~0.0#-1 | 22", # w4
+		"glider:81@0.7~0.1, mender:19@3.0~0.0#-1 | 25, route=0", # w5
+		"plated:74@1.0~0.1#-1, dart:26@0.35+4.0~0.1#-1 | 27", # w6
+		"aegis:73@1.0~0.1#-1, glider:27@0.7+3.0~0.1 | 30", # w7
+		"brute:73@1.3~0.0#-1, mender:27@2.5+2.0~0.0#-1 | 34", # w8
+		"swarmling:39@0.12~0.1#-1, phantom:61@1.0+4.0~0.0#-1 | 38", # w9
+		"glider:47@0.5~0.1, plated:51@1.0+4.0~0.0#-1, swarmling:2@0.5~0.1 | 43, route=1", # w10
+		"aegis:65@0.9~0.1#-1, brute:34@1.5+5.0~0.0#-1, swarmling:1@0.9~0.1#-1 | 47", # w11
+		"phantom:81@0.8~0.1#-1, mender:19@2.5+3.0~0.0#-1, swarmling:1@2.5+3.0~0.0#-1 | 53", # w12
+		"glider:74@0.5~0.1, swarmling:26@0.15+3.0~0.1#-1 | 60", # w13
+		"plated:62@0.8~0.1#-1, aegis:38@1.1+6.0~0.0#-1, swarmling:1@1.1+6.0~0.0#-1 | 67, route=0", # w14
+		"brute:80@1.0~0.1#-1, mender:19@2.2+2.0~0.0#-1, swarmling:1@2.2+2.0~0.0#-1 | 74", # w15
+		"glider:63@0.4~0.1, dart:34@0.3+3.0~0.1#-1, swarmling:3@0.4~0.1 | 82", # w16
+		"aegis:40@0.8~0.1#-1, plated:33@0.9+5.0~0.1#-1, phantom:26@0.9+10.0~0.1#-1, swarmling:1@0.8~0.1#-1 | 91", # w17
 		"phantom:57@0.6~0.0#-1, glider:41@0.45+2.0~0.0, swarmling:2@0.45+2.0~0.0 | 100, special", # w18
 	],
 	"level_34": [ # 23 — Facet Hall
-		"dart:38@0.38~0.1#-1, brute:62@1.5+4.0~0.0#-1 | 30, route=0", # w1
-		"brute:55@1.5~0.0#-1, drone:45@0.55+5.0~0.1#-1 | 30", # w2
-		"drone:42@0.55~0.1#-1, brute:58@1.5+4.0~0.0#-1 | 31", # w3
-		"sprinter:49@0.7~0.0#-1, glider:51@0.7+4.0~0.1 | 33", # w4
-		"sprinter:45@0.7~0.0#-1, brute:55@1.5+3.0~0.0#-1 | 35", # w5
-		"plated:46@1.1~0.0#-1, dart:23@0.38+3.0~0.0#-1, drone:30@0.55+6.0~0.0#-1 | 38, special, route=1", # w6
-		"brute:30@1.5~0.0#-1, sprinter:35@0.7+5.0~0.1#-1, glider:34@0.7+8.0~0.1 | 41", # w7
-		"plated:32@1.08~0.0#-1, aegis:41@1.08+4.0~0.0#-1, glider:27@0.69+7.0~0.1 | 45", # w8
-		"sprinter:27@0.68~0.1#-1, plated:38@1.07+4.0~0.0#-1, drone:35@0.53+7.0~0.1#-1 | 50", # w9
-		"plated:45@1.05~0.1#-1, drone:29@0.52+3.0~0.1#-1, sprinter:27@0.67+6.0~0.1#-1 | 55", # w10
-		"brute:31@1.4~0.0#-1, plated:47@1.03+4.0~0.1#-1, dart:22@0.36+6.0~0.1#-1 | 61, route=0", # w11
-		"sprinter:26@0.67~0.0#-1, glider:26@0.67+4.12~0.0, aegis:41@1.05+8.24~0.0#-1, drone:8@0.67~0.0#-1 | 68, special", # w12
-		"sprinter:40@0.64~0.1#-1, mender:8@2.36+3.0~0.0#-1, glider:43@0.64+7.0~0.1, drone:9@0.64~0.1#-1 | 75", # w13
-		"sprinter:25@0.63~0.1#-1, brute:27@1.34+3.0~0.1#-1, aegis:43@0.98+6.0~0.1#-1, drone:5@0.63~0.1#-1 | 83", # w14
-		"drone:34@0.49~0.1#-1, mender:13@2.3+5.0~0.0#-1, plated:53@0.97+6.0~0.1#-1 | 91", # w15
+		"dart:38@0.38~0.1#-1, brute:62@1.5+4.0~0.0#-1 | 20, route=0", # w1
+		"brute:55@1.5~0.0#-1, drone:45@0.55+5.0~0.1#-1 | 20", # w2
+		"drone:42@0.55~0.1#-1, brute:58@1.5+4.0~0.0#-1 | 21", # w3
+		"sprinter:49@0.7~0.0#-1, glider:51@0.7+4.0~0.1 | 23", # w4
+		"sprinter:45@0.7~0.0#-1, brute:55@1.5+3.0~0.0#-1 | 26", # w5
+		"plated:46@1.1~0.0#-1, dart:23@0.38+3.0~0.0#-1, drone:30@0.55+6.0~0.0#-1 | 29, special, route=1", # w6
+		"brute:30@1.5~0.0#-1, sprinter:35@0.7+5.0~0.1#-1, glider:34@0.7+8.0~0.1 | 33", # w7
+		"plated:32@1.08~0.0#-1, aegis:41@1.08+4.0~0.0#-1, glider:27@0.69+7.0~0.1 | 37", # w8
+		"sprinter:27@0.68~0.1#-1, plated:38@1.07+4.0~0.0#-1, drone:35@0.53+7.0~0.1#-1 | 43", # w9
+		"plated:45@1.05~0.1#-1, drone:29@0.52+3.0~0.1#-1, sprinter:27@0.67+6.0~0.1#-1 | 49", # w10
+		"brute:31@1.4~0.0#-1, plated:47@1.03+4.0~0.1#-1, dart:22@0.36+6.0~0.1#-1 | 55, route=0", # w11
+		"sprinter:26@0.67~0.0#-1, glider:26@0.67+4.12~0.0, aegis:41@1.05+8.24~0.0#-1, drone:8@0.67~0.0#-1 | 63, special", # w12
+		"sprinter:40@0.64~0.1#-1, mender:8@2.36+3.0~0.0#-1, glider:43@0.64+7.0~0.1, drone:9@0.64~0.1#-1 | 71", # w13
+		"sprinter:25@0.63~0.1#-1, brute:27@1.34+3.0~0.1#-1, aegis:43@0.98+6.0~0.1#-1, drone:5@0.63~0.1#-1 | 81", # w14
+		"drone:34@0.49~0.1#-1, mender:13@2.3+5.0~0.0#-1, plated:53@0.97+6.0~0.1#-1 | 90", # w15
 		"dart:24@0.42~0.0#-1, plated:46@1.22+3.8~0.0#-1, drone:31@0.61+10.13~0.0#-1 | 100, special, route=1", # w16
 	],
 	"level_35": [ # 24 — Lens Array
-		"drone:41@0.55~0.1#-1, plated:59@1.1+5.0~0.0#-1 | 30, route=0", # w1
-		"plated:65@1.1~0.0#-1, drone:35@0.55+3.0~0.1#-1 | 30", # w2
-		"drone:42@0.55~0.1#-1, brute:58@1.5+5.0~0.0#-1 | 31", # w3
-		"jammer:17@1.8~0.0#-1, aegis:83@1.1+4.0~0.0#-1 | 33", # w4
-		"jammer:29@1.8~0.0#-1, drone:71@0.55+3.0~0.1#-1 | 35", # w5
-		"brute:32@1.47~0.0#-1, aegis:49@1.08+4.0~0.0#-1, swarmling:18@0.14+6.0~0.0#-1 | 38, special, route=1", # w6
-		"aegis:43@1.06~0.0#-1, plated:34@1.06+3.0~0.0#-1, brute:23@1.44+8.0~0.0#-1 | 41", # w7
-		"jammer:25@1.7~0.0#-1, drone:46@0.52+4.0~0.1#-1, swarmling:30@0.13+8.0~0.1#-1 | 45", # w8
-		"jammer:12@1.67~0.0#-1, drone:34@0.51+5.0~0.1#-1, plated:54@1.02+6.0~0.0#-1 | 50", # w9
-		"brute:38@1.37~0.0#-1, jammer:11@1.64+4.0~0.0#-1, plated:51@1.0+7.0~0.1#-1, drone:1@1.64+4.0~0.0#-1 | 55", # w10
-		"drone:26@0.49~0.1#-1, aegis:48@0.99+3.0~0.1#-1, brute:25@1.35+8.0~0.0#-1 | 61, route=0", # w11
-		"drone:35@1.38~0.0#-1, swarmling:24@0.34+11.29~0.0#-1, brute:41@3.75+19.75~0.0#-1 | 68, special", # w12
-		"jammer:15@1.57~0.0#-1, plated:50@0.96+3.0~0.1#-1, drone:34@0.48+7.0~0.1#-1 | 75", # w13
-		"jammer:15@1.54~0.0#-1, drone:37@0.47+5.0~0.1#-1, phantom:48@0.77+7.0~0.1#-1 | 83", # w14
-		"swarmling:34@0.33~0.1#-1, drone:50@1.28+11.12~0.1#-1, mender:16@6.12+19.47~0.0#-1 | 91", # w15
+		"drone:41@0.55~0.1#-1, plated:59@1.1+5.0~0.0#-1 | 20, route=0", # w1
+		"plated:65@1.1~0.0#-1, drone:35@0.55+3.0~0.1#-1 | 20", # w2
+		"drone:42@0.55~0.1#-1, brute:58@1.5+5.0~0.0#-1 | 21", # w3
+		"jammer:17@1.8~0.0#-1, aegis:83@1.1+4.0~0.0#-1 | 23", # w4
+		"jammer:29@1.8~0.0#-1, drone:71@0.55+3.0~0.1#-1 | 26", # w5
+		"brute:32@1.47~0.0#-1, aegis:49@1.08+4.0~0.0#-1, swarmling:18@0.14+6.0~0.0#-1 | 29, special, route=1", # w6
+		"aegis:43@1.06~0.0#-1, plated:34@1.06+3.0~0.0#-1, brute:23@1.44+8.0~0.0#-1 | 33", # w7
+		"jammer:25@1.7~0.0#-1, drone:46@0.52+4.0~0.1#-1, swarmling:30@0.13+8.0~0.1#-1 | 37", # w8
+		"jammer:12@1.67~0.0#-1, drone:34@0.51+5.0~0.1#-1, plated:54@1.02+6.0~0.0#-1 | 43", # w9
+		"brute:38@1.37~0.0#-1, jammer:11@1.64+4.0~0.0#-1, plated:51@1.0+7.0~0.1#-1, drone:1@1.64+4.0~0.0#-1 | 49", # w10
+		"drone:26@0.49~0.1#-1, aegis:48@0.99+3.0~0.1#-1, brute:25@1.35+8.0~0.0#-1 | 55, route=0", # w11
+		"drone:35@1.38~0.0#-1, swarmling:24@0.34+11.29~0.0#-1, brute:41@3.75+19.75~0.0#-1 | 63, special", # w12
+		"jammer:15@1.57~0.0#-1, plated:50@0.96+3.0~0.1#-1, drone:34@0.48+7.0~0.1#-1 | 71", # w13
+		"jammer:15@1.54~0.0#-1, drone:37@0.47+5.0~0.1#-1, phantom:48@0.77+7.0~0.1#-1 | 81", # w14
+		"swarmling:34@0.33~0.1#-1, drone:50@1.28+11.12~0.1#-1, mender:16@6.12+19.47~0.0#-1 | 90", # w15
 		"aegis:49@0.92~0.0#-1, jammer:26@1.5+5.0~0.0#-1, mender:19@2.17+7.0~0.0#-1, drone:5@0.92~0.0#-1 | 100, special, route=1", # w16
 	],
 	"level_36": [ # 25 — Refractor
-		"brute:54@1.5~0.0#-1, glider:46@0.7+5.0~0.0 | 30, route=0", # w1
-		"dart:42@0.38~0.1#-1, brute:58@1.5+5.0~0.0#-1 | 30", # w2
-		"plated:54@1.1~0.0#-1, brute:46@1.5+5.0~0.0#-1 | 31", # w3
-		"phantom:43@0.9~0.0#-1, plated:57@1.1+3.0~0.0#-1 | 32", # w4
-		"glider:39@0.7~0.1, aegis:61@1.1+3.0~0.0#-1 | 34", # w5
-		"phantom:35@0.9~0.0#-1, aegis:53@1.1+3.0~0.0#-1, mender:13@2.6+6.0~0.0#-1 | 37, special, route=1", # w6
-		"plated:35@1.08~0.0#-1, aegis:45@1.08+4.0~0.0#-1, drone:21@0.54+8.0~0.1#-1 | 40", # w7
-		"aegis:52@1.06~0.0#-1, disruptor:21@1.74+3.0~0.0#-1, brute:27@1.45+7.0~0.0#-1 | 43", # w8
-		"brute:33@1.42~0.0#-1, plated:39@1.04+5.0~0.0#-1, sprinter:26@0.66+7.0~0.1#-1, drone:3@0.66+7.0~0.1#-1 | 48", # w9
-		"sprinter:26@0.65~0.1#-1, plated:45@1.03+5.0~0.1#-1, drone:29@0.51+7.0~0.1#-1 | 52", # w10
-		"plated:42@1.01~0.1#-1, brute:28@1.38+5.0~0.0#-1, glider:27@0.64+7.0~0.1, drone:3@0.64+7.0~0.1 | 57, route=0", # w11
-		"glider:31@0.63~0.0, aegis:50@0.99+3.0~0.0#-1, mender:13@2.34+7.0~0.0#-1, drone:7@0.63~0.0 | 63, special", # w12
-		"aegis:42@1.24~0.1#-1, phantom:36@1.02+5.08~0.1#-1, dart:20@0.43+10.15~0.1#-1, drone:2@1.24~0.1#-1 | 69", # w13
-		"glider:24@0.63~0.1, plated:35@1.0+4.16~0.1#-1, aegis:37@1.0+8.32~0.1#-1, drone:4@0.63~0.1 | 76", # w14
-		"glider:35@0.95~0.1, aegis:41@1.51+6.34~0.1#-1, dart:19@0.52+11.09~0.1#-1, drone:6@0.95~0.1 | 84", # w15
-		"jammer:23@1.53~0.0#-1, aegis:45@0.94+3.0~0.0#-1, drone:32@0.47+7.0~0.0#-1 | 92, special, route=1", # w16
+		"brute:54@1.5~0.0#-1, glider:46@0.7+5.0~0.0 | 20, route=0", # w1
+		"dart:42@0.38~0.1#-1, brute:58@1.5+5.0~0.0#-1 | 20", # w2
+		"plated:54@1.1~0.0#-1, brute:46@1.5+5.0~0.0#-1 | 21", # w3
+		"phantom:43@0.9~0.0#-1, plated:57@1.1+3.0~0.0#-1 | 22", # w4
+		"glider:39@0.7~0.1, aegis:61@1.1+3.0~0.0#-1 | 25", # w5
+		"phantom:35@0.9~0.0#-1, aegis:53@1.1+3.0~0.0#-1, mender:13@2.6+6.0~0.0#-1 | 28, special, route=1", # w6
+		"plated:35@1.08~0.0#-1, aegis:45@1.08+4.0~0.0#-1, drone:21@0.54+8.0~0.1#-1 | 31", # w7
+		"aegis:52@1.06~0.0#-1, disruptor:21@1.74+3.0~0.0#-1, brute:27@1.45+7.0~0.0#-1 | 35", # w8
+		"brute:33@1.42~0.0#-1, plated:39@1.04+5.0~0.0#-1, sprinter:26@0.66+7.0~0.1#-1, drone:3@0.66+7.0~0.1#-1 | 41", # w9
+		"sprinter:26@0.65~0.1#-1, plated:45@1.03+5.0~0.1#-1, drone:29@0.51+7.0~0.1#-1 | 45", # w10
+		"plated:42@1.01~0.1#-1, brute:28@1.38+5.0~0.0#-1, glider:27@0.64+7.0~0.1, drone:3@0.64+7.0~0.1 | 51, route=0", # w11
+		"glider:31@0.63~0.0, aegis:50@0.99+3.0~0.0#-1, mender:13@2.34+7.0~0.0#-1, drone:7@0.63~0.0 | 58, special", # w12
+		"aegis:42@1.24~0.1#-1, phantom:36@1.02+5.08~0.1#-1, dart:20@0.43+10.15~0.1#-1, drone:2@1.24~0.1#-1 | 65", # w13
+		"glider:24@0.63~0.1, plated:35@1.0+4.16~0.1#-1, aegis:37@1.0+8.32~0.1#-1, drone:4@0.63~0.1 | 73", # w14
+		"glider:35@0.95~0.1, aegis:41@1.51+6.34~0.1#-1, dart:19@0.52+11.09~0.1#-1, drone:6@0.95~0.1 | 82", # w15
+		"jammer:23@1.53~0.0#-1, aegis:45@0.94+3.0~0.0#-1, drone:32@0.47+7.0~0.0#-1 | 91, special, route=1", # w16
 		"refractor*1@1.0~0.0#-1, glider:44@0.8+5.0~0.0, plated:56@1.3+8.0~0.0#-1 | 100, boss", # w17
 	],
 	"level_37": [ # 26 — Split Beam
-		"dart:56@0.38~0.0#-1, swarmling:44@0.14+4.0~0.1#-1 | 30, route=0", # w1
-		"drone:58@0.55~0.1#-1, dart:42@0.38+5.0~0.1#-1 | 30", # w2
-		"drone:53@0.55~0.1#-1, dart:47@0.38+5.0~0.1#-1 | 31", # w3
-		"mender_elite:61@2.5~0.0#-1, mender:39@2.6+5.0~0.0#-1 | 32", # w4
-		"mender_elite:46@2.5~0.0#-1, dart:54@0.38+4.0~0.1#-1 | 34", # w5
-		"swarmling:24@0.14~0.0#-1, sprinter:41@0.7+4.0~0.0#-1, mender_elite:35@2.5+6.0~0.0#-1 | 37, special, route=1", # w6
-		"brute:46@1.5~0.0#-1, drone:31@0.55+5.0~0.1#-1, dart:23@0.38+7.0~0.1#-1 | 40", # w7
-		"drone:29@0.55~0.1#-1, mender:20@2.6+3.0~0.0#-1, plated:51@1.1+7.0~0.0#-1 | 43", # w8
-		"mender_elite:21@2.5~0.0#-1, drone:28@0.55+5.0~0.1#-1, plated:50@1.1+6.0~0.0#-1, swarmling:1@2.5~0.0#-1 | 48", # w9
-		"drone:45@0.74~0.1#-1, swarmling:31@0.19+5.36~0.1#-1, jammer:24@2.41+8.04~0.0#-1 | 52", # w10
-		"dart:34@0.38~0.1#-1, drone:44@0.55+3.0~0.1#-1, jammer:21@1.79+7.0~0.0#-1, swarmling:1@1.79+7.0~0.0#-1 | 57, route=0", # w11
-		"drone:34@0.54~0.0#-1, brute:40@1.47+4.0~0.0#-1, jammer:25@1.77+7.0~0.0#-1, swarmling:1@1.77+7.0~0.0#-1 | 63, special", # w12
-		"mender_elite:19@4.35~0.0#-1, swarmling:34@0.23+7.22~0.1#-1, drone:47@0.96+10.83~0.1#-1 | 69", # w13
-		"glider:32@0.66~0.1, aegis:57@1.04+5.0~0.1#-1, mender:8@2.47+6.0~0.0#-1, swarmling:2@0.66~0.1 | 76", # w14
-		"mender_elite:17@5.19~0.0#-1, aegis:60@2.29+6.66~0.1#-1, swarmling:23@0.29+15.53~0.1#-1 | 84", # w15
-		"brute:33@1.39~0.1#-1, plated:48@1.02+3.0~0.1#-1, jammer:18@1.66+6.0~0.0#-1, swarmling:1@1.66+6.0~0.0#-1 | 92, route=1", # w16
+		"dart:56@0.38~0.0#-1, swarmling:44@0.14+4.0~0.1#-1 | 20, route=0", # w1
+		"drone:58@0.55~0.1#-1, dart:42@0.38+5.0~0.1#-1 | 20", # w2
+		"drone:53@0.55~0.1#-1, dart:47@0.38+5.0~0.1#-1 | 21", # w3
+		"mender_elite:61@2.5~0.0#-1, mender:39@2.6+5.0~0.0#-1 | 22", # w4
+		"mender_elite:46@2.5~0.0#-1, dart:54@0.38+4.0~0.1#-1 | 25", # w5
+		"swarmling:24@0.14~0.0#-1, sprinter:41@0.7+4.0~0.0#-1, mender_elite:35@2.5+6.0~0.0#-1 | 28, special, route=1", # w6
+		"brute:46@1.5~0.0#-1, drone:31@0.55+5.0~0.1#-1, dart:23@0.38+7.0~0.1#-1 | 31", # w7
+		"drone:29@0.55~0.1#-1, mender:20@2.6+3.0~0.0#-1, plated:51@1.1+7.0~0.0#-1 | 35", # w8
+		"mender_elite:21@2.5~0.0#-1, drone:28@0.55+5.0~0.1#-1, plated:50@1.1+6.0~0.0#-1, swarmling:1@2.5~0.0#-1 | 41", # w9
+		"drone:45@0.74~0.1#-1, swarmling:31@0.19+5.36~0.1#-1, jammer:24@2.41+8.04~0.0#-1 | 45", # w10
+		"dart:34@0.38~0.1#-1, drone:44@0.55+3.0~0.1#-1, jammer:21@1.79+7.0~0.0#-1, swarmling:1@1.79+7.0~0.0#-1 | 51, route=0", # w11
+		"drone:34@0.54~0.0#-1, brute:40@1.47+4.0~0.0#-1, jammer:25@1.77+7.0~0.0#-1, swarmling:1@1.77+7.0~0.0#-1 | 58, special", # w12
+		"mender_elite:19@4.35~0.0#-1, swarmling:34@0.23+7.22~0.1#-1, drone:47@0.96+10.83~0.1#-1 | 65", # w13
+		"glider:32@0.66~0.1, aegis:57@1.04+5.0~0.1#-1, mender:8@2.47+6.0~0.0#-1, swarmling:2@0.66~0.1 | 73", # w14
+		"mender_elite:17@5.19~0.0#-1, aegis:60@2.29+6.66~0.1#-1, swarmling:23@0.29+15.53~0.1#-1 | 82", # w15
+		"brute:33@1.39~0.1#-1, plated:48@1.02+3.0~0.1#-1, jammer:18@1.66+6.0~0.0#-1, swarmling:1@1.66+6.0~0.0#-1 | 91, route=1", # w16
 		"mender_elite:21@2.28~0.0#-1, brute:31@1.37+5.0~0.0#-1, glider:45@0.64+6.0~0.0, swarmling:2@2.28~0.0#-1 | 100, special", # w17
 	],
 	"level_38": [ # 27 — Kaleidoscope
-		"brute:46@1.5~0.0#-1, plated:54@1.1+4.0~0.0#-1 | 30, route=0", # w1
-		"drone:49@0.55~0.1#-1, brute:51@1.5+5.0~0.0#-1 | 30", # w2
-		"swarmling:42@0.14~0.1#-1, brute:58@1.5+4.0~0.0#-1 | 31", # w3
-		"prismling:36@1.1~0.0#-1, aegis:64@1.1+5.0~0.0#-1 | 32", # w4
-		"prismling:64@1.1~0.0#-1, swarmling:36@0.14+3.0~0.1#-1 | 34", # w5
-		"prismling:63@1.09~0.0#-1, swarmling:37@0.14+5.0~0.0#-1 | 36, special, route=1", # w6
-		"prismling:32@1.07~0.0#-1, drone:26@0.54+3.0~0.1#-1, plated:42@1.07+7.0~0.0#-1 | 39", # w7
-		"plated:34@1.05~0.0#-1, aegis:44@1.05+5.0~0.0#-1, drone:22@0.53+7.0~0.1#-1 | 42", # w8
-		"prismling:27@1.04~0.0#-1, aegis:55@1.04+3.0~0.0#-1, swarmling:18@0.13+6.0~0.1#-1 | 46", # w9
-		"glider:25@0.65~0.1, aegis:44@1.02+5.0~0.0#-1, static_crawler:29@1.67+8.0~0.0#-1, swarmling:2@0.65~0.1 | 50", # w10
-		"phantom:58@1.96~0.1#-1, swarmling:29@0.31+9.44~0.1#-1, mender:13@5.62+14.16~0.0#-1 | 54, route=0", # w11
-		"drone:30@0.64~0.0#-1, glider:32@0.81+3.86~0.0, phantom:36@1.04+7.71~0.0#-1, swarmling:1@0.81+3.86~0.0 | 59, special", # w12
-		"prismling:24@0.98~0.0#-1, plated:50@0.98+4.0~0.1#-1, drone:26@0.49+8.0~0.1#-1, swarmling:1@0.98~0.0#-1 | 65", # w13
-		"aegis:42@1.02~0.1#-1, phantom:33@0.84+4.24~0.1#-1, glider:23@0.65+8.48~0.1, swarmling:2@1.02~0.1#-1 | 71", # w14
-		"swarmling:19@0.32~0.1#-1, phantom:38@2.06+13.19~0.1#-1, plated:43@2.51+18.46~0.1#-1 | 77", # w15
-		"prismling:34@0.99~0.1#-1, phantom:37@0.81+3.15~0.1#-1, drone:28@0.49+6.3~0.1#-1, swarmling:1@0.99~0.1#-1 | 84, route=1", # w16
-		"prismling:40@0.93~0.1#-1, aegis:44@0.93+5.0~0.1#-1, mender_elite:14@2.11+7.0~0.0#-1, swarmling:2@0.93~0.1#-1 | 92", # w17
+		"brute:46@1.5~0.0#-1, plated:54@1.1+4.0~0.0#-1 | 20, route=0", # w1
+		"drone:49@0.55~0.1#-1, brute:51@1.5+5.0~0.0#-1 | 20", # w2
+		"swarmling:42@0.14~0.1#-1, brute:58@1.5+4.0~0.0#-1 | 21", # w3
+		"prismling:36@1.1~0.0#-1, aegis:64@1.1+5.0~0.0#-1 | 22", # w4
+		"prismling:64@1.1~0.0#-1, swarmling:36@0.14+3.0~0.1#-1 | 25", # w5
+		"prismling:63@1.09~0.0#-1, swarmling:37@0.14+5.0~0.0#-1 | 27, special, route=1", # w6
+		"prismling:32@1.07~0.0#-1, drone:26@0.54+3.0~0.1#-1, plated:42@1.07+7.0~0.0#-1 | 30", # w7
+		"plated:34@1.05~0.0#-1, aegis:44@1.05+5.0~0.0#-1, drone:22@0.53+7.0~0.1#-1 | 34", # w8
+		"prismling:27@1.04~0.0#-1, aegis:55@1.04+3.0~0.0#-1, swarmling:18@0.13+6.0~0.1#-1 | 38", # w9
+		"glider:25@0.65~0.1, aegis:44@1.02+5.0~0.0#-1, static_crawler:29@1.67+8.0~0.0#-1, swarmling:2@0.65~0.1 | 43", # w10
+		"phantom:58@1.96~0.1#-1, swarmling:29@0.31+9.44~0.1#-1, mender:13@5.62+14.16~0.0#-1 | 47, route=0", # w11
+		"drone:30@0.64~0.0#-1, glider:32@0.81+3.86~0.0, phantom:36@1.04+7.71~0.0#-1, swarmling:1@0.81+3.86~0.0 | 53, special", # w12
+		"prismling:24@0.98~0.0#-1, plated:50@0.98+4.0~0.1#-1, drone:26@0.49+8.0~0.1#-1, swarmling:1@0.98~0.0#-1 | 60", # w13
+		"aegis:42@1.02~0.1#-1, phantom:33@0.84+4.24~0.1#-1, glider:23@0.65+8.48~0.1, swarmling:2@1.02~0.1#-1 | 67", # w14
+		"swarmling:19@0.32~0.1#-1, phantom:38@2.06+13.19~0.1#-1, plated:43@2.51+18.46~0.1#-1 | 74", # w15
+		"prismling:34@0.99~0.1#-1, phantom:37@0.81+3.15~0.1#-1, drone:28@0.49+6.3~0.1#-1, swarmling:1@0.99~0.1#-1 | 82, route=1", # w16
+		"prismling:40@0.93~0.1#-1, aegis:44@0.93+5.0~0.1#-1, mender_elite:14@2.11+7.0~0.0#-1, swarmling:2@0.93~0.1#-1 | 91", # w17
 		"phantom:39@0.77~0.0#-1, aegis:32@0.94+3.06~0.0#-1, prismling:28@0.94+6.12~0.0#-1, swarmling:1@0.94+3.06~0.0#-1 | 100, special", # w18
 	],
 	"level_39": [ # 28 — Spectrum
-		"brute:47@1.49~0.0#-1, glider:53@0.7+4.0~0.0 | 30, route=0", # w1
-		"brute:54@1.46~0.0#-1, dart:46@0.37+4.0~0.1#-1 | 30", # w2
-		"brute:37@1.43~0.0#-1, glider:63@0.67+4.0~0.0 | 31", # w3
-		"prismling:60@1.03~0.0#-1, dart:40@0.36+3.0~0.1#-1 | 32", # w4
-		"glider:53@0.64~0.1, brute:47@1.38+5.0~0.0#-1 | 34", # w5
-		"aegis:60@0.99~0.0#-1, glider:40@0.63+5.0~0.0 | 36, special, route=1", # w6
-		"jammer:31@1.6~0.0#-1, mender:23@2.31+5.0~0.0#-1, glider:46@0.62+7.0~0.1 | 39", # w7
-		"dart:28@0.33~0.1#-1, swarmling:27@0.12+5.0~0.1#-1, glider:45@0.61+8.0~0.1 | 42", # w8
-		"swarmling:23@0.12~0.1#-1, plated:51@0.94+5.0~0.0#-1, dart:26@0.33+8.0~0.1#-1 | 46", # w9
-		"glider:31@1.66~0.1, plated:47@2.62+14.08~0.0#-1, swarmling:22@0.34+16.9~0.1#-1 | 50", # w10
-		"dart:24@0.4~0.1#-1, brute:34@1.56+4.98~0.0#-1, phantom:42@0.93+9.96~0.1#-1 | 54, route=0", # w11
-		"aegis:46@1.31~0.0#-1, phantom:33@1.08+4.36~0.0#-1, dart:21@0.45+8.72~0.0#-1, swarmling:1@1.31~0.0#-1 | 59, special", # w12
-		"aegis:47@0.89~0.1#-1, phantom:37@0.73+5.0~0.1#-1, mender_elite:15@2.02+8.0~0.0#-1, swarmling:1@0.89~0.1#-1 | 65", # w13
-		"plated:40@2.52~0.1#-1, swarmling:18@0.31+8.58~0.1#-1, aegis:42@2.52+17.16~0.1#-1 | 71", # w14
-		"aegis:45@1.52~0.1#-1, dart:23@0.52+8.74~0.1#-1, glider:30@0.96+13.98~0.1, swarmling:2@1.52~0.1#-1 | 77", # w15
-		"aegis:41@1.26~0.1#-1, dart:19@0.44+5.85~0.1#-1, plated:40@1.26+8.78~0.1#-1, swarmling:1@1.26~0.1#-1 | 84, route=1", # w16
-		"mender_elite:24@1.92~0.0#-1, mender:16@1.99+4.0~0.0#-1, prismling:58@0.84+7.0~0.1#-1, swarmling:2@1.92~0.0#-1 | 92", # w17
+		"brute:47@1.49~0.0#-1, glider:53@0.7+4.0~0.0 | 20, route=0", # w1
+		"brute:54@1.46~0.0#-1, dart:46@0.37+4.0~0.1#-1 | 20", # w2
+		"brute:37@1.43~0.0#-1, glider:63@0.67+4.0~0.0 | 21", # w3
+		"prismling:60@1.03~0.0#-1, dart:40@0.36+3.0~0.1#-1 | 22", # w4
+		"glider:53@0.64~0.1, brute:47@1.38+5.0~0.0#-1 | 25", # w5
+		"aegis:60@0.99~0.0#-1, glider:40@0.63+5.0~0.0 | 27, special, route=1", # w6
+		"jammer:31@1.6~0.0#-1, mender:23@2.31+5.0~0.0#-1, glider:46@0.62+7.0~0.1 | 30", # w7
+		"dart:28@0.33~0.1#-1, swarmling:27@0.12+5.0~0.1#-1, glider:45@0.61+8.0~0.1 | 34", # w8
+		"swarmling:23@0.12~0.1#-1, plated:51@0.94+5.0~0.0#-1, dart:26@0.33+8.0~0.1#-1 | 38", # w9
+		"glider:31@1.66~0.1, plated:47@2.62+14.08~0.0#-1, swarmling:22@0.34+16.9~0.1#-1 | 43", # w10
+		"dart:24@0.4~0.1#-1, brute:34@1.56+4.98~0.0#-1, phantom:42@0.93+9.96~0.1#-1 | 47, route=0", # w11
+		"aegis:46@1.31~0.0#-1, phantom:33@1.08+4.36~0.0#-1, dart:21@0.45+8.72~0.0#-1, swarmling:1@1.31~0.0#-1 | 53, special", # w12
+		"aegis:47@0.89~0.1#-1, phantom:37@0.73+5.0~0.1#-1, mender_elite:15@2.02+8.0~0.0#-1, swarmling:1@0.89~0.1#-1 | 60", # w13
+		"plated:40@2.52~0.1#-1, swarmling:18@0.31+8.58~0.1#-1, aegis:42@2.52+17.16~0.1#-1 | 67", # w14
+		"aegis:45@1.52~0.1#-1, dart:23@0.52+8.74~0.1#-1, glider:30@0.96+13.98~0.1, swarmling:2@1.52~0.1#-1 | 74", # w15
+		"aegis:41@1.26~0.1#-1, dart:19@0.44+5.85~0.1#-1, plated:40@1.26+8.78~0.1#-1, swarmling:1@1.26~0.1#-1 | 82, route=1", # w16
+		"mender_elite:24@1.92~0.0#-1, mender:16@1.99+4.0~0.0#-1, prismling:58@0.84+7.0~0.1#-1, swarmling:2@1.92~0.0#-1 | 91", # w17
 		"phantom:52@1.97~0.0#-1, brute:29@3.31+11.62~0.0#-1, swarmling:18@0.32+17.43~0.0#-1 | 100, special", # w18
 	],
 	"level_40": [ # 29 — Helix
-		"plated:54@1.1~0.0#-1, brute:46@1.5+3.0~0.0#-1 | 30, route=0", # w1
-		"swarmling:31@0.14~0.1#-1, glider:69@0.7+5.0~0.0 | 30", # w2
-		"brute:42@1.5~0.0#-1, glider:58@0.7+5.0~0.0 | 31", # w3
-		"glider:36@0.7~0.1, aegis:64@1.1+4.0~0.0#-1 | 32", # w4
-		"brute:39@1.49~0.0#-1, plated:61@1.09+4.0~0.0#-1 | 34", # w5
-		"swarmling:40@0.14~0.0#-1, drone:60@0.53+4.0~0.0#-1 | 36, special, route=1", # w6
-		"glider:42@0.67~0.1, swarmling:20@0.13+4.0~0.1#-1, sprinter:38@0.67+8.0~0.1#-1 | 39", # w7
-		"glider:42@0.66~0.1, swarmling:24@0.13+5.0~0.1#-1, drone:34@0.52+7.0~0.1#-1 | 42", # w8
-		"phantom:38@0.83~0.1#-1, brute:29@1.39+4.0~0.0#-1, prismling:33@1.02+8.0~0.0#-1 | 46", # w9
-		"sprinter:21@0.64~0.1#-1, glider:23@0.64+4.0~0.1, vanguard:54@1.82+8.0~0.0#-1, swarmling:2@0.64~0.1#-1 | 50", # w10
-		"phantom:33@0.81~0.1#-1, drone:27@0.49+4.0~0.1#-1, plated:40@0.99+8.0~0.1#-1 | 54, route=0", # w11
-		"prismling:33@0.97~0.0#-1, mender_elite:13@2.21+5.0~0.0#-1, aegis:53@0.97+6.0~0.0#-1, swarmling:2@0.97~0.0#-1 | 59, special", # w12
-		"vanguard:58@1.74~0.0#-1, glider:29@0.61+4.0~0.1, mender:11@2.26+8.0~0.0#-1, swarmling:2@1.74~0.0#-1 | 65", # w13
-		"prismling:32@0.95~0.1#-1, phantom:38@0.77+4.0~0.1#-1, sprinter:28@0.6+8.0~0.1#-1, swarmling:2@0.95~0.1#-1 | 71", # w14
-		"aegis:39@0.93~0.1#-1, prismling:22@0.93+5.0~0.1#-1, plated:38@0.93+6.0~0.1#-1, swarmling:1@0.93~0.1#-1 | 77", # w15
-		"prismling:29@0.92~0.1#-1, plated:42@0.92+5.0~0.1#-1, glider:27@0.59+8.0~0.1, swarmling:2@0.92~0.1#-1 | 84, route=1", # w16
-		"phantom:36@0.74~0.1#-1, aegis:32@0.91+3.0~0.1#-1, plated:31@0.91+6.0~0.1#-1, swarmling:1@0.91+3.0~0.1#-1 | 92", # w17
+		"plated:54@1.1~0.0#-1, brute:46@1.5+3.0~0.0#-1 | 20, route=0", # w1
+		"swarmling:31@0.14~0.1#-1, glider:69@0.7+5.0~0.0 | 20", # w2
+		"brute:42@1.5~0.0#-1, glider:58@0.7+5.0~0.0 | 21", # w3
+		"glider:36@0.7~0.1, aegis:64@1.1+4.0~0.0#-1 | 22", # w4
+		"brute:39@1.49~0.0#-1, plated:61@1.09+4.0~0.0#-1 | 25", # w5
+		"swarmling:40@0.14~0.0#-1, drone:60@0.53+4.0~0.0#-1 | 27, special, route=1", # w6
+		"glider:42@0.67~0.1, swarmling:20@0.13+4.0~0.1#-1, sprinter:38@0.67+8.0~0.1#-1 | 30", # w7
+		"glider:42@0.66~0.1, swarmling:24@0.13+5.0~0.1#-1, drone:34@0.52+7.0~0.1#-1 | 34", # w8
+		"phantom:38@0.83~0.1#-1, brute:29@1.39+4.0~0.0#-1, prismling:33@1.02+8.0~0.0#-1 | 38", # w9
+		"sprinter:21@0.64~0.1#-1, glider:23@0.64+4.0~0.1, vanguard:54@1.82+8.0~0.0#-1, swarmling:2@0.64~0.1#-1 | 43", # w10
+		"phantom:33@0.81~0.1#-1, drone:27@0.49+4.0~0.1#-1, plated:40@0.99+8.0~0.1#-1 | 47, route=0", # w11
+		"prismling:33@0.97~0.0#-1, mender_elite:13@2.21+5.0~0.0#-1, aegis:53@0.97+6.0~0.0#-1, swarmling:2@0.97~0.0#-1 | 53, special", # w12
+		"vanguard:58@1.74~0.0#-1, glider:29@0.61+4.0~0.1, mender:11@2.26+8.0~0.0#-1, swarmling:2@1.74~0.0#-1 | 60", # w13
+		"prismling:32@0.95~0.1#-1, phantom:38@0.77+4.0~0.1#-1, sprinter:28@0.6+8.0~0.1#-1, swarmling:2@0.95~0.1#-1 | 67", # w14
+		"aegis:39@0.93~0.1#-1, prismling:22@0.93+5.0~0.1#-1, plated:38@0.93+6.0~0.1#-1, swarmling:1@0.93~0.1#-1 | 74", # w15
+		"prismling:29@0.92~0.1#-1, plated:42@0.92+5.0~0.1#-1, glider:27@0.59+8.0~0.1, swarmling:2@0.92~0.1#-1 | 82, route=1", # w16
+		"phantom:36@0.74~0.1#-1, aegis:32@0.91+3.0~0.1#-1, plated:31@0.91+6.0~0.1#-1, swarmling:1@0.91+3.0~0.1#-1 | 91", # w17
 		"brute:26@1.28~0.0#-1, sprinter:35@0.6+5.25~0.0#-1, plated:38@0.95+8.4~0.0#-1, swarmling:1@0.6+5.25~0.0#-1 | 100, special", # w18
 	],
 	"level_09": [ # 30 — Monolith Awakened
-		"drone:60@0.6~0.1#-1, dart:40@0.4+3.0~0.1#-1 | 30, route=0", # w1
-		"plated:51@1.2~0.0#-1, glider:49@0.9~0.0 | 30", # w2
-		"aegis:71@1.2~0.0#-1, swarmling:29@0.16+3.0~0.1#-1 | 31", # w3
-		"phantom:79@0.9~0.0#-1, mender:21@3.0+2.0~0.0#-1 | 32", # w4
-		"brute:59@1.4~0.0#-1, glider:41@0.8+3.0~0.0 | 33", # w5
-		"plated:56@1.0~0.0#-1, aegis:44@1.2+4.0~0.0#-1 | 35", # w6
-		"glider:75@0.6~0.1, swarmling:25@0.15~0.1#-1 | 37, route=1", # w7
-		"phantom:59@0.8~0.1#-1, brute:41@1.4+4.0~0.0#-1 | 40", # w8
-		"aegis:83@0.9~0.1#-1, mender:17@2.5+3.0~0.0#-1 | 42", # w9
-		"brute:83@0.8~0.0#-1, mender:17@2.0+2.0~0.0#-1 | 46, special", # w10
-		"glider:45@0.5~0.1, plated:53@1.0+3.0~0.0#-1, swarmling:2@0.5~0.1 | 49", # w11
-		"swarmling:33@0.12~0.1#-1, phantom:67@0.8+4.0~0.0#-1 | 53", # w12
-		"aegis:65@0.8~0.1#-1, brute:34@1.2+5.0~0.0#-1, swarmling:1@0.8~0.1#-1 | 58", # w13
-		"plated:71@0.8~0.1#-1, glider:28@0.5+4.0~0.1, swarmling:1@0.5+4.0~0.1 | 63, route=0", # w14
-		"phantom:83@0.6~0.1#-1, mender:17@2.2+3.0~0.0#-1, swarmling:1@2.2+3.0~0.0#-1 | 68", # w15
-		"glider:48@0.4~0.1, aegis:49@1.0+4.0~0.0#-1, swarmling:3@0.4~0.1 | 74", # w16
-		"brute:43@0.9~0.1#-1, plated:46@0.9+5.0~0.1#-1, mender:11@2.2+8.0~0.0#-1, swarmling:1@2.2+8.0~0.0#-1 | 80", # w17
-		"swarmling:17@0.21~0.1#-1, glider:42@0.96+6.39~0.1, phantom:41@1.49+12.78~0.1#-1 | 86", # w18
-		"aegis:44@0.71~0.1#-1, plated:31@0.81+4.04~0.1#-1, glider:23@0.51+8.08~0.1, swarmling:2@0.71~0.1#-1 | 93", # w19
+		"drone:60@0.6~0.1#-1, dart:40@0.4+3.0~0.1#-1 | 20, route=0", # w1
+		"plated:51@1.2~0.0#-1, glider:49@0.9~0.0 | 20", # w2
+		"aegis:71@1.2~0.0#-1, swarmling:29@0.16+3.0~0.1#-1 | 21", # w3
+		"phantom:79@0.9~0.0#-1, mender:21@3.0+2.0~0.0#-1 | 22", # w4
+		"brute:59@1.4~0.0#-1, glider:41@0.8+3.0~0.0 | 23", # w5
+		"plated:56@1.0~0.0#-1, aegis:44@1.2+4.0~0.0#-1 | 26", # w6
+		"glider:75@0.6~0.1, swarmling:25@0.15~0.1#-1 | 28, route=1", # w7
+		"phantom:59@0.8~0.1#-1, brute:41@1.4+4.0~0.0#-1 | 31", # w8
+		"aegis:83@0.9~0.1#-1, mender:17@2.5+3.0~0.0#-1 | 34", # w9
+		"brute:83@0.8~0.0#-1, mender:17@2.0+2.0~0.0#-1 | 38, special", # w10
+		"glider:45@0.5~0.1, plated:53@1.0+3.0~0.0#-1, swarmling:2@0.5~0.1 | 42", # w11
+		"swarmling:33@0.12~0.1#-1, phantom:67@0.8+4.0~0.0#-1 | 46", # w12
+		"aegis:65@0.8~0.1#-1, brute:34@1.2+5.0~0.0#-1, swarmling:1@0.8~0.1#-1 | 52", # w13
+		"plated:71@0.8~0.1#-1, glider:28@0.5+4.0~0.1, swarmling:1@0.5+4.0~0.1 | 58, route=0", # w14
+		"phantom:83@0.6~0.1#-1, mender:17@2.2+3.0~0.0#-1, swarmling:1@2.2+3.0~0.0#-1 | 63", # w15
+		"glider:48@0.4~0.1, aegis:49@1.0+4.0~0.0#-1, swarmling:3@0.4~0.1 | 70", # w16
+		"brute:43@0.9~0.1#-1, plated:46@0.9+5.0~0.1#-1, mender:11@2.2+8.0~0.0#-1, swarmling:1@2.2+8.0~0.0#-1 | 77", # w17
+		"swarmling:17@0.21~0.1#-1, glider:42@0.96+6.39~0.1, phantom:41@1.49+12.78~0.1#-1 | 84", # w18
+		"aegis:44@0.71~0.1#-1, plated:31@0.81+4.04~0.1#-1, glider:23@0.51+8.08~0.1, swarmling:2@0.71~0.1#-1 | 92", # w19
 		"monolith*1@1.0~0.0#-1!hp=0.42, aegis:46@1.5+6.0~0.0#-1, mender:19@3.0+10.0~0.0#-1, glider:34@0.8+15.0~0.0 | 100, boss", # w20
 	],
 	"level_10": [ # 31 — Rift Breach
-		"swarmling:37@0.14~0.1, drone:63@0.55+3.0~0.1 | 30", # w1
-		"swarmling:25@0.14~0.1, plated:75@1.1+3.0~0.0 | 30", # w2
-		"drone:35@0.55~0.1, plated:65@1.1+5.0~0.0 | 31", # w3
-		"diver:58@1.0~0.0, phantom:42@0.9+3.0~0.0 | 32", # w4
-		"diver:51@1.0~0.0, plated:49@1.1+4.0~0.0 | 34", # w5
-		"plated:71@1.1~0.0, swarmling:29@0.14+5.0~0.0 | 36, special", # w6
-		"aegis:50@1.09~0.0, phantom:28@0.9+4.0~0.1, drone:22@0.55+7.0~0.1 | 39", # w7
-		"swarmling:22@0.14~0.1, phantom:41@0.88+4.0~0.1, glider:37@0.69+6.0~0.1 | 42", # w8
-		"diver:47@0.96~0.0, drone:31@0.53+4.0~0.1, swarmling:21@0.13+6.0~0.1 | 46", # w9
-		"diver:40@0.95~0.0, glider:21@0.66+4.0~0.1, aegis:37@1.04+8.0~0.0, swarmling:2@0.95~0.0 | 50", # w10
-		"diver:56@0.94~0.0, mender:9@2.44+4.0~0.0, drone:34@0.52+8.0~0.1, swarmling:1@0.94~0.0 | 54", # w11
-		"plated:43@2.53~0.0, phantom:37@2.08+7.52~0.0, swarmling:19@0.33+20.06~0.0 | 59, special", # w12
-		"diver:52@0.91~0.0, mender:8@2.36+5.0~0.0, brute:39@1.36+7.0~0.0, swarmling:1@0.91~0.0 | 65", # w13
-		"diver:47@2.39~0.1, swarmling:21@0.35+13.29~0.1, drone:32@1.3+15.95~0.1 | 71", # w14
-		"brute:47@1.33~0.1, mender:15@2.3+3.0~0.0, drone:38@0.49+7.0~0.1, swarmling:1@2.3+3.0~0.0 | 77", # w15
-		"diver:44@1.06~0.1, drone:25@0.58+6.09~0.1, glider:28@0.74+8.52~0.1, swarmling:2@1.06~0.1 | 84", # w16
-		"diver:38@0.86~0.1, plated:28@0.95+4.0~0.1, phantom:33@0.77+8.0~0.1, swarmling:1@0.86~0.1 | 92", # w17
+		"swarmling:37@0.14~0.1, drone:63@0.55+3.0~0.1 | 20", # w1
+		"swarmling:25@0.14~0.1, plated:75@1.1+3.0~0.0 | 20", # w2
+		"drone:35@0.55~0.1, plated:65@1.1+5.0~0.0 | 21", # w3
+		"diver:58@1.0~0.0, phantom:42@0.9+3.0~0.0 | 22", # w4
+		"diver:51@1.0~0.0, plated:49@1.1+4.0~0.0 | 25", # w5
+		"plated:71@1.1~0.0, swarmling:29@0.14+5.0~0.0 | 27, special", # w6
+		"aegis:50@1.09~0.0, phantom:28@0.9+4.0~0.1, drone:22@0.55+7.0~0.1 | 30", # w7
+		"swarmling:22@0.14~0.1, phantom:41@0.88+4.0~0.1, glider:37@0.69+6.0~0.1 | 34", # w8
+		"diver:47@0.96~0.0, drone:31@0.53+4.0~0.1, swarmling:21@0.13+6.0~0.1 | 38", # w9
+		"diver:40@0.95~0.0, glider:21@0.66+4.0~0.1, aegis:37@1.04+8.0~0.0, swarmling:2@0.95~0.0 | 43", # w10
+		"diver:56@0.94~0.0, mender:9@2.44+4.0~0.0, drone:34@0.52+8.0~0.1, swarmling:1@0.94~0.0 | 47", # w11
+		"plated:43@2.53~0.0, phantom:37@2.08+7.52~0.0, swarmling:19@0.33+20.06~0.0 | 53, special", # w12
+		"diver:52@0.91~0.0, mender:8@2.36+5.0~0.0, brute:39@1.36+7.0~0.0, swarmling:1@0.91~0.0 | 60", # w13
+		"diver:47@2.39~0.1, swarmling:21@0.35+13.29~0.1, drone:32@1.3+15.95~0.1 | 67", # w14
+		"brute:47@1.33~0.1, mender:15@2.3+3.0~0.0, drone:38@0.49+7.0~0.1, swarmling:1@2.3+3.0~0.0 | 74", # w15
+		"diver:44@1.06~0.1, drone:25@0.58+6.09~0.1, glider:28@0.74+8.52~0.1, swarmling:2@1.06~0.1 | 82", # w16
+		"diver:38@0.86~0.1, plated:28@0.95+4.0~0.1, phantom:33@0.77+8.0~0.1, swarmling:1@0.86~0.1 | 91", # w17
 		"aegis:48@2.75~0.0, swarmling:21@0.35+8.77~0.0, drone:31@1.37+17.53~0.0 | 100, special", # w18
 	],
 	"level_11": [ # 32 — Twin Fault
-		"swarmling:40@0.14~0.1, drone:60@0.55+3.0~0.1#1 | 30", # w1
-		"glider:54@0.7~0.0, drone:46@0.55+3.0~0.1 | 30", # w2
-		"drone:49@0.55~0.1, brute:51@1.5+4.0~0.0#1 | 31, night", # w3
-		"phantom:59@0.9~0.0#1, shade:41@0.9+3.0~0.0 | 32", # w4
-		"phantom:62@0.9~0.0, dart:38@0.38+4.0~0.1#1 | 34", # w5
-		"wraith:35@1.39~0.0#1, phantom:65@0.89+4.0~0.0 | 36, special, night", # w6
-		"phantom:46@0.88~0.1, mender:20@2.54+4.0~0.0#1, shade:34@0.88+6.0~0.0 | 39", # w7
-		"glider:37@0.67~0.1, mender:14@2.49+4.0~0.0, diver:49@0.96+7.0~0.0#1 | 42", # w8
-		"phantom:57@0.85~0.1, mender:16@2.46+3.0~0.0#1, swarmling:27@0.13+6.0~0.1 | 46, night", # w9
-		"dart:23@0.38~0.1#1, phantom:37@0.92+3.28~0.1, brute:40@1.52+8.74~0.0#1 | 50", # w10
-		"phantom:32@0.9~0.1, aegis:40@1.09+4.32~0.1#1, glider:26@0.69+8.65~0.1, swarmling:2@1.09+4.32~0.1#1 | 54", # w11
-		"wraith:40@1.26~0.0#1, mender:10@2.34+3.0~0.0, drone:50@0.5+7.0~0.0#1, swarmling:1@1.26~0.0#1 | 59, special, night", # w12
-		"phantom:39@2.17~0.1, diver:40@2.42+13.58~0.0#1, swarmling:21@0.33+16.3~0.1 | 65", # w13
-		"aegis:49@0.96~0.1#1, mender:11@2.28+5.0~0.0, phantom:39@0.79+8.0~0.1#1, swarmling:1@0.96~0.1#1 | 71", # w14
-		"swarmling:29@0.34~0.1, drone:40@1.37+8.58~0.1#1, wraith:32@3.46+17.15~0.0 | 77, night", # w15
-		"swarmling:17@0.32~0.1#1, aegis:41@2.54+8.09~0.1, diver:42@2.29+18.88~0.1#1 | 84", # w16
-		"rallier:43@3.21~0.0, dart:31@1.02+12.71~0.1#1, swarmling:26@0.38+25.43~0.1 | 92", # w17
+		"swarmling:40@0.14~0.1, drone:60@0.55+3.0~0.1#1 | 20", # w1
+		"glider:54@0.7~0.0, drone:46@0.55+3.0~0.1 | 20", # w2
+		"drone:49@0.55~0.1, brute:51@1.5+4.0~0.0#1 | 21, night", # w3
+		"phantom:59@0.9~0.0#1, shade:41@0.9+3.0~0.0 | 22", # w4
+		"phantom:62@0.9~0.0, dart:38@0.38+4.0~0.1#1 | 25", # w5
+		"wraith:35@1.39~0.0#1, phantom:65@0.89+4.0~0.0 | 27, special, night", # w6
+		"phantom:46@0.88~0.1, mender:20@2.54+4.0~0.0#1, shade:34@0.88+6.0~0.0 | 30", # w7
+		"glider:37@0.67~0.1, mender:14@2.49+4.0~0.0, diver:49@0.96+7.0~0.0#1 | 34", # w8
+		"phantom:57@0.85~0.1, mender:16@2.46+3.0~0.0#1, swarmling:27@0.13+6.0~0.1 | 38, night", # w9
+		"dart:23@0.38~0.1#1, phantom:37@0.92+3.28~0.1, brute:40@1.52+8.74~0.0#1 | 43", # w10
+		"phantom:32@0.9~0.1, aegis:40@1.09+4.32~0.1#1, glider:26@0.69+8.65~0.1, swarmling:2@1.09+4.32~0.1#1 | 47", # w11
+		"wraith:40@1.26~0.0#1, mender:10@2.34+3.0~0.0, drone:50@0.5+7.0~0.0#1, swarmling:1@1.26~0.0#1 | 53, special, night", # w12
+		"phantom:39@2.17~0.1, diver:40@2.42+13.58~0.0#1, swarmling:21@0.33+16.3~0.1 | 60", # w13
+		"aegis:49@0.96~0.1#1, mender:11@2.28+5.0~0.0, phantom:39@0.79+8.0~0.1#1, swarmling:1@0.96~0.1#1 | 67", # w14
+		"swarmling:29@0.34~0.1, drone:40@1.37+8.58~0.1#1, wraith:32@3.46+17.15~0.0 | 74, night", # w15
+		"swarmling:17@0.32~0.1#1, aegis:41@2.54+8.09~0.1, diver:42@2.29+18.88~0.1#1 | 82", # w16
+		"rallier:43@3.21~0.0, dart:31@1.02+12.71~0.1#1, swarmling:26@0.38+25.43~0.1 | 91", # w17
 		"drone:26@0.67~0.0#1, glider:39@0.84+5.79~0.0, shade:33@1.09+11.59~0.0#1, swarmling:2@0.84+5.79~0.0 | 100, special, night", # w18
 	],
 	"level_12": [ # 33 — Fault Lines
-		"dart:53@0.38~0.1#-1, swarmling:47@0.14+3.0~0.1#-1 | 30, route=0", # w1
-		"dart:30@0.38~0.1#-1, plated:70@1.1+5.0~0.0#-1 | 30", # w2
-		"glider:62@0.7~0.0, dart:38@0.38+5.0~0.1#-1 | 31", # w3
-		"swarmling:46@0.14~0.1#-1, dart:54@0.38+4.0~0.1#-1 | 32", # w4
-		"dart:36@0.38~0.1#-1, glider:64@0.69+4.0~0.1 | 34", # w5
-		"glider:58@0.68~0.0, brute:42@1.46+5.0~0.0#-1 | 36, special, route=1", # w6
-		"glider:44@0.67~0.1, mender:16@2.48+3.0~0.0#-1, sprinter:40@0.67+7.0~0.1#-1 | 39", # w7
-		"glider:39@0.66~0.1, brute:38@1.41+4.0~0.0#-1, dart:23@0.36+8.0~0.1#-1 | 42", # w8
-		"glider:42@0.65~0.1, phantom:40@0.83+5.0~0.1#-1, disruptor:19@1.66+7.0~0.0#-1 | 46", # w9
-		"plated:58@1.04~0.0#-1, dart:32@0.36+4.16~0.1#-1, mender:10@2.46+6.24~0.0#-1, swarmling:1@2.46+6.24~0.0#-1 | 50", # w10
-		"plated:42@1.18~0.1#-1, glider:29@0.75+3.57~0.1, sprinter:27@0.75+8.32~0.1#-1, swarmling:2@0.75+3.57~0.1 | 54, route=0", # w11
-		"glider:46@0.66~0.0, sprinter:40@0.66+4.28~0.0#-1, mender:11@2.46+8.57~0.0#-1, swarmling:4@0.66~0.0 | 59, special", # w12
-		"glider:27@0.61~0.1, brute:26@1.31+5.0~0.0#-1, aegis:45@0.96+7.0~0.1#-1, swarmling:2@0.61~0.1 | 65", # w13
-		"sprinter:23@0.6~0.1#-1, plated:37@0.95+3.0~0.1#-1, aegis:38@0.95+7.0~0.1#-1, swarmling:1@0.6~0.1#-1 | 71", # w14
-		"disruptor:14@1.53~0.0#-1, phantom:38@0.76+4.0~0.1#-1, aegis:47@0.93+6.0~0.1#-1, swarmling:1@1.53~0.0#-1 | 77", # w15
-		"dart:27@0.39~0.1#-1, disruptor:15@1.84+3.65~0.0#-1, aegis:57@1.12+8.51~0.1#-1, swarmling:1@1.84+3.65~0.0#-1 | 84, route=1", # w16
-		"glider:37@1.64~0.1, swarmling:19@0.34+8.49~0.1#-1, aegis:44@2.57+19.8~0.1#-1 | 92", # w17
+		"dart:53@0.38~0.1#-1, swarmling:47@0.14+3.0~0.1#-1 | 20, route=0", # w1
+		"dart:30@0.38~0.1#-1, plated:70@1.1+5.0~0.0#-1 | 20", # w2
+		"glider:62@0.7~0.0, dart:38@0.38+5.0~0.1#-1 | 21", # w3
+		"swarmling:46@0.14~0.1#-1, dart:54@0.38+4.0~0.1#-1 | 22", # w4
+		"dart:36@0.38~0.1#-1, glider:64@0.69+4.0~0.1 | 25", # w5
+		"glider:58@0.68~0.0, brute:42@1.46+5.0~0.0#-1 | 27, special, route=1", # w6
+		"glider:44@0.67~0.1, mender:16@2.48+3.0~0.0#-1, sprinter:40@0.67+7.0~0.1#-1 | 30", # w7
+		"glider:39@0.66~0.1, brute:38@1.41+4.0~0.0#-1, dart:23@0.36+8.0~0.1#-1 | 34", # w8
+		"glider:42@0.65~0.1, phantom:40@0.83+5.0~0.1#-1, disruptor:19@1.66+7.0~0.0#-1 | 38", # w9
+		"plated:58@1.04~0.0#-1, dart:32@0.36+4.16~0.1#-1, mender:10@2.46+6.24~0.0#-1, swarmling:1@2.46+6.24~0.0#-1 | 43", # w10
+		"plated:42@1.18~0.1#-1, glider:29@0.75+3.57~0.1, sprinter:27@0.75+8.32~0.1#-1, swarmling:2@0.75+3.57~0.1 | 47, route=0", # w11
+		"glider:46@0.66~0.0, sprinter:40@0.66+4.28~0.0#-1, mender:11@2.46+8.57~0.0#-1, swarmling:4@0.66~0.0 | 53, special", # w12
+		"glider:27@0.61~0.1, brute:26@1.31+5.0~0.0#-1, aegis:45@0.96+7.0~0.1#-1, swarmling:2@0.61~0.1 | 60", # w13
+		"sprinter:23@0.6~0.1#-1, plated:37@0.95+3.0~0.1#-1, aegis:38@0.95+7.0~0.1#-1, swarmling:1@0.6~0.1#-1 | 67", # w14
+		"disruptor:14@1.53~0.0#-1, phantom:38@0.76+4.0~0.1#-1, aegis:47@0.93+6.0~0.1#-1, swarmling:1@1.53~0.0#-1 | 74", # w15
+		"dart:27@0.39~0.1#-1, disruptor:15@1.84+3.65~0.0#-1, aegis:57@1.12+8.51~0.1#-1, swarmling:1@1.84+3.65~0.0#-1 | 82, route=1", # w16
+		"glider:37@1.64~0.1, swarmling:19@0.34+8.49~0.1#-1, aegis:44@2.57+19.8~0.1#-1 | 91", # w17
 		"jammer:26@4.09~0.0#-1, plated:51@2.51+13.92~0.0#-1, swarmling:22@0.31+16.7~0.0#-1 | 100, special", # w18
 	],
 	"level_13": [ # 34 — Dark Spiral
-		"brute:42@1.36~0.0, glider:58@0.63+3.0~0.0 | 30", # w1
-		"plated:61@0.98~0.0, brute:39@1.33+4.0~0.0 | 30", # w2
-		"swarmling:34@0.12~0.1, glider:66@0.61+3.0~0.0 | 31, night", # w3
-		"phantom:69@0.77~0.0, swarmling:31@0.12+5.0~0.1 | 32", # w4
-		"phantom:42@0.76~0.0, static_crawler:58@1.52+3.0~0.0 | 33", # w5
-		"static_crawler:53@1.49~0.0, brute:47@1.24+3.0~0.0 | 35, special, night", # w6
-		"plated:43@0.9~0.0, phantom:40@0.73+5.0~0.1, cloaker:17@1.8+6.0~0.0 | 37", # w7
-		"plated:47@0.88~0.0, phantom:32@0.72+3.0~0.1, cloaker:21@1.77+7.0~0.0 | 40", # w8
-		"cloaker:21@1.74~0.0, brute:31@1.19+3.0~0.0, plated:48@0.87+7.0~0.0 | 42, night", # w9
-		"brute:28@1.17~0.0, swarmling:18@0.11+5.0~0.1, aegis:54@0.86+6.0~0.0 | 46", # w10
-		"shade:36@0.82~0.0, glider:46@0.64+5.92~0.1, mender:15@2.37+9.48~0.0, swarmling:2@0.64+5.92~0.1 | 49", # w11
-		"phantom:42@0.68~0.0, shade:25@0.68+5.0~0.0, brute:34@1.14+7.0~0.0 | 53, special, night", # w12
-		"static_crawler:33@4.09~0.0, swarmling:19@0.3+9.1~0.1, aegis:48@2.49+24.26~0.1 | 58", # w13
-		"phantom:37@0.86~0.1, brute:31@1.43+5.16~0.0, glider:31@0.67+9.03~0.1, swarmling:1@0.67+9.03~0.1 | 63", # w14
-		"plated:44@0.8~0.1, mender:9@1.9+4.0~0.0, aegis:46@0.8+7.0~0.1, swarmling:1@1.9+4.0~0.0 | 68, night", # w15
-		"phantom:52@0.65~0.1, shade:31@0.65+3.0~0.1, cloaker:17@1.59+8.0~0.0, swarmling:1@1.59+8.0~0.0 | 74", # w16
-		"brute:30@1.33~0.1, glider:27@0.62+4.98~0.1, plated:42@0.98+7.47~0.1, swarmling:1@0.62+4.98~0.1 | 80", # w17
-		"swarmling:23@0.35~0.0, glider:33@1.69+17.26~0.0, phantom:44@2.18+20.72~0.0 | 86, special, night", # w18
-		"phantom:38@0.74~0.1, plated:30@0.9+3.51~0.1, aegis:31@0.9+8.2~0.1, swarmling:1@0.9+8.2~0.1 | 93", # w19
+		"brute:42@1.36~0.0, glider:58@0.63+3.0~0.0 | 20", # w1
+		"plated:61@0.98~0.0, brute:39@1.33+4.0~0.0 | 20", # w2
+		"swarmling:34@0.12~0.1, glider:66@0.61+3.0~0.0 | 21, night", # w3
+		"phantom:69@0.77~0.0, swarmling:31@0.12+5.0~0.1 | 22", # w4
+		"phantom:42@0.76~0.0, static_crawler:58@1.52+3.0~0.0 | 23", # w5
+		"static_crawler:53@1.49~0.0, brute:47@1.24+3.0~0.0 | 26, special, night", # w6
+		"plated:43@0.9~0.0, phantom:40@0.73+5.0~0.1, cloaker:17@1.8+6.0~0.0 | 28", # w7
+		"plated:47@0.88~0.0, phantom:32@0.72+3.0~0.1, cloaker:21@1.77+7.0~0.0 | 31", # w8
+		"cloaker:21@1.74~0.0, brute:31@1.19+3.0~0.0, plated:48@0.87+7.0~0.0 | 34, night", # w9
+		"brute:28@1.17~0.0, swarmling:18@0.11+5.0~0.1, aegis:54@0.86+6.0~0.0 | 38", # w10
+		"shade:36@0.82~0.0, glider:46@0.64+5.92~0.1, mender:15@2.37+9.48~0.0, swarmling:2@0.64+5.92~0.1 | 42", # w11
+		"phantom:42@0.68~0.0, shade:25@0.68+5.0~0.0, brute:34@1.14+7.0~0.0 | 46, special, night", # w12
+		"static_crawler:33@4.09~0.0, swarmling:19@0.3+9.1~0.1, aegis:48@2.49+24.26~0.1 | 52", # w13
+		"phantom:37@0.86~0.1, brute:31@1.43+5.16~0.0, glider:31@0.67+9.03~0.1, swarmling:1@0.67+9.03~0.1 | 58", # w14
+		"plated:44@0.8~0.1, mender:9@1.9+4.0~0.0, aegis:46@0.8+7.0~0.1, swarmling:1@1.9+4.0~0.0 | 63, night", # w15
+		"phantom:52@0.65~0.1, shade:31@0.65+3.0~0.1, cloaker:17@1.59+8.0~0.0, swarmling:1@1.59+8.0~0.0 | 70", # w16
+		"brute:30@1.33~0.1, glider:27@0.62+4.98~0.1, plated:42@0.98+7.47~0.1, swarmling:1@0.62+4.98~0.1 | 77", # w17
+		"swarmling:23@0.35~0.0, glider:33@1.69+17.26~0.0, phantom:44@2.18+20.72~0.0 | 84, special, night", # w18
+		"phantom:38@0.74~0.1, plated:30@0.9+3.51~0.1, aegis:31@0.9+8.2~0.1, swarmling:1@0.9+8.2~0.1 | 92", # w19
 		"cloaker:23@1.82~0.0, glider:36@0.58+6.0~0.0, aegis:38@0.91+9.6~0.0, swarmling:3@1.82~0.0 | 100, special", # w20
 	],
 	"level_14": [ # 35 — Chimera
-		"brute:46@1.5~0.0, plated:54@1.1+4.0~0.0#1 | 30", # w1
-		"brute:42@1.5~0.0#1, glider:58@0.7+5.0~0.0 | 30", # w2
-		"plated:64@1.1~0.0, brute:36@1.5+4.0~0.0#1 | 31", # w3
-		"swarmling:26@0.14~0.1#1, plated:74@1.09+4.0~0.0 | 32", # w4
-		"plated:54@1.07~0.0, glider:46@0.68+5.0~0.1 | 33", # w5
-		"aegis:60@1.05~0.0#1, glider:40@0.67+3.0~0.0 | 35, special", # w6
-		"aegis:44@1.03~0.0, brute:29@1.41+4.0~0.0#1, glider:26@0.66+7.0~0.1 | 37", # w7
-		"plated:33@1.02~0.0#1, aegis:43@1.02+4.0~0.0, glider:24@0.65+6.0~0.1 | 40", # w8
-		"swarmling:22@0.13~0.1, brute:37@1.37+4.0~0.0#1, prismling:41@1.0+7.0~0.0 | 42", # w9
-		"mender_elite:22@2.25~0.0#1, swarmling:26@0.13+3.0~0.1, glider:52@0.63+6.0~0.1 | 46", # w10
-		"disruptor:20@1.6~0.0, mender_elite:19@2.22+3.0~0.0#1, aegis:60@0.98+6.0~0.1, swarmling:2@1.6~0.0 | 49", # w11
-		"disruptor:18@1.57~0.0#1, aegis:69@0.96+3.0~0.0, mender:11@2.27+7.0~0.0#1, swarmling:2@1.57~0.0#1 | 53, special", # w12
-		"brute:29@1.33~0.0, plated:42@0.97+5.1~0.1#1, glider:28@0.61+7.14~0.1, swarmling:1@0.61+7.14~0.1 | 58", # w13
-		"mender_elite:28@2.13~0.0#1, glider:51@0.6+5.0~0.1, mender:18@2.21+8.0~0.0#1, swarmling:3@2.13~0.0#1 | 63", # w14
-		"phantom:39@0.96~0.1, glider:27@0.74+6.28~0.1, prismling:31@1.16+7.54~0.1, swarmling:2@0.74+6.28~0.1 | 68", # w15
-		"prismling:25@0.91~0.1#1, plated:36@0.91+4.0~0.1, aegis:37@0.91+8.0~0.1#1, swarmling:1@0.91~0.1#1 | 74", # w16
-		"aegis:47@2.52~0.1, swarmling:19@0.31+8.41~0.1#1, brute:34@3.45+16.81~0.1 | 80", # w17
-		"disruptor:31@1.46~0.0#1, aegis:48@0.89+5.0~0.0, mender:19@2.11+7.0~0.0#1, swarmling:2@1.46~0.0#1 | 86, special", # w18
-		"mender_elite:29@2.0~0.0, mender:19@2.08+3.0~0.0#1, plated:51@0.88+6.0~0.0, swarmling:1@2.0~0.0 | 93, special", # w19
+		"brute:46@1.5~0.0, plated:54@1.1+4.0~0.0#1 | 20", # w1
+		"brute:42@1.5~0.0#1, glider:58@0.7+5.0~0.0 | 20", # w2
+		"plated:64@1.1~0.0, brute:36@1.5+4.0~0.0#1 | 21", # w3
+		"swarmling:26@0.14~0.1#1, plated:74@1.09+4.0~0.0 | 22", # w4
+		"plated:54@1.07~0.0, glider:46@0.68+5.0~0.1 | 23", # w5
+		"aegis:60@1.05~0.0#1, glider:40@0.67+3.0~0.0 | 26, special", # w6
+		"aegis:44@1.03~0.0, brute:29@1.41+4.0~0.0#1, glider:26@0.66+7.0~0.1 | 28", # w7
+		"plated:33@1.02~0.0#1, aegis:43@1.02+4.0~0.0, glider:24@0.65+6.0~0.1 | 31", # w8
+		"swarmling:22@0.13~0.1, brute:37@1.37+4.0~0.0#1, prismling:41@1.0+7.0~0.0 | 34", # w9
+		"mender_elite:22@2.25~0.0#1, swarmling:26@0.13+3.0~0.1, glider:52@0.63+6.0~0.1 | 38", # w10
+		"disruptor:20@1.6~0.0, mender_elite:19@2.22+3.0~0.0#1, aegis:60@0.98+6.0~0.1, swarmling:2@1.6~0.0 | 42", # w11
+		"disruptor:18@1.57~0.0#1, aegis:69@0.96+3.0~0.0, mender:11@2.27+7.0~0.0#1, swarmling:2@1.57~0.0#1 | 46, special", # w12
+		"brute:29@1.33~0.0, plated:42@0.97+5.1~0.1#1, glider:28@0.61+7.14~0.1, swarmling:1@0.61+7.14~0.1 | 52", # w13
+		"mender_elite:28@2.13~0.0#1, glider:51@0.6+5.0~0.1, mender:18@2.21+8.0~0.0#1, swarmling:3@2.13~0.0#1 | 58", # w14
+		"phantom:39@0.96~0.1, glider:27@0.74+6.28~0.1, prismling:31@1.16+7.54~0.1, swarmling:2@0.74+6.28~0.1 | 63", # w15
+		"prismling:25@0.91~0.1#1, plated:36@0.91+4.0~0.1, aegis:37@0.91+8.0~0.1#1, swarmling:1@0.91~0.1#1 | 70", # w16
+		"aegis:47@2.52~0.1, swarmling:19@0.31+8.41~0.1#1, brute:34@3.45+16.81~0.1 | 77", # w17
+		"disruptor:31@1.46~0.0#1, aegis:48@0.89+5.0~0.0, mender:19@2.11+7.0~0.0#1, swarmling:2@1.46~0.0#1 | 84, special", # w18
+		"mender_elite:29@2.0~0.0, mender:19@2.08+3.0~0.0#1, plated:51@0.88+6.0~0.0, swarmling:1@2.0~0.0 | 92, special", # w19
 		"chimera*1@1.0~0.0, aegis:76@1.4+6.0~0.0#1, mender:24@2.6+10.0~0.0 | 100, boss", # w20
 	],
 	"level_15": [ # 36 — Three Gates
-		"dart:42@0.38~0.1#-1, glider:58@0.7+4.0~0.0 | 30, route=0", # w1
-		"drone:49@0.55~0.1#-1, brute:51@1.5+4.0~0.0#-1 | 30", # w2
-		"swarmling:48@0.14~0.1#-1, dart:52@0.38+3.0~0.1#-1 | 31, night", # w3
-		"rallier:63@1.2~0.0#-1, swarmling:37@0.14+4.0~0.1#-1 | 32", # w4
-		"brute:46@1.5~0.0#-1, phantom:54@0.9+5.0~0.0#-1 | 33", # w5
-		"phantom:68@0.9~0.0#-1, swarmling:32@0.14+3.0~0.0#-1 | 35, special, night, route=1", # w6
-		"swarmling:13@0.14~0.1#-1, aegis:37@1.1+5.0~0.0#-1, vanguard:49@2.0+8.0~0.0#-1 | 37", # w7
-		"phantom:36@0.89~0.1#-1, rallier:31@1.19+4.0~0.0#-1, brute:33@1.49+8.0~0.0#-1 | 40", # w8
-		"brute:31@1.46~0.0#-1, drone:31@0.54+3.0~0.1#-1, phantom:38@0.88+7.0~0.1#-1 | 42, night", # w9
-		"brute:33@1.44~0.0#-1, glider:51@0.67+3.0~0.1, escort:16@1.25+6.0~0.0#-1 | 46", # w10
-		"dart:24@0.4~0.1#-1, drone:34@0.58+3.34~0.1#-1, phantom:42@0.95+8.9~0.1#-1 | 49, route=2", # w11
-		"drone:31@0.72~0.0#-1, diver:46@1.3+5.53~0.0#-1, dart:23@0.5+9.68~0.0#-1, swarmling:1@1.3+5.53~0.0#-1 | 53, special, night", # w12
-		"dart:25@0.45~0.1#-1, glider:35@0.83+5.14~0.1, brute:39@1.79+8.99~0.0#-1, swarmling:2@0.83+5.14~0.1 | 58", # w13
-		"aegis:45@1.05~0.1#-1, glider:27@0.67+3.15~0.1, drone:26@0.53+7.35~0.1#-1, swarmling:2@1.05~0.1#-1 | 63", # w14
-		"swarmling:24@0.31~0.1#-1, brute:33@3.23+9.58~0.0#-1, diver:44@2.16+14.37~0.0#-1 | 68, night", # w15
-		"dart:16@0.4~0.1#-1, vanguard:53@2.08+5.84~0.0#-1, phantom:30@0.93+7.01~0.1#-1, swarmling:1@2.08+5.84~0.0#-1 | 74, route=0", # w16
-		"escort:18@1.14~0.0#-1, rallier:30@1.06+5.0~0.0#-1, aegis:50@0.97+7.0~0.1#-1, swarmling:2@1.14~0.0#-1 | 80", # w17
-		"drone:38@0.48~0.0#-1, escort:23@1.14+3.03~0.0#-1, rallier:38@1.05+7.07~0.0#-1, swarmling:1@1.14+3.03~0.0#-1 | 86, special, night", # w18
-		"escort:22@1.12~0.0#-1, brute:30@1.29+4.0~0.1#-1, aegis:46@0.95+7.0~0.1#-1, swarmling:1@1.12~0.0#-1 | 93", # w19
+		"dart:42@0.38~0.1#-1, glider:58@0.7+4.0~0.0 | 20, route=0", # w1
+		"drone:49@0.55~0.1#-1, brute:51@1.5+4.0~0.0#-1 | 20", # w2
+		"swarmling:48@0.14~0.1#-1, dart:52@0.38+3.0~0.1#-1 | 21, night", # w3
+		"rallier:63@1.2~0.0#-1, swarmling:37@0.14+4.0~0.1#-1 | 22", # w4
+		"brute:46@1.5~0.0#-1, phantom:54@0.9+5.0~0.0#-1 | 23", # w5
+		"phantom:68@0.9~0.0#-1, swarmling:32@0.14+3.0~0.0#-1 | 26, special, night, route=1", # w6
+		"swarmling:13@0.14~0.1#-1, aegis:37@1.1+5.0~0.0#-1, vanguard:49@2.0+8.0~0.0#-1 | 28", # w7
+		"phantom:36@0.89~0.1#-1, rallier:31@1.19+4.0~0.0#-1, brute:33@1.49+8.0~0.0#-1 | 31", # w8
+		"brute:31@1.46~0.0#-1, drone:31@0.54+3.0~0.1#-1, phantom:38@0.88+7.0~0.1#-1 | 34, night", # w9
+		"brute:33@1.44~0.0#-1, glider:51@0.67+3.0~0.1, escort:16@1.25+6.0~0.0#-1 | 38", # w10
+		"dart:24@0.4~0.1#-1, drone:34@0.58+3.34~0.1#-1, phantom:42@0.95+8.9~0.1#-1 | 42, route=2", # w11
+		"drone:31@0.72~0.0#-1, diver:46@1.3+5.53~0.0#-1, dart:23@0.5+9.68~0.0#-1, swarmling:1@1.3+5.53~0.0#-1 | 46, special, night", # w12
+		"dart:25@0.45~0.1#-1, glider:35@0.83+5.14~0.1, brute:39@1.79+8.99~0.0#-1, swarmling:2@0.83+5.14~0.1 | 52", # w13
+		"aegis:45@1.05~0.1#-1, glider:27@0.67+3.15~0.1, drone:26@0.53+7.35~0.1#-1, swarmling:2@1.05~0.1#-1 | 58", # w14
+		"swarmling:24@0.31~0.1#-1, brute:33@3.23+9.58~0.0#-1, diver:44@2.16+14.37~0.0#-1 | 63, night", # w15
+		"dart:16@0.4~0.1#-1, vanguard:53@2.08+5.84~0.0#-1, phantom:30@0.93+7.01~0.1#-1, swarmling:1@2.08+5.84~0.0#-1 | 70, route=0", # w16
+		"escort:18@1.14~0.0#-1, rallier:30@1.06+5.0~0.0#-1, aegis:50@0.97+7.0~0.1#-1, swarmling:2@1.14~0.0#-1 | 77", # w17
+		"drone:38@0.48~0.0#-1, escort:23@1.14+3.03~0.0#-1, rallier:38@1.05+7.07~0.0#-1, swarmling:1@1.14+3.03~0.0#-1 | 84, special, night", # w18
+		"escort:22@1.12~0.0#-1, brute:30@1.29+4.0~0.1#-1, aegis:46@0.95+7.0~0.1#-1, swarmling:1@1.12~0.0#-1 | 92", # w19
 		"glider:35@0.63~0.0, brute:25@1.34+4.2~0.0#-1, aegis:38@0.99+6.3~0.0#-1, swarmling:2@0.63~0.0 | 100, special", # w20
 	],
 	"level_16": [ # 37 — Pincer
-		"swarmling:39@0.12~0.1, drone:61@0.49+5.0~0.1#1 | 30", # w1
-		"swarmling:39@0.12~0.1#1, drone:61@0.48+3.0~0.1 | 30", # w2
-		"swarmling:42@0.12~0.1, brute:58@1.29+5.0~0.0#1 | 31", # w3
-		"brute:47@1.27~0.0#1, sludge:53@1.18+4.0~0.0 | 32", # w4
-		"escort:42@1.08~0.0, drone:58@0.46+3.0~0.1#1 | 33", # w5
-		"mender_elite:44@2.04~0.0#1, drone:56@0.45+4.0~0.0 | 35, special", # w6
-		"drone:28@0.44~0.1, brute:36@1.21+4.0~0.0#1, glider:37@0.56+8.0~0.1 | 37", # w7
-		"escort:24@1.03~0.0#1, drone:47@0.44+5.0~0.1, swarmling:29@0.11+7.0~0.1#1 | 40", # w8
-		"plated:39@0.86~0.0, glider:30@0.55+5.0~0.1, sludge:31@1.09+8.0~0.0 | 42", # w9
-		"static_crawler:27@1.38~0.0#1, swarmling:18@0.11+4.0~0.1, aegis:54@0.85+6.0~0.0#1 | 46", # w10
-		"drone:32@0.53~0.1, aegis:50@1.07+3.81~0.0#1, escort:17@1.26+8.89~0.0, swarmling:1@1.07+3.81~0.0#1 | 49", # w11
-		"brute:44@1.12~0.0#1, mender:11@1.95+5.0~0.0, sludge:44@1.05+7.0~0.0#1, swarmling:1@1.95+5.0~0.0 | 53, special", # w12
-		"aegis:38@1.1~0.1, glider:23@0.7+5.42~0.1, plated:37@1.1+10.84~0.1, swarmling:2@1.1~0.1 | 58", # w13
-		"glider:28@0.65~0.1, plated:44@1.02+5.08~0.1, sludge:27@1.29+10.15~0.0#1, swarmling:2@0.65~0.1 | 63", # w14
-		"glider:35@0.62~0.1, brute:38@1.31+6.08~0.0#1, escort:25@1.14+8.51~0.0, swarmling:2@0.62~0.1 | 68", # w15
-		"brute:40@3.24~0.1#1, sludge:37@3.03+9.09~0.0, swarmling:23@0.3+24.25~0.1#1 | 74", # w16
-		"glider:26@0.68~0.1, aegis:43@1.07+5.57~0.1#1, brute:29@1.48+9.75~0.1, swarmling:2@0.68~0.1 | 80", # w17
-		"escort:25@3.15~0.0#1, drone:45@1.33+17.49~0.0, swarmling:30@0.35+20.99~0.0#1 | 86, special", # w18
-		"glider:39@0.75~0.1, brute:33@1.6+4.67~0.1#1, drone:26@0.59+10.89~0.1, swarmling:2@0.75~0.1 | 93", # w19
+		"swarmling:39@0.12~0.1, drone:61@0.49+5.0~0.1#1 | 20", # w1
+		"swarmling:39@0.12~0.1#1, drone:61@0.48+3.0~0.1 | 20", # w2
+		"swarmling:42@0.12~0.1, brute:58@1.29+5.0~0.0#1 | 21", # w3
+		"brute:47@1.27~0.0#1, sludge:53@1.18+4.0~0.0 | 22", # w4
+		"escort:42@1.08~0.0, drone:58@0.46+3.0~0.1#1 | 23", # w5
+		"mender_elite:44@2.04~0.0#1, drone:56@0.45+4.0~0.0 | 26, special", # w6
+		"drone:28@0.44~0.1, brute:36@1.21+4.0~0.0#1, glider:37@0.56+8.0~0.1 | 28", # w7
+		"escort:24@1.03~0.0#1, drone:47@0.44+5.0~0.1, swarmling:29@0.11+7.0~0.1#1 | 31", # w8
+		"plated:39@0.86~0.0, glider:30@0.55+5.0~0.1, sludge:31@1.09+8.0~0.0 | 34", # w9
+		"static_crawler:27@1.38~0.0#1, swarmling:18@0.11+4.0~0.1, aegis:54@0.85+6.0~0.0#1 | 38", # w10
+		"drone:32@0.53~0.1, aegis:50@1.07+3.81~0.0#1, escort:17@1.26+8.89~0.0, swarmling:1@1.07+3.81~0.0#1 | 42", # w11
+		"brute:44@1.12~0.0#1, mender:11@1.95+5.0~0.0, sludge:44@1.05+7.0~0.0#1, swarmling:1@1.95+5.0~0.0 | 46, special", # w12
+		"aegis:38@1.1~0.1, glider:23@0.7+5.42~0.1, plated:37@1.1+10.84~0.1, swarmling:2@1.1~0.1 | 52", # w13
+		"glider:28@0.65~0.1, plated:44@1.02+5.08~0.1, sludge:27@1.29+10.15~0.0#1, swarmling:2@0.65~0.1 | 58", # w14
+		"glider:35@0.62~0.1, brute:38@1.31+6.08~0.0#1, escort:25@1.14+8.51~0.0, swarmling:2@0.62~0.1 | 63", # w15
+		"brute:40@3.24~0.1#1, sludge:37@3.03+9.09~0.0, swarmling:23@0.3+24.25~0.1#1 | 70", # w16
+		"glider:26@0.68~0.1, aegis:43@1.07+5.57~0.1#1, brute:29@1.48+9.75~0.1, swarmling:2@0.68~0.1 | 77", # w17
+		"escort:25@3.15~0.0#1, drone:45@1.33+17.49~0.0, swarmling:30@0.35+20.99~0.0#1 | 84, special", # w18
+		"glider:39@0.75~0.1, brute:33@1.6+4.67~0.1#1, drone:26@0.59+10.89~0.1, swarmling:2@0.75~0.1 | 92", # w19
 		"phantom:41@0.65~0.0#1, brute:23@1.08+3.18~0.0, sludge:35@1.01+7.42~0.0#1, swarmling:1@1.01+7.42~0.0#1 | 100, special", # w20
 	],
 	"level_17": [ # 38 — Shortcut
-		"dart:38@0.34~0.1#-1, glider:62@0.63+4.0~0.0 | 30, route=0", # w1
-		"dart:47@0.34~0.1#-1, drone:53@0.49+3.0~0.1#-1 | 30", # w2
-		"drone:55@0.48~0.1#-1, dart:45@0.33+5.0~0.1#-1 | 31", # w3
-		"glider:76@0.6~0.0, jammer:24@1.55+3.0~0.0#-1 | 31", # w4
-		"glider:54@0.59~0.1, rallier:46@1.02+3.0~0.0#-1 | 33", # w5
-		"phantom:54@0.75~0.0#-1, glider:46@0.59+5.0~0.0 | 34, special, route=1", # w6
-		"dart:40@0.31~0.1#-1, glider:60@0.58+4.0~0.1 | 36", # w7
-		"dart:24@0.31~0.1#-1, drone:31@0.45+5.0~0.1#-1, plated:45@0.89+8.0~0.0#-1 | 38", # w8
-		"dart:28@0.3~0.1#-1, jammer:26@1.44+4.0~0.0#-1, glider:46@0.56+8.0~0.1 | 40", # w9
-		"disruptor:26@1.42~0.0#-1, dart:27@0.3+5.0~0.1#-1, glider:46@0.55+7.0~0.1 | 43", # w10
-		"swarmling:22@0.11~0.1#-1, glider:44@0.55+4.0~0.1, drone:34@0.43+7.0~0.1#-1 | 46, route=0", # w11
-		"dart:26@0.48~0.0#-1, aegis:47@1.4+6.61~0.0#-1, glider:27@0.89+13.22~0.0 | 49, special", # w12
-		"disruptor:16@1.68~0.0#-1, glider:38@0.65+4.9~0.1, sprinter:38@0.65+7.34~0.1#-1, dart:8@1.68~0.0#-1 | 53", # w13
-		"sprinter:32@0.95~0.1#-1, dart:33@0.52+5.39~0.1#-1, glider:35@0.95+14.37~0.1 | 57", # w14
-		"plated:60@1.1~0.1#-1, mender:13@2.59+6.7~0.0#-1, dart:27@0.38+8.04~0.1#-1 | 61", # w15
-		"swarmling:21@0.38~0.1#-1, phantom:43@2.5+18.97~0.1#-1, glider:32@1.94+30.36~0.1, dart:4@1.94+30.36~0.1 | 66, route=1", # w16
-		"plated:41@0.8~0.1#-1, disruptor:13@1.31+5.0~0.0#-1, aegis:43@0.8+7.0~0.1#-1, dart:2@1.31+5.0~0.0#-1 | 71", # w17
-		"aegis:55@1.15~0.0#-1, dart:30@0.39+4.36~0.0#-1, jammer:15@1.89+10.17~0.0#-1 | 76, special", # w18
-		"phantom:36@2.1~0.1#-1, aegis:45@2.56+13.14~0.1#-1, swarmling:18@0.33+26.27~0.1#-1, dart:2@2.56+13.14~0.1#-1 | 81", # w19
-		"jammer:13@1.27~0.0#-1, aegis:67@0.77+5.0~0.1#-1, disruptor:16@1.27+6.0~0.0#-1, dart:4@1.27~0.0#-1 | 87", # w20
-		"swarmling:20@0.43~0.1#-1, drone:31@1.63+21.44~0.1#-1, glider:44@2.1+34.3~0.1, dart:5@2.1+34.3~0.1 | 93, route=0", # w21
+		"dart:38@0.34~0.1#-1, glider:62@0.63+4.0~0.0 | 20, route=0", # w1
+		"dart:47@0.34~0.1#-1, drone:53@0.49+3.0~0.1#-1 | 20", # w2
+		"drone:55@0.48~0.1#-1, dart:45@0.33+5.0~0.1#-1 | 21", # w3
+		"glider:76@0.6~0.0, jammer:24@1.55+3.0~0.0#-1 | 21", # w4
+		"glider:54@0.59~0.1, rallier:46@1.02+3.0~0.0#-1 | 23", # w5
+		"phantom:54@0.75~0.0#-1, glider:46@0.59+5.0~0.0 | 25, special, route=1", # w6
+		"dart:40@0.31~0.1#-1, glider:60@0.58+4.0~0.1 | 27", # w7
+		"dart:24@0.31~0.1#-1, drone:31@0.45+5.0~0.1#-1, plated:45@0.89+8.0~0.0#-1 | 29", # w8
+		"dart:28@0.3~0.1#-1, jammer:26@1.44+4.0~0.0#-1, glider:46@0.56+8.0~0.1 | 31", # w9
+		"disruptor:26@1.42~0.0#-1, dart:27@0.3+5.0~0.1#-1, glider:46@0.55+7.0~0.1 | 35", # w10
+		"swarmling:22@0.11~0.1#-1, glider:44@0.55+4.0~0.1, drone:34@0.43+7.0~0.1#-1 | 38, route=0", # w11
+		"dart:26@0.48~0.0#-1, aegis:47@1.4+6.61~0.0#-1, glider:27@0.89+13.22~0.0 | 42, special", # w12
+		"disruptor:16@1.68~0.0#-1, glider:38@0.65+4.9~0.1, sprinter:38@0.65+7.34~0.1#-1, dart:8@1.68~0.0#-1 | 46", # w13
+		"sprinter:32@0.95~0.1#-1, dart:33@0.52+5.39~0.1#-1, glider:35@0.95+14.37~0.1 | 51", # w14
+		"plated:60@1.1~0.1#-1, mender:13@2.59+6.7~0.0#-1, dart:27@0.38+8.04~0.1#-1 | 55", # w15
+		"swarmling:21@0.38~0.1#-1, phantom:43@2.5+18.97~0.1#-1, glider:32@1.94+30.36~0.1, dart:4@1.94+30.36~0.1 | 61, route=1", # w16
+		"plated:41@0.8~0.1#-1, disruptor:13@1.31+5.0~0.0#-1, aegis:43@0.8+7.0~0.1#-1, dart:2@1.31+5.0~0.0#-1 | 67", # w17
+		"aegis:55@1.15~0.0#-1, dart:30@0.39+4.36~0.0#-1, jammer:15@1.89+10.17~0.0#-1 | 73, special", # w18
+		"phantom:36@2.1~0.1#-1, aegis:45@2.56+13.14~0.1#-1, swarmling:18@0.33+26.27~0.1#-1, dart:2@2.56+13.14~0.1#-1 | 78", # w19
+		"jammer:13@1.27~0.0#-1, aegis:67@0.77+5.0~0.1#-1, disruptor:16@1.27+6.0~0.0#-1, dart:4@1.27~0.0#-1 | 85", # w20
+		"swarmling:20@0.43~0.1#-1, drone:31@1.63+21.44~0.1#-1, glider:44@2.1+34.3~0.1, dart:5@2.1+34.3~0.1 | 92, route=0", # w21
 		"dart:27@0.57~0.0#-1, drone:29@0.83+8.74~0.0#-1, glider:43@1.05+15.29~0.0 | 100, special", # w22
 	],
 	"level_18": [ # 39 — Eclipse
-		"glider:53@0.58~0.0, brute:47@1.24+5.0~0.0#1 | 30", # w1
-		"glider:43@0.57~0.0, plated:57@0.89+3.0~0.0 | 30", # w2
-		"glider:60@0.56~0.0, brute:40@1.2+3.0~0.0#1 | 31, night", # w3
-		"swarmling:28@0.11~0.1#1, plated:72@0.86+3.0~0.0 | 31", # w4
-		"vanguard:75@1.55~0.0, wraith:25@1.08+3.0~0.0#1 | 33", # w5
-		"shade:40@0.69~0.0#1, phantom:60@0.69+3.0~0.0 | 34, special, night", # w6
-		"aegis:40@0.83~0.0, vanguard:60@1.5+3.0~0.0#1 | 36", # w7
-		"brute:41@1.11~0.0#1, glider:43@0.52+5.0~0.1, cloaker:16@1.63+6.0~0.0#1 | 38", # w8
-		"phantom:28@0.66~0.1, brute:25@1.1+4.0~0.0#1, aegis:48@0.8+8.0~0.0 | 40, night", # w9
-		"aegis:42@0.79~0.0#1, plated:33@0.79+3.0~0.0, glider:25@0.51+7.0~0.1 | 43", # w10
-		"aegis:41@0.78~0.0, phantom:27@0.64+4.0~0.1#1, plated:32@0.78+6.0~0.0 | 46", # w11
-		"phantom:40@0.63~0.0#1, mender:8@1.83+4.0~0.0, aegis:51@0.77+6.0~0.0#1, swarmling:1@1.83+4.0~0.0 | 49, special, night", # w12
-		"glider:33@1.66~0.1, swarmling:21@0.34+13.57~0.1#1, aegis:46@2.58+27.15~0.1 | 53", # w13
-		"phantom:35@0.63~0.1#1, plated:45@0.77+5.05~0.1, wraith:20@0.97+8.08~0.0#1, swarmling:1@0.97+8.08~0.0#1 | 57", # w14
-		"vanguard:42@1.68~0.0, aegis:35@0.93+4.94~0.1#1, glider:21@0.59+9.89~0.1, swarmling:2@1.68~0.0 | 61, night", # w15
-		"plated:32@0.74~0.1#1, vanguard:50@1.34+3.0~0.0, wraith:17@0.94+8.0~0.0#1, swarmling:1@1.34+3.0~0.0 | 66", # w16
-		"vanguard:62@1.48~0.0, glider:25@0.51+5.56~0.1, cloaker:12@1.62+8.89~0.0, swarmling:2@1.48~0.0 | 71", # w17
-		"glider:34@0.57~0.0, mender:12@2.13+4.99~0.0, plated:52@0.9+8.73~0.0#1, swarmling:2@0.57~0.0 | 76, special, night", # w18
-		"aegis:48@2.65~0.1, swarmling:21@0.34+11.2~0.1#1, glider:31@1.68+22.4~0.1 | 81", # w19
-		"phantom:31@0.75~0.1#1, plated:41@0.92+5.19~0.1, prismling:28@0.92+10.38~0.1#1, swarmling:1@0.92+10.38~0.1#1 | 87", # w20
-		"cloaker:10@1.4~0.0, brute:24@0.95+5.0~0.1#1, vanguard:65@1.27+8.0~0.0, swarmling:1@1.4~0.0 | 93, night", # w21
+		"glider:53@0.58~0.0, brute:47@1.24+5.0~0.0#1 | 20", # w1
+		"glider:43@0.57~0.0, plated:57@0.89+3.0~0.0 | 20", # w2
+		"glider:60@0.56~0.0, brute:40@1.2+3.0~0.0#1 | 21, night", # w3
+		"swarmling:28@0.11~0.1#1, plated:72@0.86+3.0~0.0 | 21", # w4
+		"vanguard:75@1.55~0.0, wraith:25@1.08+3.0~0.0#1 | 23", # w5
+		"shade:40@0.69~0.0#1, phantom:60@0.69+3.0~0.0 | 25, special, night", # w6
+		"aegis:40@0.83~0.0, vanguard:60@1.5+3.0~0.0#1 | 27", # w7
+		"brute:41@1.11~0.0#1, glider:43@0.52+5.0~0.1, cloaker:16@1.63+6.0~0.0#1 | 29", # w8
+		"phantom:28@0.66~0.1, brute:25@1.1+4.0~0.0#1, aegis:48@0.8+8.0~0.0 | 31, night", # w9
+		"aegis:42@0.79~0.0#1, plated:33@0.79+3.0~0.0, glider:25@0.51+7.0~0.1 | 35", # w10
+		"aegis:41@0.78~0.0, phantom:27@0.64+4.0~0.1#1, plated:32@0.78+6.0~0.0 | 38", # w11
+		"phantom:40@0.63~0.0#1, mender:8@1.83+4.0~0.0, aegis:51@0.77+6.0~0.0#1, swarmling:1@1.83+4.0~0.0 | 42, special, night", # w12
+		"glider:33@1.66~0.1, swarmling:21@0.34+13.57~0.1#1, aegis:46@2.58+27.15~0.1 | 46", # w13
+		"phantom:35@0.63~0.1#1, plated:45@0.77+5.05~0.1, wraith:20@0.97+8.08~0.0#1, swarmling:1@0.97+8.08~0.0#1 | 51", # w14
+		"vanguard:42@1.68~0.0, aegis:35@0.93+4.94~0.1#1, glider:21@0.59+9.89~0.1, swarmling:2@1.68~0.0 | 55, night", # w15
+		"plated:32@0.74~0.1#1, vanguard:50@1.34+3.0~0.0, wraith:17@0.94+8.0~0.0#1, swarmling:1@1.34+3.0~0.0 | 61", # w16
+		"vanguard:62@1.48~0.0, glider:25@0.51+5.56~0.1, cloaker:12@1.62+8.89~0.0, swarmling:2@1.48~0.0 | 67", # w17
+		"glider:34@0.57~0.0, mender:12@2.13+4.99~0.0, plated:52@0.9+8.73~0.0#1, swarmling:2@0.57~0.0 | 73, special, night", # w18
+		"aegis:48@2.65~0.1, swarmling:21@0.34+11.2~0.1#1, glider:31@1.68+22.4~0.1 | 78", # w19
+		"phantom:31@0.75~0.1#1, plated:41@0.92+5.19~0.1, prismling:28@0.92+10.38~0.1#1, swarmling:1@0.92+10.38~0.1#1 | 85", # w20
+		"cloaker:10@1.4~0.0, brute:24@0.95+5.0~0.1#1, vanguard:65@1.27+8.0~0.0, swarmling:1@1.4~0.0 | 92, night", # w21
 		"phantom:53@0.59~0.0#1, wraith:29@0.91+3.09~0.0, mender:17@1.69+6.18~0.0#1, swarmling:1@0.91+3.09~0.0 | 100, special", # w22
 	],
 	"level_19": [ # 40 — Colossus
-		"glider:66@0.7~0.0, swarmling:34@0.14+3.0~0.1 | 30", # w1
-		"glider:62@0.7~0.0, dart:38@0.38+3.0~0.1 | 30", # w2
-		"glider:66@0.7~0.0, swarmling:34@0.14+4.0~0.1 | 30, night", # w3
-		"swarmling:26@0.14~0.1, aegis:74@1.08+4.0~0.0 | 31", # w4
-		"diver:71@0.97~0.0, escort:29@1.26+3.0~0.0 | 32", # w5
-		"plated:42@1.05~0.0, vanguard:58@1.92+3.0~0.0 | 33, special, night", # w6
-		"brute:46@1.42~0.0, plated:54@1.04+4.0~0.0 | 34", # w7
-		"static_crawler:83@1.68~0.0, mender:17@2.42+5.0~0.0 | 36", # w8
-		"escort:15@1.2~0.0, vanguard:62@1.84+3.0~0.0, disruptor:23@1.66+8.0~0.0 | 38, night", # w9
-		"disruptor:22@1.64~0.0, glider:41@0.64+5.0~0.1, brute:37@1.36+6.0~0.0 | 40", # w10
-		"mender_elite:21@2.25~0.0, mender:13@2.33+4.0~0.0, aegis:66@0.99+7.0~0.0 | 42", # w11
-		"aegis:50@0.98~0.0, brute:20@1.33+5.0~0.0, static_crawler:30@1.6+6.0~0.0 | 45, special, night", # w12
-		"static_crawler:22@1.58~0.0, vanguard:39@1.75+5.0~0.0, aegis:29@0.96+7.0~0.0, brute:9@1.58~0.0 | 48", # w13
-		"plated:49@0.95~0.1, brute:41@1.3+3.0~0.0, mender:10@2.25+6.0~0.0 | 51", # w14
-		"diver:37@0.86~0.0, aegis:38@0.94+3.0~0.1, mender_elite:12@2.14+6.0~0.0, brute:14@0.86~0.0 | 54, night", # w15
-		"aegis:56@0.93~0.1, mender_elite:18@2.12+5.0~0.0, mender:12@2.21+7.0~0.0, brute:14@0.93~0.1 | 57", # w16
-		"brute:44@1.26~0.0, diver:45@0.84+5.0~0.0, mender:12@2.19+7.0~0.0 | 61", # w17
-		"escort:16@1.08~0.0, plated:47@0.92+3.0~0.0, brute:37@1.25+6.0~0.0 | 65, special, night", # w18
-		"vanguard:48@1.65~0.0, aegis:32@0.91+3.0~0.1, mender_elite:11@2.06+6.0~0.0, brute:10@1.65~0.0 | 69", # w19
-		"aegis:43@0.9~0.1, plated:41@0.9+4.0~0.1, mender:7@2.12+7.0~0.0, brute:9@0.9~0.1 | 74", # w20
-		"glider:39@0.8~0.1, dart:29@0.44+7.05~0.1, mender:11@2.96+8.45~0.0, brute:21@0.8~0.1 | 79, night", # w21
-		"glider:28@0.56~0.1, mender:7@2.08+4.0~0.0, aegis:43@0.88+7.0~0.1, brute:22@0.56~0.1 | 84", # w22
-		"brute:27@1.19~0.1, vanguard:64@1.59+5.0~0.0, mender:8@2.06+8.0~0.0 | 89", # w23
-		"static_crawler:43@1.41~0.0, disruptor:25@1.41+5.0~0.0, escort:19@1.02+7.0~0.0, brute:14@1.41~0.0 | 94, special, night", # w24
+		"glider:66@0.7~0.0, swarmling:34@0.14+3.0~0.1 | 20", # w1
+		"glider:62@0.7~0.0, dart:38@0.38+3.0~0.1 | 20", # w2
+		"glider:66@0.7~0.0, swarmling:34@0.14+4.0~0.1 | 20, night", # w3
+		"swarmling:26@0.14~0.1, aegis:74@1.08+4.0~0.0 | 21", # w4
+		"diver:71@0.97~0.0, escort:29@1.26+3.0~0.0 | 22", # w5
+		"plated:42@1.05~0.0, vanguard:58@1.92+3.0~0.0 | 23, special, night", # w6
+		"brute:46@1.42~0.0, plated:54@1.04+4.0~0.0 | 25", # w7
+		"static_crawler:83@1.68~0.0, mender:17@2.42+5.0~0.0 | 27", # w8
+		"escort:15@1.2~0.0, vanguard:62@1.84+3.0~0.0, disruptor:23@1.66+8.0~0.0 | 29, night", # w9
+		"disruptor:22@1.64~0.0, glider:41@0.64+5.0~0.1, brute:37@1.36+6.0~0.0 | 31", # w10
+		"mender_elite:21@2.25~0.0, mender:13@2.33+4.0~0.0, aegis:66@0.99+7.0~0.0 | 34", # w11
+		"aegis:50@0.98~0.0, brute:20@1.33+5.0~0.0, static_crawler:30@1.6+6.0~0.0 | 37, special, night", # w12
+		"static_crawler:22@1.58~0.0, vanguard:39@1.75+5.0~0.0, aegis:29@0.96+7.0~0.0, brute:9@1.58~0.0 | 41", # w13
+		"plated:49@0.95~0.1, brute:41@1.3+3.0~0.0, mender:10@2.25+6.0~0.0 | 44", # w14
+		"diver:37@0.86~0.0, aegis:38@0.94+3.0~0.1, mender_elite:12@2.14+6.0~0.0, brute:14@0.86~0.0 | 47, night", # w15
+		"aegis:56@0.93~0.1, mender_elite:18@2.12+5.0~0.0, mender:12@2.21+7.0~0.0, brute:14@0.93~0.1 | 51", # w16
+		"brute:44@1.26~0.0, diver:45@0.84+5.0~0.0, mender:12@2.19+7.0~0.0 | 55", # w17
+		"escort:16@1.08~0.0, plated:47@0.92+3.0~0.0, brute:37@1.25+6.0~0.0 | 60, special, night", # w18
+		"vanguard:48@1.65~0.0, aegis:32@0.91+3.0~0.1, mender_elite:11@2.06+6.0~0.0, brute:10@1.65~0.0 | 65", # w19
+		"aegis:43@0.9~0.1, plated:41@0.9+4.0~0.1, mender:7@2.12+7.0~0.0, brute:9@0.9~0.1 | 70", # w20
+		"glider:39@0.8~0.1, dart:29@0.44+7.05~0.1, mender:11@2.96+8.45~0.0, brute:21@0.8~0.1 | 76, night", # w21
+		"glider:28@0.56~0.1, mender:7@2.08+4.0~0.0, aegis:43@0.88+7.0~0.1, brute:22@0.56~0.1 | 82", # w22
+		"brute:27@1.19~0.1, vanguard:64@1.59+5.0~0.0, mender:8@2.06+8.0~0.0 | 87", # w23
+		"static_crawler:43@1.41~0.0, disruptor:25@1.41+5.0~0.0, escort:19@1.02+7.0~0.0, brute:14@1.41~0.0 | 93, special, night", # w24
 		"colossus*1@1.0~0.0, plated:33@1.2+8.0~0.0, aegis:42@1.2+16.0~0.0, glider:25@0.7+24.0~0.0 | 100, boss, night", # w25
 	],
 }

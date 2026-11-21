@@ -79,6 +79,12 @@ func _ready() -> void:
 	hud.items_enabled = not _is_lab
 	hud.match_id = _match_id
 	add_child(hud)
+	if resume.is_empty() and Tutorial.should_run(lvl, _is_lab, SceneRouter.pending_challenge != null):
+		var tut := Tutorial.new() # first-match onboarding (level 1 until finished or skipped)
+		tut.hud = hud
+		tut.controller = controller
+		tut.placement = placement
+		(hud.get("_root") as Control).add_child(tut)
 	if new_tower != null:
 		hud.announce_new_tower.call_deferred(new_tower)
 		SceneRouter.pending_new_tower = null # only announce once, not again on a retry
