@@ -71,8 +71,11 @@ func test_steps_follow_the_player_and_finish_once() -> void:
 	tut.call("_go", Tutorial.Step.UPGRADE)
 	for lv in range(1, 4):
 		check(c.try_upgrade(c.towers[0], 0), "upgrade to level %d" % lv)
-		eq(tut.step, Tutorial.Step.UPGRADE if lv < 3 else Tutorial.Step.MORE, "level %d" % lv)
+		eq(tut.step, Tutorial.Step.UPGRADE if lv < 3 else Tutorial.Step.TARGET, "level %d" % lv)
 	eq(Progression.model.profile.counter(Tutorial.COUNTER), 1, "maxed one tower: counted as done")
+	check(c.set_targeting(c.towers[0], TowerDef.TargetRule.STRONGEST), "targeting set")
+	tut._process(0.016)
+	eq(tut.step, Tutorial.Step.MORE, "targeting chosen -> spare-money hints")
 	tut.finish() # Skip button
 	eq(tut.step, Tutorial.Step.DONE)
 	eq(Progression.model.profile.counter(Tutorial.COUNTER), 1, "marked done")

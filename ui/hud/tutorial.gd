@@ -6,21 +6,24 @@ extends Control
 ##   1. drag 3 towers onto the map            4. after wave 1: build a Coil
 ##   2. start the first wave                  5. call the next wave early for bonus money
 ##   3. fast-forward x2                       6. max out one tower's branch (level 3/3)
+##   7. pick a targeting priority (First / Strongest / Cluster / Air) in the tower panel
 ##   then: counted as done, and until the match ends a "spare money? build more" pointer whenever a tower is
 ##   affordable (following the old one-tower tutorial lost level 1; a level-1 follower sim of this flow wins 20/20).
 ## A "Skip tutorial" button ends it at any time. Lives inside the HUD root, so it scales with the HUD.
 
 const P = preload("res://ui/style/visual_palette.gd")
 const COUNTER := "tutorial_done"
-enum Step { BUILD, START, SPEED, COIL, EARLY, UPGRADE, MORE, DONE }
+enum Step { BUILD, START, SPEED, COIL, EARLY, UPGRADE, TARGET, MORE, DONE }
 const FIRST_TOWERS := 3 ## towers asked for before wave 1
-const NUMBERED := 6 ## steps shown as n/6 (MORE is "+")
+const NUMBERED := 7 ## steps shown as n/7 (MORE is "+")
 const TEXT := {
 	Step.START: ["Start the first wave", "Enemies walk the path to your base. Each one that gets through costs 1 HP."],
 	Step.SPEED: ["Speed up the game: x2", "Fast-forward to skip the waiting. Tap again to go back to x1."],
 	Step.COIL: ["Coil zaps every enemy around it. Build one!",
 		"Its discharge hits every enemy in the ring, ground and air. Great against packs."],
 	Step.EARLY: ["Call the next wave early", "Calling early pays bonus money: the sooner you call, the bigger the bonus."],
+	Step.TARGET: ["Choose who a tower shoots first",
+		"First: the leader. Strongest: the toughest (bosses). Cluster: the biggest group. Air: fliers."],
 	Step.MORE: ["Spare money? Build more towers for the big waves",
 		"Every kill pays. Money in the bank does not stop enemies: spend it."],
 }
@@ -87,7 +90,7 @@ func _ready() -> void:
 		if step == Step.UPGRADE:
 			if _best_tier() >= UpgradeRules.MAX_TIER:
 				_mark_done()
-				_go(Step.MORE)
+				_go(Step.TARGET if _aimed_tower() != null else Step.MORE)
 			else:
 				_go(Step.UPGRADE)) # refresh the level count
 	controller.speed_changed.connect(func(sp: int) -> void:
@@ -183,6 +186,17 @@ func _best_tier() -> int:
 	return best
 
 
+## A tower with a targeting choice (Coil and auras hit everything in range): the maxed one if it aims.
+func _aimed_tower() -> Tower:
+	var f: Tower = _focus()[0]
+	if f != null and not f.is_aura() and not f.is_pulse():
+		return f
+	for tw in controller.towers:
+		if not tw.is_aura() and not tw.is_pulse():
+			return tw
+	return null
+
+
 func _focus() -> Array: # [tower, branch]
 	var ft: Tower = null
 	var fb := 0
@@ -227,6 +241,13 @@ func _process(delta: float) -> void:
 		_go(Step.MORE)
 	if step == Step.EARLY:
 		_waiting = not (hud.get("_start_btn") as Control).is_visible_in_tree()
+	if step == Step.TARGET:
+		for tw in controller.towers:
+			if tw.targeting_override >= 0:
+				_go(Step.MORE)
+				break
+		if step == Step.TARGET and _aimed_tower() == null:
+			_go(Step.MORE)
 	if step == Step.MORE:
 		var cheap := _cheapest()
 		_waiting = cheap == null or controller.economy.currency < cheap.cost or _spot == Vector2.INF
@@ -282,6 +303,13 @@ func _draw() -> void:
 			if controller.economy.currency < cost:
 				id = "pulse"
 			_drag_hint(_center_of(hud.find_child("Card_%s" % id, true, false) as Control))
+		Step.TARGET: # open an aiming tower, then point at "Strongest"
+			var panel := hud.get("_panel") as Control
+			var btns: Array = panel.get("_target_buttons") if panel != null else []
+			if panel != null and panel.visible and btns.size() > 1 and (btns[1] as Control).is_visible_in_tree():
+				_tap_hint(_center_of(btns[1] as Control))
+			elif _aimed_tower() != null:
+				_tap_hint(_to_layer(_aimed_tower().position))
 		Step.UPGRADE: # the tower with the highest branch: open it, then the same branch again
 			var f := _focus()
 			var panel := hud.get("_panel") as Control
