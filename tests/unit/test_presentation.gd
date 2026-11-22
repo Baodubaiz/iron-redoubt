@@ -70,20 +70,39 @@ func test_world_offset_centres_in_safe_area() -> void:
 
 
 func test_all_audio_assets_load() -> void:
-	for id in ["ui_click", "build", "upgrade", "evolve", "sell", "shot_pulse", "shot_nova", "shot_lance", "impact",
-			"enemy_death", "wave_start", "boss", "emp", "victory", "defeat"]:
-		var s: AudioStream = load("res://audio/sfx/%s.wav" % id)
-		check(s != null and s.get_length() > 0.0, "sfx %s" % id)
-	var m: AudioStream = load("res://audio/music/ambient_loop.wav")
-	check(m != null and m.get_length() > 30.0, "music loop")
+	for id in ["ui_click", "ui_error", "build", "upgrade", "evolve", "sell", "shot_pulse", "shot_nova", "shot_lance",
+			"shot_coil", "impact", "enemy_death", "explosion", "shield_hit", "wave_start", "wave_clear", "boss",
+			"boss_phase", "emp", "victory", "defeat"]:
+		var s: AudioStream = load("res://audio/sfx/%s.ogg" % id)
+		check(s != null and s.get_length() > 0.05, "sfx %s" % id)
+	for m in ["calm", "action", "boss"]:
+		var ms: AudioStream = load("res://audio/music/%s.ogg" % m)
+		check(ms != null and ms.get_length() > 60.0, "music %s" % m)
+	var calm: AudioStream = load("res://audio/music/calm.ogg")
+	var action: AudioStream = load("res://audio/music/action.ogg")
+	near(calm.get_length(), action.get_length(), 0.1, "calm and action line up for the in-sync crossfade")
+
+
+## 2026-11-22: music follows the match (calm -> action on a wave -> boss on a boss wave -> calm when cleared).
+func test_music_follows_the_waves() -> void:
+	var audio = tree.root.get_node("Audio")
+	audio.set_music(&"calm")
+	eq(audio.music_state, &"calm")
+	audio.set_music(&"action")
+	eq(audio.music_state, &"action")
+	audio.set_music(&"boss")
+	eq(audio.music_state, &"boss")
+	audio.set_music(&"nope")
+	eq(audio.music_state, &"boss", "unknown state ignored")
+	audio.set_music(&"calm")
 
 
 func test_every_tower_has_a_shot_sound_or_is_aura() -> void:
 	for t in all_real_towers():
 		if t.attack_mode == TowerDef.AttackMode.AURA:
 			continue
-		var sfx := String(MatchAudio.SHOT_SFX.get(t.id, "shot_" + String(t.id))) # Coil borrows the Lance zap
-		check(ResourceLoader.exists("res://audio/sfx/%s.wav" % sfx), "shot sound for %s" % t.id)
+		var sfx := String(MatchAudio.SHOT_SFX.get(t.id, "shot_" + String(t.id)))
+		check(ResourceLoader.exists("res://audio/sfx/%s.ogg" % sfx), "shot sound for %s" % t.id)
 
 
 func test_wide_screen_world_leaves_room_for_the_palette() -> void:

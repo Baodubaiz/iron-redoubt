@@ -1,22 +1,38 @@
 extends Node
-## Autoload "Audio": pooled SFX playback with a limiter, and the looping ambient music.
-## All assets are original (see audio/LICENSES.md).
+## Autoload "Audio": pooled SFX playback with a limiter, and state-driven music (calm / action / boss).
+## Assets: CC0 packs built by tools/audio_import.py (see audio/LICENSES.md), 2026-11-22.
+##
+## Music (2026-11-22, user: "fix every audio problem"): calm in menus and between waves, action during a wave,
+## boss during a boss wave. calm and action are two versions of the same track (same length and tempo), so a
+## switch between them starts the new one at the old one's position and crossfades: it sounds like the band
+## picking up, not a new song. Only one track decodes at a time except during the 1.5 s crossfade.
 
 const SFX_DIR := "res://audio/sfx/"
-const MUSIC := "res://audio/music/ambient_loop.wav"
+const MUSIC := {
+	&"calm": "res://audio/music/calm.ogg",
+	&"action": "res://audio/music/action.ogg",
+	&"boss": "res://audio/music/boss.ogg",
+}
+const MUSIC_DB := -7.0
+const FADE := 1.5
+const SILENT_DB := -60.0
 const POOL := 12
-## Per-sound base volume (dB) so frequent sounds stay subtle.
+## Per-sound base volume (dB). Sources are peak-normalized to -1 dBFS; frequent sounds sit lower.
 const GAIN := {
-	&"shot_pulse": -11.0, &"shot_lance": -8.0, &"shot_nova": -8.0, &"shot_trap": -9.0, &"shot_venom": -10.0, &"shot_spotter": -11.0, &"shot_sniper": -6.0, &"shot_storm": -9.0, &"impact": -12.0,
-	&"enemy_death": -9.0, &"ui_click": -6.0, &"ui_error": -6.0, &"explosion": -7.0, &"shield_hit": -13.0,
-	&"wave_clear": -4.0, &"boss_phase": -3.0,
+	&"shot_pulse": -15.0, &"shot_lance": -12.0, &"shot_nova": -12.0, &"shot_trap": -13.0, &"shot_venom": -13.0,
+	&"shot_spotter": -15.0, &"shot_sniper": -10.0, &"shot_storm": -12.0, &"shot_coil": -13.0, &"impact": -16.0,
+	&"enemy_death": -14.0, &"explosion": -9.0, &"shield_hit": -16.0, &"emp": -8.0,
+	&"build": -6.0, &"sell": -7.0, &"upgrade": -6.0, &"evolve": -4.0, &"ui_click": -9.0, &"ui_error": -8.0,
+	&"wave_start": -6.0, &"wave_clear": -6.0, &"boss": -3.0, &"boss_phase": -4.0, &"victory": -3.0, &"defeat": -3.0,
 }
 
 var limiter := SfxLimiter.new()
+var music_state: StringName = &""
 var _streams: Dictionary = {}
 var _lengths: Dictionary = {}
 var _players: Array[AudioStreamPlayer] = []
-var _music: AudioStreamPlayer
+var _music: Dictionary = {} ## state -> AudioStreamPlayer
+var _fades: Dictionary = {} ## state -> Tween
 var _next := 0
 
 
@@ -29,18 +45,26 @@ func _ready() -> void:
 		p.bus = &"SFX"
 		add_child(p)
 		_players.append(p)
-	_music = AudioStreamPlayer.new()
-	_music.bus = &"Music"
-	add_child(_music)
 	var dir := DirAccess.open(SFX_DIR)
 	if dir != null:
 		for f in dir.get_files():
-			var base := f.trim_suffix(".import")
-			if base.ends_with(".wav") and not _streams.has(StringName(base.get_basename())):
+			var base := f.trim_suffix(".import").trim_suffix(".remap")
+			var id := StringName(base.get_basename())
+			if (base.ends_with(".ogg") or base.ends_with(".wav")) and not _streams.has(id):
 				var s: AudioStream = load(SFX_DIR + base)
 				if s != null:
-					_streams[StringName(base.get_basename())] = s
-					_lengths[StringName(base.get_basename())] = int(s.get_length() * 1000.0)
+					_streams[id] = s
+					_lengths[id] = int(s.get_length() * 1000.0)
+	for state: StringName in MUSIC:
+		var mp := AudioStreamPlayer.new()
+		mp.bus = &"Music"
+		mp.volume_db = SILENT_DB
+		add_child(mp)
+		var s := load(MUSIC[state]) as AudioStream
+		if s is AudioStreamOggVorbis:
+			(s as AudioStreamOggVorbis).loop = true
+		mp.stream = s
+		_music[state] = mp
 	Settings.apply()
 	play_music()
 
@@ -58,15 +82,49 @@ func play(id: StringName, pitch_variation: float = 0.04) -> void:
 	p.play()
 
 
+## Menus call this (calm); matches switch with set_music().
 func play_music() -> void:
-	if _music.playing:
+	set_music(&"calm")
+
+
+func set_music(state: StringName) -> void:
+	if state == music_state or not _music.has(state):
 		return
-	var s := load(MUSIC) as AudioStreamWAV
-	if s == null:
+	var old: AudioStreamPlayer = _music.get(music_state)
+	var new: AudioStreamPlayer = _music[state]
+	var from := 0.0
+	# calm <-> action are the same track: pick up where the other left off
+	if old != null and old.playing and state != &"boss" and music_state != &"boss":
+		from = fmod(old.get_playback_position(), maxf(new.stream.get_length(), 0.01))
+	music_state = state
+	if new.stream == null:
 		return
-	s.loop_mode = AudioStreamWAV.LOOP_FORWARD
-	s.loop_begin = 0
-	s.loop_end = s.data.size() / 2 # 16-bit mono frames
-	_music.stream = s
-	_music.volume_db = -4.0
-	_music.play()
+	if not new.playing:
+		new.play(from)
+	_fade(state, new, MUSIC_DB, false)
+	if old != null:
+		_fade(StringName(_key_of(old)), old, SILENT_DB, true)
+
+
+func _fade(state: StringName, p: AudioStreamPlayer, to_db: float, stop_after: bool) -> void:
+	if _fades.has(state) and (_fades[state] as Tween).is_valid():
+		(_fades[state] as Tween).kill()
+	if not is_inside_tree():
+		p.volume_db = to_db
+		if stop_after:
+			p.stop()
+		return
+	var tw := create_tween()
+	tw.tween_property(p, "volume_db", to_db, FADE)
+	if stop_after:
+		tw.tween_callback(func() -> void:
+			if _music.get(music_state) != p:
+				p.stop())
+	_fades[state] = tw
+
+
+func _key_of(p: AudioStreamPlayer) -> String:
+	for k in _music:
+		if _music[k] == p:
+			return String(k)
+	return ""

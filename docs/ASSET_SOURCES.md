@@ -7,7 +7,7 @@
 | Icon UI (play, back, gear, lock, cores…) | `assets/ui/icons/*.svg` | Tự vẽ cho dự án (SVG viết tay) | Thuộc dự án |
 | Sprite tháp / quái (vector) | `assets/art/**/*.svg` | Tự vẽ cho dự án, theo concept Stage A | Thuộc dự án |
 | Concept sheet | `docs/reforged_concepts/` | Tự vẽ (SVG → Godot render) | Thuộc dự án |
-| SFX / nhạc | `audio/**` | Tự tổng hợp bằng `tools/audio_gen/gen_audio.gd` | Thuộc dự án |
+| SFX / nhạc | `audio/**` | Kenney (kenney.nl) + vitalezzz (opengameart.org), qua `tools/audio_import.py`; chi tiết ở `audio/LICENSES.md` | CC0 |
 
 **Ghi chú về font:**
 
