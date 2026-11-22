@@ -1,20 +1,29 @@
 class_name Tutorial
 extends Control
-## First-match onboarding (2026-11-21, CrazyGames quality feedback): shown in level 1 until it is finished or
-## skipped once (lifetime counter "tutorial_done"). Visual first, one short line per step, never blocks play:
-##   1. drag 3 towers from the palette onto the map (animated pointer from the card to a good spot)
-##   2. start the first wave (pointer on the Start button)
-##   3. after wave 1: build a Coil (it hits every enemy around it)
-##   4. right after the Coil: tap a tower, then pick an upgrade
-##   then (2026-11-22, user: following the tutorial lost level 1 -- one tower and 380 unspent money cannot
-##   hold the waves): counted as done, but until the end of this match it keeps pointing out spare money
-##   ("build more towers") whenever a tower is affordable.
+## First-match onboarding (2026-11-21, CrazyGames quality feedback; 2026-11-22 reworked with the user): shown in
+## level 1 until it is finished or skipped once (lifetime counter "tutorial_done"). Each step = a pointer, a short
+## instruction and a one-line description of why. Never blocks play:
+##   1. drag 3 towers onto the map            4. after wave 1: build a Coil
+##   2. start the first wave                  5. call the next wave early for bonus money
+##   3. fast-forward x2                       6. max out one tower's branch (level 3/3)
+##   then: counted as done, and until the match ends a "spare money? build more" pointer whenever a tower is
+##   affordable (following the old one-tower tutorial lost level 1; a level-1 follower sim of this flow wins 20/20).
 ## A "Skip tutorial" button ends it at any time. Lives inside the HUD root, so it scales with the HUD.
 
 const P = preload("res://ui/style/visual_palette.gd")
 const COUNTER := "tutorial_done"
-enum Step { BUILD, START, COIL, UPGRADE, MORE, DONE }
+enum Step { BUILD, START, SPEED, COIL, EARLY, UPGRADE, MORE, DONE }
 const FIRST_TOWERS := 3 ## towers asked for before wave 1
+const NUMBERED := 6 ## steps shown as n/6 (MORE is "+")
+const TEXT := {
+	Step.START: ["Start the first wave", "Enemies walk the path to your base. Each one that gets through costs 1 HP."],
+	Step.SPEED: ["Speed up the game: x2", "Fast-forward to skip the waiting. Tap again to go back to x1."],
+	Step.COIL: ["Coil zaps every enemy around it. Build one!",
+		"Its discharge hits every enemy in the ring, ground and air. Great against packs."],
+	Step.EARLY: ["Call the next wave early", "Calling early pays bonus money: the sooner you call, the bigger the bonus."],
+	Step.MORE: ["Spare money? Build more towers for the big waves",
+		"Every kill pays. Money in the bank does not stop enemies: spend it."],
+}
 
 var hud: Hud
 var controller: MatchController
@@ -23,6 +32,7 @@ var step: Step = Step.BUILD
 var _t := 0.0
 var _caption: PanelContainer
 var _caption_label: Label
+var _desc_label: Label
 var _step_label: Label
 var _skip: Button
 var _spot := Vector2.INF ## world position suggested for the next build
@@ -47,11 +57,15 @@ func _ready() -> void:
 	_caption = PanelContainer.new()
 	_caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_caption.add_theme_stylebox_override("panel", UiKit.chamfer(Color(P.BG_DEEP, 0.94), Color(P.CYAN, 0.8), 10, 2))
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 2)
+	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_caption.add_child(v)
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 10)
 	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_caption.add_child(h)
-	_step_label = UiKit.title("1/4", 15, P.CYAN, 1)
+	v.add_child(h)
+	_step_label = UiKit.title("1/%d" % NUMBERED, 15, P.CYAN, 1)
 	_step_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	h.add_child(_step_label)
 	_caption_label = UiKit.label("", 17, P.TEXT)
@@ -59,6 +73,10 @@ func _ready() -> void:
 	_caption_label.autowrap_mode = TextServer.AUTOWRAP_OFF
 	_caption_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	h.add_child(_caption_label)
+	_desc_label = UiKit.label("", 14, P.TEXT_DIM)
+	_desc_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_desc_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	v.add_child(_desc_label)
 	add_child(_caption)
 	_skip = UiKit.button(I18n.t("Skip tutorial"), func() -> void: finish(), Vector2(0, 36), "GhostButton", "forward")
 	_skip.name = "SkipTutorial"
@@ -67,24 +85,35 @@ func _ready() -> void:
 	controller.tower_built.connect(_on_built)
 	controller.tower_upgraded.connect(func(_tw: Tower) -> void:
 		if step == Step.UPGRADE:
-			_mark_done()
-			_go(Step.MORE))
-	controller.waves.wave_started.connect(func(_i: int, _b: int) -> void:
+			if _best_tier() >= UpgradeRules.MAX_TIER:
+				_mark_done()
+				_go(Step.MORE)
+			else:
+				_go(Step.UPGRADE)) # refresh the level count
+	controller.speed_changed.connect(func(sp: int) -> void:
+		if step == Step.SPEED and sp > 1:
+			_go(Step.COIL, controller.waves.index == 0 and not _wave1_cleared))
+	controller.waves.wave_started.connect(func(i: int, _b: int) -> void:
 		if step == Step.START:
-			_go(Step.COIL, true) # shown again once wave 1 is cleared
-		elif step == Step.COIL and controller.waves.index >= 2:
-			_go(Step.UPGRADE)) # player did not build a Coil: move on
+			_go(Step.SPEED)
+		elif step == Step.EARLY:
+			_go(Step.UPGRADE)
+		elif (step == Step.SPEED or step == Step.COIL) and i >= 1: # missed the Coil / early call: move on
+			_go(Step.UPGRADE))
 	controller.waves.wave_cleared.connect(func(i: int, _r: int) -> void:
-		if step == Step.COIL and i >= 0:
+		if i == 0:
+			_wave1_cleared = true
+		if step == Step.COIL:
 			_waiting = false
-			_pick_spot()
-		elif step == Step.UPGRADE and i >= 1:
-			_waiting = false)
+			_pick_spot())
 	controller.match_ended.connect(func(_w: bool) -> void: finish())
 	if controller.towers.size() >= FIRST_TOWERS: # resumed / already built: skip ahead
 		_go(Step.START)
 	else:
 		_go(Step.BUILD)
+
+
+var _wave1_cleared := false
 
 
 func _go(s: Step, wait: bool = false) -> void:
@@ -93,18 +122,19 @@ func _go(s: Step, wait: bool = false) -> void:
 	_t = 0.0
 	if s == Step.BUILD or s == Step.COIL or s == Step.MORE:
 		_pick_spot()
-	var texts := {
-		Step.START: "Start the first wave",
-		Step.COIL: "Coil zaps every enemy around it. Build one!",
-		Step.UPGRADE: "Tap a tower, then pick an upgrade",
-		Step.MORE: "Spare money? Build more towers for the big waves",
-	}
-	if s == Step.BUILD:
-		_caption_label.text = I18n.f("Drag 3 towers onto the map, next to the path (%d/3)",
-			mini(controller.towers.size(), FIRST_TOWERS))
-	elif texts.has(s):
-		_caption_label.text = I18n.t(texts[s])
-	_step_label.text = "%d/4" % (int(s) + 1) if s != Step.MORE else "+"
+	match s:
+		Step.BUILD:
+			_caption_label.text = I18n.f("Drag 3 towers onto the map, next to the path (%d/3)",
+				mini(controller.towers.size(), FIRST_TOWERS))
+			_desc_label.text = I18n.t("Towers shoot enemies in range on their own. Place them close to the path.")
+		Step.UPGRADE:
+			_caption_label.text = I18n.f("Max out one tower (level %d/3)", _best_tier())
+			_desc_label.text = I18n.t("Tap a tower and keep upgrading the same branch. Level 3 makes it far stronger.")
+		_:
+			if TEXT.has(s):
+				_caption_label.text = I18n.t(TEXT[s][0])
+				_desc_label.text = I18n.t(TEXT[s][1])
+	_step_label.text = "%d/%d" % [int(s) + 1, NUMBERED] if s < Step.MORE else "+"
 	queue_redraw()
 
 
@@ -112,7 +142,7 @@ func _on_built(t: Tower) -> void:
 	if step == Step.BUILD:
 		_go(Step.START if controller.towers.size() >= FIRST_TOWERS else Step.BUILD)
 	elif step == Step.COIL and t.def.id == &"coil":
-		_go(Step.UPGRADE) # right away (2026-11-22): spare money starts working during wave 2
+		_go(Step.EARLY)
 	elif step == Step.MORE:
 		_pick_spot()
 
@@ -144,6 +174,28 @@ func _cheapest() -> TowerDef:
 	return best
 
 
+## Highest branch level on any tower, and the tower / branch holding it (the one to keep upgrading).
+func _best_tier() -> int:
+	var best := 0
+	for tw in controller.towers:
+		for b in range(tw.tiers.size()):
+			best = maxi(best, tw.tiers[b])
+	return best
+
+
+func _focus() -> Array: # [tower, branch]
+	var ft: Tower = null
+	var fb := 0
+	var best := -1
+	for tw in controller.towers:
+		for b in range(tw.tiers.size()):
+			if tw.tiers[b] > best:
+				best = tw.tiers[b]
+				ft = tw
+				fb = b
+	return [ft, fb]
+
+
 ## A free spot 50-65 px beside the route, a little way in from the entrance (so it is on screen).
 func _pick_spot() -> void:
 	_spot = Vector2.INF
@@ -170,9 +222,11 @@ func _process(delta: float) -> void:
 	_t += delta
 	if step == Step.DONE:
 		return
-	if step == Step.UPGRADE and not _waiting and controller.towers.is_empty():
+	if step == Step.UPGRADE and controller.towers.is_empty():
 		_mark_done()
 		_go(Step.MORE)
+	if step == Step.EARLY:
+		_waiting = not (hud.get("_start_btn") as Control).is_visible_in_tree()
 	if step == Step.MORE:
 		var cheap := _cheapest()
 		_waiting = cheap == null or controller.economy.currency < cheap.cost or _spot == Vector2.INF
@@ -216,8 +270,10 @@ func _draw() -> void:
 	match step:
 		Step.BUILD:
 			_drag_hint(_center_of(hud.find_child("Card_pulse", true, false) as Control))
-		Step.START:
+		Step.START, Step.EARLY:
 			_tap_hint(_center_of(hud.get("_start_btn") as Control))
+		Step.SPEED:
+			_tap_hint(_center_of(hud.get("_speed_btn") as Control))
 		Step.COIL:
 			_drag_hint(_center_of(hud.find_child("Card_coil", true, false) as Control))
 		Step.MORE: # alternate Pulse / Coil suggestions
@@ -226,13 +282,18 @@ func _draw() -> void:
 			if controller.economy.currency < cost:
 				id = "pulse"
 			_drag_hint(_center_of(hud.find_child("Card_%s" % id, true, false) as Control))
-		Step.UPGRADE:
+		Step.UPGRADE: # the tower with the highest branch: open it, then the same branch again
+			var f := _focus()
 			var panel := hud.get("_panel") as Control
-			if panel != null and panel.visible:
+			if panel != null and panel.visible and panel.get("tower") != null:
+				var sel: Tower = panel.get("tower")
+				var b: int = f[1] if sel == f[0] else 0
+				if f[0] != null and sel != f[0] and sel.tiers.max() > 0:
+					b = sel.tiers.find(sel.tiers.max())
 				var btns: Array = panel.get("_branch_buttons")
-				_tap_hint(_center_of(btns[0] as Control) if not btns.is_empty() else Vector2.INF)
-			elif not controller.towers.is_empty():
-				_tap_hint(_to_layer(controller.towers[0].position))
+				_tap_hint(_center_of(btns[b] as Control) if b < btns.size() else Vector2.INF)
+			elif f[0] != null:
+				_tap_hint(_to_layer((f[0] as Tower).position))
 
 
 ## Card -> map spot: a dot travels along a dashed line and lands in a pulsing ring.
