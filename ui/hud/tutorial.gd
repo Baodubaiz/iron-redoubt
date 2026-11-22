@@ -2,15 +2,19 @@ class_name Tutorial
 extends Control
 ## First-match onboarding (2026-11-21, CrazyGames quality feedback): shown in level 1 until it is finished or
 ## skipped once (lifetime counter "tutorial_done"). Visual first, one short line per step, never blocks play:
-##   1. drag a tower from the palette onto the map (animated pointer from the card to a good spot)
+##   1. drag 3 towers from the palette onto the map (animated pointer from the card to a good spot)
 ##   2. start the first wave (pointer on the Start button)
 ##   3. after wave 1: build a Coil (it hits every enemy around it)
-##   4. once a later wave is cleared: tap a tower, then pick an upgrade
+##   4. right after the Coil: tap a tower, then pick an upgrade
+##   then (2026-11-22, user: following the tutorial lost level 1 -- one tower and 380 unspent money cannot
+##   hold the waves): counted as done, but until the end of this match it keeps pointing out spare money
+##   ("build more towers") whenever a tower is affordable.
 ## A "Skip tutorial" button ends it at any time. Lives inside the HUD root, so it scales with the HUD.
 
 const P = preload("res://ui/style/visual_palette.gd")
 const COUNTER := "tutorial_done"
-enum Step { BUILD, START, COIL, UPGRADE, DONE }
+enum Step { BUILD, START, COIL, UPGRADE, MORE, DONE }
+const FIRST_TOWERS := 3 ## towers asked for before wave 1
 
 var hud: Hud
 var controller: MatchController
@@ -63,12 +67,13 @@ func _ready() -> void:
 	controller.tower_built.connect(_on_built)
 	controller.tower_upgraded.connect(func(_tw: Tower) -> void:
 		if step == Step.UPGRADE:
-			finish())
+			_mark_done()
+			_go(Step.MORE))
 	controller.waves.wave_started.connect(func(_i: int, _b: int) -> void:
 		if step == Step.START:
 			_go(Step.COIL, true) # shown again once wave 1 is cleared
 		elif step == Step.COIL and controller.waves.index >= 2:
-			_go(Step.UPGRADE, true)) # player did not build a Coil: move on
+			_go(Step.UPGRADE)) # player did not build a Coil: move on
 	controller.waves.wave_cleared.connect(func(i: int, _r: int) -> void:
 		if step == Step.COIL and i >= 0:
 			_waiting = false
@@ -76,7 +81,7 @@ func _ready() -> void:
 		elif step == Step.UPGRADE and i >= 1:
 			_waiting = false)
 	controller.match_ended.connect(func(_w: bool) -> void: finish())
-	if not controller.towers.is_empty(): # resumed / already built: skip ahead
+	if controller.towers.size() >= FIRST_TOWERS: # resumed / already built: skip ahead
 		_go(Step.START)
 	else:
 		_go(Step.BUILD)
@@ -86,39 +91,57 @@ func _go(s: Step, wait: bool = false) -> void:
 	step = s
 	_waiting = wait
 	_t = 0.0
-	if s == Step.BUILD or s == Step.COIL:
+	if s == Step.BUILD or s == Step.COIL or s == Step.MORE:
 		_pick_spot()
 	var texts := {
-		Step.BUILD: "Drag a tower onto the map, next to the path",
 		Step.START: "Start the first wave",
 		Step.COIL: "Coil zaps every enemy around it. Build one!",
 		Step.UPGRADE: "Tap a tower, then pick an upgrade",
+		Step.MORE: "Spare money? Build more towers for the big waves",
 	}
-	if texts.has(s):
+	if s == Step.BUILD:
+		_caption_label.text = I18n.f("Drag 3 towers onto the map, next to the path (%d/3)",
+			mini(controller.towers.size(), FIRST_TOWERS))
+	elif texts.has(s):
 		_caption_label.text = I18n.t(texts[s])
-		_step_label.text = "%d/4" % (int(s) + 1)
+	_step_label.text = "%d/4" % (int(s) + 1) if s != Step.MORE else "+"
 	queue_redraw()
 
 
 func _on_built(t: Tower) -> void:
 	if step == Step.BUILD:
-		_go(Step.START)
+		_go(Step.START if controller.towers.size() >= FIRST_TOWERS else Step.BUILD)
 	elif step == Step.COIL and t.def.id == &"coil":
-		_go(Step.UPGRADE, true)
+		_go(Step.UPGRADE) # right away (2026-11-22): spare money starts working during wave 2
+	elif step == Step.MORE:
+		_pick_spot()
 
 
-## Marks the tutorial as done (finished or skipped) so it never shows again, then fades out.
+## Ends the tutorial (skipped, or the match is over): marked done so it never shows again, then fades out.
 func finish() -> void:
 	if step == Step.DONE:
 		return
 	step = Step.DONE
+	_mark_done()
+	UiKit.fade_out(self, 0.25, func() -> void: queue_free())
+
+
+func _mark_done() -> void:
 	var tree := get_tree()
 	if tree != null and tree.root.has_node("Progression"):
 		var pm: ProgressionModel = tree.root.get_node("Progression").get("model")
 		if pm != null and pm.profile.counter(COUNTER) == 0:
 			pm.profile.add_counter(COUNTER, 1)
 			pm.save()
-	UiKit.fade_out(self, 0.25, func() -> void: queue_free())
+
+
+## Cheapest tower the player can build here (the "spare money" hint shows once it is affordable).
+func _cheapest() -> TowerDef:
+	var best: TowerDef = null
+	for d in controller.available_towers():
+		if best == null or d.cost < best.cost:
+			best = d
+	return best
 
 
 ## A free spot 50-65 px beside the route, a little way in from the entrance (so it is on screen).
@@ -148,8 +171,11 @@ func _process(delta: float) -> void:
 	if step == Step.DONE:
 		return
 	if step == Step.UPGRADE and not _waiting and controller.towers.is_empty():
-		finish()
-		return
+		_mark_done()
+		_go(Step.MORE)
+	if step == Step.MORE:
+		var cheap := _cheapest()
+		_waiting = cheap == null or controller.economy.currency < cheap.cost or _spot == Vector2.INF
 	_place_caption()
 	queue_redraw()
 
@@ -194,6 +220,12 @@ func _draw() -> void:
 			_tap_hint(_center_of(hud.get("_start_btn") as Control))
 		Step.COIL:
 			_drag_hint(_center_of(hud.find_child("Card_coil", true, false) as Control))
+		Step.MORE: # alternate Pulse / Coil suggestions
+			var id := "coil" if controller.towers.size() % 2 == 1 else "pulse"
+			var cost: int = (load("res://data/towers/%s.tres" % id) as TowerDef).cost
+			if controller.economy.currency < cost:
+				id = "pulse"
+			_drag_hint(_center_of(hud.find_child("Card_%s" % id, true, false) as Control))
 		Step.UPGRADE:
 			var panel := hud.get("_panel") as Control
 			if panel != null and panel.visible:

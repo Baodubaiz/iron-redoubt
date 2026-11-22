@@ -53,12 +53,20 @@ func test_steps_follow_the_player_and_finish_once() -> void:
 	var scene := _scene(0)
 	var c: MatchController = scene.get("controller")
 	var tut := _tutorial(scene)
-	var spot: Vector2 = tut.get("_spot")
-	check(c.try_build(real_tower("pulse"), spot) != null, "suggested spot is buildable")
-	eq(tut.step, Tutorial.Step.START, "built -> start the wave")
+	for i in range(Tutorial.FIRST_TOWERS):
+		eq(tut.step, Tutorial.Step.BUILD, "still asking for towers (%d built)" % i)
+		var spot: Vector2 = tut.get("_spot")
+		check(c.try_build(real_tower("pulse"), spot) != null, "suggested spot %d is buildable" % i)
+	eq(tut.step, Tutorial.Step.START, "3 built -> start the wave")
 	c.request_next_wave()
 	eq(tut.step, Tutorial.Step.COIL, "wave started -> Coil step (waits for the wave to clear)")
 	check(tut.get("_waiting"), "Coil hint waits for wave 1 to be cleared")
+	c.tower_upgraded.emit(c.towers[0]) # (shortcut) upgrade step done -> counted as done, keeps hinting
+	eq(tut.step, Tutorial.Step.COIL, "upgrade only counts in the upgrade step")
+	tut.call("_go", Tutorial.Step.UPGRADE)
+	c.tower_upgraded.emit(c.towers[0])
+	eq(tut.step, Tutorial.Step.MORE, "after the upgrade: spare-money hints until the match ends")
+	eq(Progression.model.profile.counter(Tutorial.COUNTER), 1, "already marked done")
 	tut.finish() # Skip button
 	eq(tut.step, Tutorial.Step.DONE)
 	eq(Progression.model.profile.counter(Tutorial.COUNTER), 1, "marked done")
