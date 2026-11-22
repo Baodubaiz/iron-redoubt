@@ -380,6 +380,24 @@ func _row(name_text: String, desc: String, color: Color = P.TEXT) -> void:
 	v.add_child(d)
 
 
+## One tier: "II · 78 · Fire rate 3.4/s" on a single line (wraps only if the effect is long).
+func _tier_line(tag: String, cost: int, desc: String, color: Color) -> void:
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 8)
+	_detail.add_child(h)
+	var t := UiKit.title(tag, 14, color, 1)
+	t.custom_minimum_size = Vector2(34, 0)
+	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	h.add_child(t)
+	var c := UiKit.label(str(cost), 14, P.ORANGE)
+	c.custom_minimum_size = Vector2(36, 0)
+	h.add_child(c)
+	var l := UiKit.label(desc, 14, P.TEXT_DIM)
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	l.custom_minimum_size = Vector2(200, 0)
+	h.add_child(l)
+
+
 static func _num(v: float) -> String:
 	return str(int(v)) if absf(v - roundf(v)) < 0.001 else "%.1f" % v
 
@@ -394,7 +412,7 @@ func _tower(d: TowerDef) -> void:
 		rr.add_theme_constant_override("separation", 8)
 		_detail.add_child(rr)
 		rr.add_child(UiKit.rank_badge(d.rarity, 16))
-		var rl := UiKit.label("%s — %s" % [I18n.t(rk.display_name), I18n.t(rk.description)], 14, rk.color)
+		var rl := UiKit.label(I18n.t(rk.display_name), 14, rk.color) # the badge says the rest (less text, 2026-11-22)
 		rl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		rr.add_child(rl)
 	var items: Array = [["credits", str(d.cost), P.ORANGE]]
@@ -418,7 +436,8 @@ func _tower(d: TowerDef) -> void:
 		items.append(["air", I18n.t("Hits air") if d.can_target_air else I18n.t("Ground only"), P.GREEN if d.can_target_air else P.TEXT_FAINT])
 	_chips(items)
 	_section(I18n.t("Branches"))
-	_para(I18n.t("Each tower takes one main branch (tier 3 + evolution) and one secondary branch (up to tier 2)."), P.TEXT_DIM)
+	# Compact (2026-11-22, CrazyGames review: too much text): branch name + one line, then one short line per
+	# tier ("I · 40 · effect") instead of a name line and a description line for every tier.
 	for b in d.branches:
 		var title := I18n.t(b.display_name)
 		if b.requires_research:
@@ -426,9 +445,10 @@ func _tower(d: TowerDef) -> void:
 		_row(title, I18n.t(b.description), P.tower_color(d.id))
 		for i in range(b.tiers.size()):
 			var t: TierDef = b.tiers[i]
-			_row("   %s  (%d)" % [I18n.t(t.display_name), t.cost], "   " + I18n.t(t.description), P.TEXT)
+			_tier_line(["I", "II", "III", "IV"][mini(i, 3)], t.cost, I18n.t(t.description), P.TEXT)
 		if b.evolution != null:
-			_row("   ★ %s  (%d)" % [I18n.t(b.evolution.display_name), b.evolution.cost], "   " + I18n.t(b.evolution.description), P.ORANGE)
+			_tier_line("★", b.evolution.cost, "%s: %s" % [I18n.t(b.evolution.display_name), I18n.t(b.evolution.description)],
+				P.ORANGE)
 
 
 func _enemy(d: EnemyDef, locked: bool) -> void:

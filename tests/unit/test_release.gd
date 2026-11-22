@@ -21,7 +21,7 @@ func test_android_export_preset() -> void:
 
 func test_project_settings_for_mobile() -> void:
 	eq(ProjectSettings.get_setting("application/config/name"), "Iron Redoubt")
-	eq(ProjectSettings.get_setting("application/config/version"), "0.10.0")
+	eq(ProjectSettings.get_setting("application/config/version"), "1.0.0")
 	eq(int(ProjectSettings.get_setting("display/window/handheld/orientation")), DisplayServer.SCREEN_SENSOR_LANDSCAPE, "landscape")
 	eq(ProjectSettings.get_setting("application/config/quit_on_go_back"), false, "back button handled by the game")
 	eq(ProjectSettings.get_setting("rendering/textures/vram_compression/import_etc2_astc"), true, "mobile texture format")

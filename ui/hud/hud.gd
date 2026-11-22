@@ -119,6 +119,11 @@ func _ready() -> void:
 		_show_banner(I18n.f("Wave %d", i + 1).to_upper(), I18n.f("+%d early bonus", bonus) if bonus > 0 else "", P.CYAN))
 	controller.waves.wave_cleared.connect(func(i: int, reward: int) -> void:
 		_show_banner(I18n.f("Wave %d cleared", i + 1).to_upper(), "+%d" % reward, P.GREEN))
+	# Level name + objective when a fresh match opens (2026-11-22, CrazyGames feedback: the objective was only
+	# on the campaign screen, so players who start straight into a match never saw it).
+	if controller.waves.index < 0 and controller.level != null and controller.level.objective != "":
+		_show_banner.call_deferred(I18n.t(controller.level.display_name).to_upper(), I18n.t(controller.level.objective),
+			P.CYAN, 3.5)
 	controller.tower_built.connect(func(t: Tower) -> void: _floater(t.position, "-%d" % t.def.cost, P.ORANGE))
 	controller.tower_upgraded.connect(func(t: Tower) -> void:
 		var evo_now := t.evolved and not t.has_meta("evo_shown")
@@ -463,6 +468,7 @@ func _build_feedback(root: Control) -> void:
 	_banner_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_banner_sub.add_theme_constant_override("outline_size", 8)
 	_banner_sub.add_theme_color_override("font_outline_color", Color(P.BG_DEEP, 0.85))
+	_banner_sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART # long objectives wrap inside the banner
 	_banner.add_child(_banner_sub)
 	_preview = UiKit.label("", 14, P.TEXT_DIM)
 	_preview.set_anchors_preset(Control.PRESET_TOP_LEFT)
@@ -955,7 +961,7 @@ func _show_toast(text: String) -> void:
 	_toast(text, "campaign", P.CYAN)
 
 
-func _show_banner(title: String, sub: String, col: Color) -> void:
+func _show_banner(title: String, sub: String, col: Color, hold: float = 1.1) -> void:
 	_banner_title.text = title
 	_banner_title.add_theme_color_override("font_color", col)
 	_banner_sub.text = sub
@@ -969,7 +975,7 @@ func _show_banner(title: String, sub: String, col: Color) -> void:
 	_banner_tween.set_parallel(true)
 	_banner_tween.tween_property(_banner, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_banner_tween.tween_property(_banner, "modulate:a", 1.0, 0.2)
-	_banner_tween.chain().tween_interval(1.1)
+	_banner_tween.chain().tween_interval(hold)
 	_banner_tween.chain().tween_property(_banner, "modulate:a", 0.0, 0.4)
 
 

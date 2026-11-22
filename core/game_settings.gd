@@ -11,6 +11,7 @@ var reduce_effects: bool = false ## fewer particles, no screen shake / flashes
 ## Web builds only (2026-11-19 perf): false = render at the 1280x720 base and scale up to the screen (much
 ## lighter on laptops / phones with big or high-DPI screens); true = render at full screen resolution (sharper).
 var sharp_graphics: bool = false
+var show_fps: bool = false ## small FPS / frame-time readout in the corner (F3 toggles it too)
 
 
 func clamp_values() -> void:
@@ -29,6 +30,7 @@ func save(path: String) -> Error:
 	cf.set_value("ui", "language", language)
 	cf.set_value("ui", "reduce_effects", reduce_effects)
 	cf.set_value("ui", "sharp_graphics", sharp_graphics)
+	cf.set_value("ui", "show_fps", show_fps)
 	return cf.save(path)
 
 
@@ -44,6 +46,7 @@ func load_from(path: String) -> void:
 	language = String(cf.get_value("ui", "language", language))
 	reduce_effects = bool(cf.get_value("ui", "reduce_effects", reduce_effects))
 	sharp_graphics = bool(cf.get_value("ui", "sharp_graphics", sharp_graphics))
+	show_fps = bool(cf.get_value("ui", "show_fps", show_fps))
 	clamp_values()
 
 

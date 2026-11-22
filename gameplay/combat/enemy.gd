@@ -109,6 +109,8 @@ func place_at_progress(p: float) -> void:
 	progress = clampf(p, 0.0, route.total_length)
 	_seg = route.segment_for(progress, 0)
 	position = route.position_at(progress, _seg)
+	if is_inside_tree():
+		reset_physics_interpolation() # teleport (Colossus blink): jump, do not slide
 
 
 func is_alive() -> bool:

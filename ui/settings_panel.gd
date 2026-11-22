@@ -39,6 +39,16 @@ func _ready() -> void:
 		Settings.data.reduce_effects = on
 		Settings.save())
 	v.add_child(fx)
+	var fps := CheckButton.new()
+	fps.text = I18n.t("Show FPS")
+	fps.tooltip_text = I18n.t("Frame rate in the corner (F3).")
+	fps.button_pressed = s.show_fps
+	fps.custom_minimum_size = Vector2(230, 56)
+	fps.add_theme_font_size_override("font_size", 20)
+	fps.toggled.connect(func(on: bool) -> void:
+		Settings.data.show_fps = on
+		Settings.save())
+	v.add_child(fps)
 	if OS.has_feature("web"): # browser builds: sharper picture costs a lot of speed on big screens
 		var sharp := CheckButton.new()
 		sharp.text = I18n.t("Sharp graphics (slower)")
@@ -52,7 +62,7 @@ func _ready() -> void:
 		v.add_child(sharp)
 	if show_language:
 		_language_row(v)
-	v.add_child(UiKit.label(I18n.t("Use the x1/x2 button in a match to change speed. Targeting is automatic."), 14, UiKit.MUTED))
+	v.add_child(UiKit.label(I18n.t("Use the x1/x2 button in a match to change speed. Tap a tower to pick who it shoots first."), 14, UiKit.MUTED))
 	if show_close:
 		v.add_child(UiKit.button(I18n.t("Close"), func() -> void: closed.emit(), Vector2(0, 56)))
 

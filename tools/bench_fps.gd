@@ -24,6 +24,9 @@ func _initialize() -> void:
 			_seconds = float(a.substr(10))
 		elif a.begins_with("--hide="):
 			_hide = a.substr(7)
+		elif a == "--web": # simulate the browser build's throttles (MapView / EnemyVisual)
+			MapView.WEB = true
+			EnemyVisual.WEB = true
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = 0
 
@@ -130,3 +133,16 @@ func _apply_hide() -> void:
 			_ctrl.map_view.visible = false
 		"fx":
 			_ctrl.projectiles.visible = false
+		"map_still": # drawn once, never redrawn: what the map's per-frame animation costs
+			_ctrl.map_view.set_process(false)
+		"hud":
+			var hud = current_scene.get("hud")
+			hud.visible = false
+			hud.set_process(false)
+			for c in hud.find_children("*", "", true, false):
+				c.set_process(false)
+		"hud_still":
+			var hud2 = current_scene.get("hud")
+			hud2.set_process(false)
+			for c in hud2.find_children("*", "", true, false):
+				c.set_process(false)

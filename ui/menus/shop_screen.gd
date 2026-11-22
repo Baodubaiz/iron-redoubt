@@ -23,9 +23,12 @@ func _build() -> void:
 	_v = v
 	UiKit.header(v, I18n.t("Armory"), func() -> void: SceneRouter.to_menu())
 	var model: ProgressionModel = Progression.model
-	v.add_child(UiKit.label(I18n.t("Bosses (levels 5 and 10 of every region) can drop blueprint shards for a random tower. Each ad gives 1 shard for the tower you pick."), 16, UiKit.MUTED))
-	v.add_child(UiKit.label(I18n.f("Ads left today: %d / %d", [model.ads_left_today(_now()), model.campaign.ad_daily_cap])
-		+ ("   " + I18n.t("(test ads)") if AdService.is_test_mode() else ""), 15, VisualPalette.CYAN))
+	if AdService.is_available():
+		v.add_child(UiKit.label(I18n.t("Bosses (levels 5 and 10 of every region) can drop blueprint shards for a random tower. Each ad gives 1 shard for the tower you pick."), 16, UiKit.MUTED))
+		v.add_child(UiKit.label(I18n.f("Ads left today: %d / %d", [model.ads_left_today(_now()), model.campaign.ad_daily_cap])
+			+ ("   " + I18n.t("(test ads)") if AdService.is_test_mode() else ""), 15, VisualPalette.CYAN))
+	else: # no ads on this host: say nothing about them
+		v.add_child(UiKit.label(I18n.t("Bosses can drop blueprint shards for a random tower. Or buy a tower with Cores."), 16, UiKit.MUTED))
 	var list := UiKit.scroll(v)
 	var grid := GridContainer.new()
 	grid.columns = 2
@@ -116,14 +119,16 @@ func _card(model: ProgressionModel, t: TowerDef) -> Control:
 		btns.add_child(ob)
 		return card
 	var ad_reason := model.ad_block_reason(t, _now())
-	if ad_reason == "" and not AdService.is_available():
-		ad_reason = I18n.t("Ads unavailable")
+	# No ads on this host (CrazyGames Basic Launch, adblock, desktop): no ad button at all instead of a
+	# disabled "Ads unavailable" one that looks broken (2026-11-22, CrazyGames quality review).
+	var ad_shown := AdService.is_available()
 	var ad := UiKit.button(I18n.f("Watch ad  +%d", model.campaign.ad_shards) if ad_reason == "" else ad_reason,
 		func() -> void: _watch_ad(t), Vector2(0, 48), "", "play")
 	ad.name = "Ad"
 	ad.disabled = ad_reason != ""
 	ad.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	ad.add_theme_font_size_override("font_size", UiKit.fs(15))
+	ad.visible = ad_shown
 	btns.add_child(ad)
 	var price := model.campaign.core_price(t)
 	var buy := UiKit.button(I18n.f("Buy  %d Cores", price) if buy_reason == "" else buy_reason,

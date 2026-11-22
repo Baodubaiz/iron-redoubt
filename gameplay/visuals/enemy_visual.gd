@@ -42,6 +42,7 @@ static var shared_layers := false
 ## frame). Bosses, hits and telegraphs always redraw. 2026-11-19 perf: re-building ~180 enemy drawings every
 ## frame cost ~9 ms on desktop, the GPU part ~1 ms.
 static var crowd := 0
+static var WEB := OS.has_feature("web")
 static var _unit16 := PackedVector2Array()
 static var _unit12 := PackedVector2Array()
 
@@ -143,7 +144,11 @@ func _process(delta: float) -> void:
 
 
 func _needs_redraw() -> bool:
-	var every := 1 if crowd < 80 else 2 # smoothness first: 60 Hz up to 80 enemies, then 30 Hz
+	# smoothness first: 60 Hz up to 80 enemies, then 30 Hz. Web (2026-11-22 perf, GDScript ~3x slower in the
+	# browser): 30 Hz from 30 enemies, 20 Hz from 100. Movement itself stays per-frame either way.
+	var every := 1 if crowd < 80 else 2
+	if WEB:
+		every = 1 if crowd < 30 else (2 if crowd < 100 else 3)
 	# hit flashes / sparks last ~0.1-0.2 s: still visible at 20 Hz, so only bosses and skill telegraphs
 	# (timing the player reads) always redraw
 	if every == 1 or e.def.is_boss or e.telegraph_kind != 0 or _phase_fx > 0.0:

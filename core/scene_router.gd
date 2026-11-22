@@ -34,6 +34,9 @@ var _fx_tween: Tween
 
 
 func _ready() -> void:
+	# Physics interpolation (2026-11-22 web smoothness): only the enemies layer opts in (MatchController); menus,
+	# HUD, camera and tweens move in _process and must not be interpolated.
+	get_tree().root.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	CrazyGamesSdk.init() # no-op outside the CrazyGames web build
 	_fx_layer = CanvasLayer.new()
 	_fx_layer.layer = 100

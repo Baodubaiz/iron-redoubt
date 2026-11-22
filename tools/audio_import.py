@@ -5,7 +5,7 @@ Sources (all CC0 / public domain, see audio/LICENSES.md), unpacked outside the r
   music/singularity_calm_0.mp3, music/singularity_action_0.mp3, music/brute_force_loop.mp3   (vitalezzz, opengameart.org)
 
 Each sound: leading silence trimmed, capped to a max length with a short fade, peak-normalized to -1 dBFS,
-mono 44.1 kHz Ogg Vorbis -> audio/sfx/<id>.ogg. Music: loudness-normalized stereo Ogg -> audio/music/<id>.ogg.
+mono 44.1 kHz Ogg Vorbis -> audio/sfx/<id>.ogg. Music: loudness-normalized mono Ogg -> audio/music/<id>.ogg.
 To change a sound, edit SFX below and run:  python tools/audio_import.py   (then Godot --import)
 """
 import os, re, subprocess, sys
@@ -88,7 +88,9 @@ def build_sfx(sid, src, max_s):
 
 def build_music(mid, src):
     out = os.path.join(ROOT, "audio", "music", mid + ".ogg")
-    r = ff("-y", "-i", os.path.join(SRC, src), "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-ar", "44100", "-ac", "2",
+    # mono (2026-11-22): web builds keep each track fully decoded in browser memory (float32 per channel), so
+    # stereo 3-minute tracks cost ~70 MB each; mono halves that and the file size, game BGM sounds the same.
+    r = ff("-y", "-i", os.path.join(SRC, src), "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-ar", "44100", "-ac", "1",
            "-c:a", "libvorbis", "-q:a", "3", out)
     if r.returncode != 0:
         sys.exit(r.stderr[-800:])

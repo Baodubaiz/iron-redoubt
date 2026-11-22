@@ -111,6 +111,9 @@ func setup(lvl: LevelDef, seed_value: int = -1, unlock_state: UpgradeRules.Unloc
 	add_child(towers_root)
 	enemies_root = Node2D.new()
 	enemies_root.name = "Enemies"
+	# Enemies move on the 60 Hz physics tick; interpolation draws them smoothly between ticks when frames are
+	# uneven (browser builds: frames of 16 / 33 ms made them step visibly). 2026-11-22.
+	enemies_root.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_ON
 	add_child(enemies_root)
 	projectiles = ProjectileSystem.new()
 	projectiles.impact_callback = _on_impact
@@ -217,6 +220,7 @@ func spawn_enemy_on(def: EnemyDef, route: RoutePath, at_progress: float) -> Enem
 func _add_enemy(e: Enemy) -> void:
 	enemies.append(e)
 	enemies_root.add_child(e)
+	e.reset_physics_interpolation() # appears where it spawns, no slide from the route start
 	stats["seen_enemies"][String(e.def.id)] = true # Codex: unlock entries the player has met
 	if e.is_boss():
 		stats["boss_spawn_time"][e.uid] = match_time

@@ -12,6 +12,7 @@ extends Node2D
 const P = preload("res://ui/style/visual_palette.gd")
 const WORLD := Rect2(0, 0, 1280, 720)
 
+static var WEB := OS.has_feature("web")
 var map: MapDef
 var night: bool = false
 var active_route: int = 0
@@ -148,7 +149,10 @@ func _process(delta: float) -> void:
 	for g in _gates:
 		var want := 1.0 if g["route"] == active_route else 0.0
 		g["open"] = move_toward(g["open"], want, delta * 1.6)
-	_fx.queue_redraw()
+	# Web (2026-11-22 perf): the animated layer (route chevrons, portals, core, gates) redraws at 30 Hz. Rebuilding
+	# it every frame cost ~1.3 ms on desktop, ~3x that in the browser; at 38 px/s the chevrons still glide.
+	if not WEB or Engine.get_process_frames() % 2 == 0:
+		_fx.queue_redraw()
 	if _ctrl != null:
 		EnemyVisual.crowd = _ctrl.enemies.size()
 	if _enemy_under != null:
