@@ -60,13 +60,35 @@ func _ready() -> void:
 		mp.bus = &"Music"
 		mp.volume_db = SILENT_DB
 		add_child(mp)
-		var s := load(MUSIC[state]) as AudioStream
-		if s is AudioStreamOggVorbis:
-			(s as AudioStreamOggVorbis).loop = true
-		mp.stream = s
 		_music[state] = mp
 	Settings.apply()
-	play_music()
+	# Startup (2026-11-22, web load time): loading + preparing all three tracks cost ~0.6 s of the browser boot.
+	# The menu track starts once the first frame is on screen; the match tracks load in the background a few
+	# seconds later (or right away if a match asks for them first).
+	_start_music_later.call_deferred()
+
+
+func _start_music_later() -> void:
+	if not is_inside_tree():
+		return
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if music_state == &"":
+		play_music()
+	for state: StringName in [&"action", &"boss"]:
+		await get_tree().create_timer(2.0).timeout
+		_ensure_stream(state)
+
+
+## Loads a music track the first time it is needed.
+func _ensure_stream(state: StringName) -> void:
+	var mp: AudioStreamPlayer = _music.get(state)
+	if mp == null or mp.stream != null:
+		return
+	var s := load(MUSIC[state]) as AudioStream
+	if s is AudioStreamOggVorbis:
+		(s as AudioStreamOggVorbis).loop = true
+	mp.stream = s
 
 
 func play(id: StringName, pitch_variation: float = 0.04) -> void:
@@ -90,6 +112,7 @@ func play_music() -> void:
 func set_music(state: StringName) -> void:
 	if state == music_state or not _music.has(state):
 		return
+	_ensure_stream(state)
 	var old: AudioStreamPlayer = _music.get(music_state)
 	var new: AudioStreamPlayer = _music[state]
 	var from := 0.0
